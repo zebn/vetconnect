@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  div.text-center
+      div(class="form-signin")
+          div.text-center
+              p Hola #{username}!
+              a(href="/users")
+                  button(type="button") Mis consultas 

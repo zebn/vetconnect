@@ -1,0 +1,43 @@
+extends layout
+block content
+    div.text-center
+        p Hola #{username}!
+            if (chats.length==0&&role=="ROLE_USER")
+                button(type='button', onclick='createRoom()')#createButton Crear nueva consulta
+            br
+            ul#chats Mis consultas 
+                each chat in chats
+                    li
+                        a(href="/chat/"+chat.idChat)
+                            button(type="button") Unir consulta #{chat.nameChat}
+            if chatsWithoutDoctor.length>0
+                ul#chats Consultas pendientes sin doctor
+                    each chatWithoutDoctor in chatsWithoutDoctor
+                        li
+                            a(href="/chat/"+chatWithoutDoctor.idChat)
+                                button(type="button") Unir consulta #{chatWithoutDoctor.nameChat}
+    script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
+    script.
+        console.log(#{roomId});
+        function createRoom()
+        {
+        const socket = io().connect();
+        let roomId = '#{roomId}';
+        let username = '#{username}';
+        let userId = '#{userId}';  
+        dataConnection = {username: username, userId: userId,socketId:socket.id};
+        if (socket && userId) 
+        socket.emit('create', dataConnection, (response) => {
+        document.getElementById("createButton").remove();
+        console.log(response.roomName);
+        const button = document.createElement('button');
+        button.textContent= 'Unir consulta '+ response.roomName;
+        const a = document.createElement('a');
+        a.href="/chat/"+response.roomId;
+        a.appendChild(button);
+        const item = document.createElement('li');
+        item.appendChild(a)
+        chats.appendChild(item);
+        }); 
+        }
+
