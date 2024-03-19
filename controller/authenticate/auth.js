@@ -4,8 +4,8 @@ const mysql = require('mysql');
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Qqwweerr89',
-    database: 'mydb'
+    password: '1234',
+    database: 'vetconnect'
 });
 
 
