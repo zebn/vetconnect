@@ -7,34 +7,16 @@ html
   body
     nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-primary
       .container-fluid
-        a.navbar-brand(href='#') Navbar
+        a.navbar-brand(href='#').text-white.ms-2 VETCONNECT
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse
-          ul.navbar-nav.me-auto.mb-2.mb-lg-0
+          ul.nav.ms-auto
             li.nav-item
-              a.nav-link.active(aria-current='page' href='#') Home
+              a.nav-link.active(aria-current='page' href='#').text-white REGISTRAR
             li.nav-item
-              a.nav-link(href='#') Link
-            li.nav-item.dropdown
-              a.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                | Dropdown
-              ul.dropdown-menu
-                li
-                  a.dropdown-item(href='#') Action
-                li
-                  a.dropdown-item(href='#') Another action
-                li
-                  hr.dropdown-divider
-                li
-                  a.dropdown-item(href='#') Something else here
-            li.nav-item
-              a.nav-link.disabled(aria-disabled='true') Disabled
-          form.d-flex(role='search')
-            input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
-            button.btn.btn-outline-success(type='submit') Search
-    div.container
-      block content
+              a.nav-link(href='#').text-white.float-right LOGIN
+    block content
     footer.bd-footer.py-4.py-md-5.mt-5.bg-secondary.text-light
       .container.py-4.py-md-5.px-4.px-md-3
         .row.align-items-center
