@@ -1,5 +1,5 @@
 const socketIo = require('socket.io')
-const connection = require('../model/db');
+const db = require('../model/db');
 
 var checkLogin = (request, response, next) => {
     let username = request.body.username
@@ -7,7 +7,7 @@ var checkLogin = (request, response, next) => {
     // Ensure the input fields exists and are not empty
     if (username && password) {
         // Execute SQL query that'll select the account from the database based on the specified username and password
-        connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.Email = ? AND u.Password = ?', [username, password], function (error, results, fields) {
+        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.Email = ? AND u.Password = ?', [username, password], function (error, results, fields) {
             // If there is an issue with the query, output the error
             if (error) throw error;
             // If the account exists
@@ -21,7 +21,7 @@ var checkLogin = (request, response, next) => {
                 request.session.token = token;
                 response.cookie('username', username, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
                 response.cookie('token', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-                connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE Email = ?", [token, token, username], function (error, results, fields) {
+                db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE Email = ?", [token, token, username], function (error, results, fields) {
                     if (error) throw error;
                 });
                 next();
@@ -49,7 +49,7 @@ var checkAuthToken = (request, response, next) => {
         response.redirect('/login');
     }
     else {
-        connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.Email = ? AND u.AuthToken = ?', [request.cookies['username'], request.cookies['token']], function (error, results, fields) {
+        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.Email = ? AND u.AuthToken = ?', [request.cookies['username'], request.cookies['token']], function (error, results, fields) {
             if (error) throw error;
             // If the account exists
             if (results.length > 0) {

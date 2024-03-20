@@ -1,5 +1,5 @@
 const socketIo = require('socket.io')
-const connection = require('../model/db');
+const db = require('../model/db');
 
 class Message {
     constructor(idMessage, dateMessage, textMessage, binaryMessage, idChat, idUser) {
@@ -13,7 +13,7 @@ class Message {
 
     async getAllMessages(idChat){
         return new Promise((resolve, reject) => {
-            connection.query('select * from message m inner join user u on m.idUser = u.idUser where idChat = ?', [idChat], function (error, results, fields) {
+            db.connection.query('select * from message m inner join user u on m.idUser = u.idUser where idChat = ?', [idChat], function (error, results, fields) {
                 if (error) {reject(err)};
                 resolve(results)
             });
@@ -22,7 +22,7 @@ class Message {
 
     async getAllChatsForUser(idUser){
         return new Promise((resolve, reject) => {
-            connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where idUser = ? AND isFinished = 0', [idUser], function (error, results, fields) {
+            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where idUser = ? AND isFinished = 0', [idUser], function (error, results, fields) {
                 if (error) {reject(err)};
                 resolve(results)
             });
@@ -31,7 +31,7 @@ class Message {
 
     async getAllChatsWithoutDoctor(idUser){
         return new Promise((resolve, reject) => {
-            connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', [idUser], function (error, results, fields) {
+            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', [idUser], function (error, results, fields) {
                 if (error) {reject(err)};
                 resolve(results)
             });
