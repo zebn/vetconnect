@@ -1,15 +1,5 @@
 const socketIo = require('socket.io')
-const mysql = require('mysql');
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Qqwweerr89',
-    database: 'mydb'
-});
-
-
-
+const connection = require('../model/db');
 
 
 class SocketController {

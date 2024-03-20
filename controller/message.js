@@ -1,14 +1,5 @@
-const mysql = require('mysql');
-
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Qqwweerr89',
-    database: 'mydb'
-});
-
-
+const socketIo = require('socket.io')
+const connection = require('../model/db');
 
 class Message {
     constructor(idMessage, dateMessage, textMessage, binaryMessage, idChat, idUser) {
