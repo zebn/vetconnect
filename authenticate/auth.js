@@ -1,5 +1,14 @@
-const socketIo = require('socket.io')
-const connection = require('../model/db');
+const mysql = require('mysql');
+
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Qqwweerr89',
+    database: 'mydb'
+});
+
+
 
 var checkLogin = (request, response, next) => {
     let username = request.body.username
