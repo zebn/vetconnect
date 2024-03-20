@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../controller/authenticate/auth');
+var auth = require('../authenticate/auth');
 
 /* GET users listing. */
 router.get('/', function (request, response, next) {

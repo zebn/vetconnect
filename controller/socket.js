@@ -1,15 +1,5 @@
 const socketIo = require('socket.io')
-const mysql = require('mysql');
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'vetconnect'
-});
-
-
-
+const db = require('../model/db');
 
 
 class SocketController {
@@ -21,12 +11,12 @@ class SocketController {
         io.on('connection', (socket) => {
 
             function joinRoom(data) {
-                connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
+                db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
                     , [[data.roomId, data.userId]], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`${data.userId} with ${data.role} joined ${data.roomId}`);
                         if (data.role == "ROLE_DOCTOR" || data.role == "ROLE_ADMIN") {
-                            connection.query("UPDATE chat SET isNeedDoctor = 0 WHERE idChat = ?;"
+                            db.connection.query("UPDATE chat SET isNeedDoctor = 0 WHERE idChat = ?;"
                                 , [[data.roomId]], function (error, results, fields) {
                                     if (error) throw error;
                                     console.log(`${data.userId} doctor assigned to ${data.roomId}`);
@@ -37,7 +27,7 @@ class SocketController {
             };
 
             socket.on('chat message', (data) => {
-                connection.query("INSERT INTO message (textMessage,idChat,idUser) VALUES (?);"
+                db.connection.query("INSERT INTO message (textMessage,idChat,idUser) VALUES (?);"
                     , [[data.message, data.roomId, data.userId]], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
@@ -46,7 +36,7 @@ class SocketController {
             });
 
             socket.on('create', (data, callback) => {
-                connection.query("INSERT INTO chat (nameChat) VALUES (?);"
+                db.connection.query("INSERT INTO chat (nameChat) VALUES (?);"
                     , [`Consulta ${data.username}`], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`${data.userId} created room ${results.insertId}`);
