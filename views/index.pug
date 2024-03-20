@@ -1,11 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div.text-center
-      div(class="form-signin")
-          div.text-center
-              p Hola #{username}!
-              a(href="/users")
-                  button(type="button") Mis consultas 
+        .row.mt-5.d-flex.justify-content-between.mx-3
+            .col-lg-4.d-none.d-lg-block
+               img.img-fluid(src='img/vetconnect2.jpg' alt='Gato encima de tableta' style=' width: auto; height: auto;  border-radius: 0 50% 50% 0' )
+            .col-lg-4.mt-lg-5.mb-lg-0.my-5
+                h1.mb-4 Bienvenidos a VETCONNECT
+                p.fs-4.text-start
+                    | En nuestro sitio, ofrecemos consultas veterinarias a través de un práctico chat en línea. Aquí, encontrarás soluciones confiables y accesibles para todas tus necesidades veterinarias, con la comodidad de acceder a asesoramiento profesional sin salir de casa. Nuestro equipo de expertos está dedicado a brindarte el mejor cuidado y orientación para tus queridas mascotas en tiempo real.
+                p.fs-4.text-start.mb-5
+                    | ¡Comienza a cuidar de tus amigos peludos hoy mismo a través de nuestro servicio de chat veterinario!
+                p.text-center 
+                    a.btn.btn-primary.px-4.py-2(href='#' role='button') SOY PACIENTE
+                p.text-center
+                    a.btn.btn-primary.px-4.py-2(href='#' role='button') SOY DOCTOR
+            .col-lg-4.d-none.d-lg-block
+                img.img-fluid(src='img/vetconnect1.jpg' alt='Perro encima de ordenador' style=' width: auto; height: auto;   border-radius: 50% 0 0 50%')
+            
