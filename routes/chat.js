@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../controller/authenticate/auth');
-const message = require('../model/message');
+var auth = require('../authenticate/auth');
+const message = require('../controller/message');
 
 router.get('/:roomId', auth.checkAuthToken, async function (request, response, next) {
   const messages = await message.getAllMessages(request.params.roomId)
