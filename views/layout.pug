@@ -7,15 +7,21 @@ html
   body
     nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-primary
       .container-fluid
-        a.navbar-brand(href='#').text-white.ms-2 VETCONNECT
+        a.navbar-brand(href='/').text-white.ms-2 VETCONNECT
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse
           ul.nav.ms-auto
-            li.nav-item
-              a.nav-link.active(aria-current='page' href='#').text-white REGISTRAR
-            li.nav-item
-              a.nav-link(href='#').text-white.float-right LOGIN
+            if (username)
+              li.nav-item
+                a.nav-link.active(aria-current='' href='/users').text-white #{username}
+              li.nav-item
+                a.nav-link(href='/logout').text-white.float-right SALIR
+            else
+              li.nav-item
+                a.nav-link.active(aria-current='' href='/register').text-white REGISTRAR
+              li.nav-item
+                a.nav-link(href='/login').text-white.float-right LOGIN
     block content
     footer.bd-footer.py-4.py-md-5.mt-5.bg-secondary.text-light
       .container.py-4.py-md-5.px-4.px-md-3

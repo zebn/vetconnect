@@ -1,0 +1,9 @@
+h1 Sign up
+form(action='/signup' method='post')
+  section
+    label(for='username') Username
+    input#username(name='username' type='text' autocomplete='username' required='')
+  section
+    label(for='new-password') Password
+    input#new-password(name='password' type='password' autocomplete='new-password' required='')
+  button(type='submit') Sign up

@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../authenticate/auth');
+var auth = require('../controller/authController');
 
-/* GET users listing. */
 router.get('/', function (request, response, next) {
     if (request.cookies['token']&&request.cookies['username']) {
         response.redirect('/users');
@@ -12,7 +11,6 @@ router.get('/', function (request, response, next) {
     }
 });
 
-/* Login user */
 router.post('/',auth.checkLogin, function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
@@ -21,6 +19,8 @@ router.post('/',auth.checkLogin, function (request, response, next) {
         response.render('login', {error: request.error});
     }
 });
+
+
 
 
 
