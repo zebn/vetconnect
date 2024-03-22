@@ -23,7 +23,7 @@ var checkLogin = (request, response, next) => {
                 db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE username = ?", [token, token, results[0].username], function (error, results, fields) {
                     if (error) throw error;
                 });
-                if (request.body.rememberme) {                    
+                if (request.body.rememberme) {
                     response.cookie('token', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
                 }
                 next();
@@ -46,16 +46,16 @@ var checkLogin = (request, response, next) => {
 
 var checkAuthToken = (request, response, next) => {
     console.log(request.session);
-    if (request.cookies['username']&&request.cookies['token']) {
-        request.session.username=request.cookies['username'];
-        request.session.token=request.cookies['token'];
-        request.session.loggedin=true;
+    if (request.cookies['username'] && request.cookies['token']) {
+        request.session.username = request.cookies['username'];
+        request.session.token = request.cookies['token'];
+        request.session.loggedin = true;
     }
-    if (!request.session.username||!request.session.loggedin) {
+    if (!request.session.username || !request.session.loggedin) {
         response.redirect('/login');
     }
     else {
-        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.session.username,request.session.token], function (error, results, fields) {
+        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.session.username, request.session.token], function (error, results, fields) {
             if (error) throw error;
             if (results.length > 0) {
                 console.log(`${results[0].Email} with id ${results[0].idUser} entered in with role ${results[0].nameRole}`);
@@ -63,7 +63,7 @@ var checkAuthToken = (request, response, next) => {
                 request.session.username = results[0].username;
                 request.session.userId = results[0].idUser;
                 request.session.role = results[0].nameRole;
-                request.cookies['username']=request.session.username;
+                request.cookies['username'] = request.session.username;
                 next();
             }
             else {
@@ -74,8 +74,21 @@ var checkAuthToken = (request, response, next) => {
     }
 };
 
+
+var signUp = (request, response, next) => {
+    if (err) { return next(err); }
+    db.connection.query('INSERT INTO user (username, password) VALUES (?, ?, ?)', [request.body.username,request.body.password], function (err, results, fields) {
+        if (err) { return next(err); }
+        request.login(user, function (err) {
+            if (err) { return next(err); }
+            response.redirect('/');
+        });
+    });
+};
+
 module.exports = {
     checkLogin,
-    checkAuthToken
+    checkAuthToken,
+    signUp
 };
 
