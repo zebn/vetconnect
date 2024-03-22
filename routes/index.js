@@ -1,13 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../controller/authController');
 
 router.get('/', function(request, response, next) {
-  if (!request.user){
+  if (!request.cookies['username']){
     username=null;
   }  
   else{
-    username=request.user.username
+    username=request.cookies['username']
   }
   console.log("test"+username);
   response.render('index', { username: username});

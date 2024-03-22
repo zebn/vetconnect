@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../controller/authController');
+var auth = require('../authenticate/auth');
 
-router.get('/', function (request, response, next) {
+router.get('/login', function (request, response, next) {
     if (request.cookies['token']&&request.cookies['username']) {
         response.redirect('/users');
     }
@@ -11,7 +11,8 @@ router.get('/', function (request, response, next) {
     }
 });
 
-router.post('/',auth.checkLogin, function (request, response, next) {
+
+router.post('/login',auth.checkLogin, function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
     }
@@ -19,6 +20,16 @@ router.post('/',auth.checkLogin, function (request, response, next) {
         response.render('login', {error: request.error});
     }
 });
+
+
+router.get('/logout', function (request, response, next) {
+    response.clearCookie('token');
+    response.clearCookie('username');
+    request.session.destroy((err) => {
+        response.redirect('/');
+      })
+});
+
 
 
 

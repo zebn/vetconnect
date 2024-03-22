@@ -2,8 +2,8 @@ const socketIo = require('socket.io')
 const db = require('../model/db');
 
 var checkLogin = (request, response, next) => {
-    let username = request.body.username
-    let password = request.body.password
+    let username = request.body.username;
+    let password = request.body.password;
     // Ensure the input fields exists and are not empty
     if (username && password) {
         // Execute SQL query that'll select the account from the database based on the specified username and password
@@ -13,29 +13,31 @@ var checkLogin = (request, response, next) => {
             // If the account exists
             if (results.length > 0) {
                 // Authenticate the user
-                console.log(`${results[0].Email} logged in with role ${results[0].nameRole}`);
+                console.log(`${results[0].username} logged in with role ${results[0].nameRole}`);
                 request.session.loggedin = true;
-                request.session.username = username;
+                request.session.username = results[0].username;
                 request.session.role = results[0].nameRole;
                 token = require('crypto').randomBytes(32).toString('hex');
                 request.session.token = token;
-                response.cookie('username', username, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-                response.cookie('token', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-                db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE username = ?", [token, token, username], function (error, results, fields) {
+                response.cookie('username', results[0].username, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+                db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE username = ?", [token, token, results[0].username], function (error, results, fields) {
                     if (error) throw error;
                 });
+                if (request.body.rememberme) {                    
+                    response.cookie('token', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+                }
                 next();
                 return true
             } else {
                 request.session.loggedin = false;
-                request.error = "Wrong username or password";
+                request.error = "Contrasena incorrecta";
                 next();
                 return false
             }
         });
     } else {
         request.session.loggedin = false;
-        request.error = "Field Empty";
+        request.error = "Campo obligatorio";
         next();
         return false
     }
@@ -43,34 +45,34 @@ var checkLogin = (request, response, next) => {
 
 
 var checkAuthToken = (request, response, next) => {
-
-    if (!request.cookies['username']||!request.cookies['token']) {
-        // response.status(403).send('Not logged in');
+    console.log(request.session);
+    if (request.cookies['username']&&request.cookies['token']) {
+        request.session.username=request.cookies['username'];
+        request.session.token=request.cookies['token'];
+        request.session.loggedin=true;
+    }
+    if (!request.session.username||!request.session.loggedin) {
         response.redirect('/login');
     }
     else {
-        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.cookies['username'], request.cookies['token']], function (error, results, fields) {
+        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.session.username,request.session.token], function (error, results, fields) {
             if (error) throw error;
-            // If the account exists
             if (results.length > 0) {
                 console.log(`${results[0].Email} with id ${results[0].idUser} entered in with role ${results[0].nameRole}`);
                 request.session.loggedin = true;
-                request.session.username = results[0].Email;
+                request.session.username = results[0].username;
                 request.session.userId = results[0].idUser;
-                request.session.token = request.cookies['token'];
                 request.session.role = results[0].nameRole;
-                // Access is granted, proceed to the next middleware or route handler
+                request.cookies['username']=request.session.username;
                 next();
             }
             else {
-                // response.status(403).send('Access denied.');
                 response.redirect('/login');
                 return;
             }
         });
     }
 };
-
 
 module.exports = {
     checkLogin,

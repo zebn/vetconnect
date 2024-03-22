@@ -1,11 +1,14 @@
 extends layout
 block content
     h1 Sign in
-    form(action='/login/password' method='post')
+    form(action='/login' method='post')
         section
             label(for='username') Username
             input#username(name='username' type='text' autocomplete='username' required='' autofocus='')
         section
             label(for='current-password') Password
             input#current-password(name='password' type='password' autocomplete='current-password' required='')
+        section
+            label(for='rememberme') Remember me
+            input#rememberme(name='rememberme'  type='checkbox' value="yes")
         button(type='submit') Sign in

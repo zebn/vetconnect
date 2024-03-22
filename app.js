@@ -4,14 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require("express-session");
-var passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// var loginRouter = require('./routes/login');
+var loginRouter = require('./routes/login');
 var chatRouter = require('./routes/chat');
 var adminRouter = require('./routes/admin');
-var authRouter = require('./routes/auth');
 
 
 
@@ -33,13 +31,11 @@ app.use(session({
   saveUninitialized: false,
   // store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
 }));
-app.use(passport.authenticate('session'));
 
 app.use('/', indexRouter);
-app.use('/', authRouter);
+app.use('/', loginRouter);
 app.use('/users', usersRouter);
 app.use('/chat', chatRouter);
-// app.use('/login', loginRouter);
 app.use('/admin', adminRouter);
 
 

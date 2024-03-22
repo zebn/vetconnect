@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var auth = require('../controller/authController');
+var auth = require('../authenticate/auth');
 
 /* GET users listing. */
-router.get('/', auth.checkLogin, function(req, res, next) {
+router.get('/', auth.checkAuthToken, function(req, res, next) {
   res.send('respond with a resource');
 });
 
