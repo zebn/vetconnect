@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var auth = require('../controller/authController');
 
-/* GET home page. */
 router.get('/', function(request, response, next) {
   if (!request.user){
     username=null;

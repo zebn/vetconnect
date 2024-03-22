@@ -4,7 +4,7 @@ var auth = require('../controller/authController');
 const message = require('../controller/message');
 
 /* GET users listing. */
-router.get('/', auth.checkLogin, async function (request, response, next) {
+router.get('/', auth.checkAuthToken, async function (request, response, next) {
   const chats = await message.getAllChatsForUser(request.session.userId)
   const chatsWithoutDoctor = await message.getAllChatsWithoutDoctor(request.params.roomId)
   console.log(request.user);

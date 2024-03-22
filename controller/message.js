@@ -29,9 +29,9 @@ class Message {
         });
     }
 
-    async getAllChatsWithoutDoctor(idUser){
+    async getAllChatsWithoutDoctor(){
         return new Promise((resolve, reject) => {
-            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where idUser = ? AND c.isNeedDoctor = 1 AND c.isFinished = 0', [idUser], function (error, results, fields) {
+            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', function (error, results, fields) {
                 if (error) {reject(err)};
                 resolve(results)
             });
