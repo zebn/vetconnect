@@ -11,6 +11,16 @@ router.get('/login', function (request, response, next) {
     }
 });
 
+router.get('/signup', function (request, response, next) {
+    if (request.cookies['token']&&request.cookies['username']) {
+        response.redirect('/users');
+    }
+    else {
+        response.render('signup', {error: false});
+    }
+});
+
+
 
 router.post('/login',auth.checkLogin, function (request, response, next) {
     if (request.session.loggedin) {
