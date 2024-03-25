@@ -1,15 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var auth = require('../authenticate/auth');
 
 router.get('/', function(request, response, next) {
-  if (!request.cookies['username']){
+  if (!request.cookies['username']||!request.cookies['role']){
     username=null;
+    role=null;
   }  
   else{
-    username=request.cookies['username']
+    username=request.cookies['username'];
+    role=request.cookies['role'];
   }
-  console.log("test"+username);
-  response.render('index', { username: username});
+  response.render('index', { username: username, role:role});
 });
 
 

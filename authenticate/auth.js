@@ -20,6 +20,7 @@ var checkLogin = (request, response, next) => {
                 token = require('crypto').randomBytes(32).toString('hex');
                 request.session.token = token;
                 response.cookie('username', results[0].username, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+                response.cookie('role', results[0].nameRole, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
                 db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE username = ?", [token, token, results[0].username], function (error, results, fields) {
                     if (error) throw error;
                 });
@@ -45,44 +46,60 @@ var checkLogin = (request, response, next) => {
 
 
 var checkAuthToken = (request, response, next) => {
-    console.log(request.session);
     if (request.cookies['username'] && request.cookies['token']) {
-        request.session.username = request.cookies['username'];
-        request.session.token = request.cookies['token'];
-        request.session.loggedin = true;
-    }
-    if (!request.session.username || !request.session.loggedin) {
-        response.redirect('/login');
-    }
-    else {
-        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.session.username, request.session.token], function (error, results, fields) {
+        db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.cookies['username'], request.cookies['token']], function (error, results, fields) {
             if (error) throw error;
             if (results.length > 0) {
-                console.log(`${results[0].Email} with id ${results[0].idUser} entered in with role ${results[0].nameRole}`);
+                console.log(`${results[0].username} with id ${results[0].idUser} entered in with role ${results[0].nameRole}`);
                 request.session.loggedin = true;
                 request.session.username = results[0].username;
                 request.session.userId = results[0].idUser;
                 request.session.role = results[0].nameRole;
-                request.cookies['username'] = request.session.username;
                 next();
+                return true
             }
             else {
                 response.redirect('/login');
-                return;
+                next();
+                return false
             }
         });
+    } else {
+        if (!request.session.username || !request.session.loggedin) {
+            response.redirect('/login');
+            next();
+            return false
+        }
+        else {
+            db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.username = ? AND u.AuthToken = ?', [request.session.username, request.session.token], function (error, results, fields) {
+                if (error) throw error;
+                if (results.length > 0) {
+                    console.log(`${results[0].username} with id ${results[0].idUser} entered in with role ${results[0].nameRole}`);
+                    request.session.loggedin = true;
+                    request.session.username = results[0].username;
+                    request.session.userId = results[0].idUser;
+                    request.session.role = results[0].nameRole;
+                    next();
+                }
+                else {                    
+                    response.redirect('/login');
+                    next();
+                    return true;
+                }
+            });
+        }
     }
+
 };
 
 
 var signUp = (request, response, next) => {
     if (err) { return next(err); }
-    db.connection.query('INSERT INTO user (username, password) VALUES (?, ?, ?)', [request.body.username,request.body.password], function (err, results, fields) {
+    db.connection.query('INSERT INTO user (username, password) VALUES (?, ?, ?)', [request.body.username, request.body.password], function (err, results, fields) {
         if (err) { return next(err); }
-        request.login(user, function (err) {
-            if (err) { return next(err); }
-            response.redirect('/');
-        });
+        // checkLogin(request, response, function (err) {
+        //     if (err) { return next(err); }
+        // });
     });
 };
 
