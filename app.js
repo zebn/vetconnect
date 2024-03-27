@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var chatRouter = require('./routes/chat');
 var adminRouter = require('./routes/admin');
+var contactRouter = require('./routes/contact');
 
 
 
@@ -37,6 +38,8 @@ app.use('/', loginRouter);
 app.use('/users', usersRouter);
 app.use('/chat', chatRouter);
 app.use('/admin', adminRouter);
+app.use('/contact', contactRouter);
+
 
 
 // catch 404 and forward to error handler

@@ -44,8 +44,11 @@ router.get('/', auth.checkAuthToken, function(request, response, next) {
     [ "Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675" ]
 ];
 
-
+if (request.session.role=="ROLE_ADMIN")
   response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId,data:data});
+else {
+  response.render('error', { username: request.session.username, role: request.session.role, userId: request.session.userId,error:{status:"403 Forbidden",stack:""}});
+}
 });
 
 
