@@ -27,8 +27,8 @@ class SocketController {
             };
 
             socket.on('chat message', (data) => {
-                db.connection.query("INSERT INTO message (textMessage,idChat,idUser) VALUES (?);"
-                    , [[data.message, data.roomId, data.userId]], function (error, results, fields) {
+                db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage) VALUES (?);"
+                    , [[data.message, data.roomId, data.userId, new Date()]], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
                         io.to(data.roomId).emit('chat message', data);
