@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    .container
+        .sidenav
+            a(href='#') Usuarios
+            a(href='#') Consultas
+            a(href='#') Mensajes
+            a(href='#') Etc
+        .main
+            table#example.table.table-striped(style='width:100%')
+        script(src='https://cdn.datatables.net/2.0.3/js/dataTables.js')
+        script(type='text/javascript').
+            $(document).ready(function() {
+                $('#example').DataTable( {
+                    data: !{JSON.stringify(data)},
+                    columns: [
+                        { title: "Name" },
+                        { title: "Position" },
+                        { title: "Office" },
+                        { title: "Extn." },
+                        { title: "Start date" },
+                        { title: "Salary" }
+                    ]
+                } );
+            } );

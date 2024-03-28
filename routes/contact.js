@@ -11,7 +11,7 @@ router.get('/', function(request, response, next) {
     username=request.cookies['username'];
     role=request.cookies['role'];
   }
-  response.render('index', { username: username, role:role});
+  response.render('contact', { username: username, role:role});
 });
 
 

@@ -3,7 +3,7 @@ var router = express.Router();
 var auth = require('../authenticate/auth');
 
 router.get('/login', function (request, response, next) {
-    if (request.cookies['token']&&request.cookies['username']) {
+    if (request.session.loggedin) {
         response.redirect('/users');
     }
     else {
