@@ -5,52 +5,67 @@ body {
 }
 
 #form {
-  background: rgba(0, 0, 0, 0.15);
-  padding: 0.25rem;
-  position: sticky;
+  background-color: #f5f5f5; /* Color de fondo del formulario de chat */
+  padding: 0px;
+   position: sticky; 
+  align-self: flex-end;
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
-  height: 3rem;
-  box-sizing: border-box;
-  backdrop-filter: blur(10px);
 }
 
 #input {
-  border: none;
-  padding: 0 1rem;
   flex-grow: 1;
-  border-radius: 2rem;
-  margin: 0.25rem;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  outline: none;
+
 }
 
 #input:focus {
   outline: none;
 }
 
-#form>button {
-  background: #333;
+#form > button {
+  background-color: #007bff; /* Color de fondo del botón de enviar */
+  color: #ffffff; /* Color del texto del botón de enviar */
   border: none;
-  padding: 0 1rem;
-  margin: 0.25rem;
-  border-radius: 3px;
-  outline: none;
-  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+#form > button:hover {
+  background-color: #0056b3; /* Cambia el color de fondo del botón al pasar el mouse */
 }
 
 #messages {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  overflow-y: scroll; /* Agrega una barra de desplazamiento vertical si hay muchos mensajes */
+  height: 300px; /* Limita la altura del chat para que no ocupe demasiado espacio */
 }
 
-#messages>li {
-  padding: 0.5rem 1rem;
+#messages > li {
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  max-width: 20%; /* Limita el ancho de los mensajes para que no se extiendan demasiado */
 }
 
-#messages>li:nth-child(odd) {
-  background: #efefef;
+#messages > li:nth-child(odd) {
+  background-color: #f0f0f0; /* Color de fondo para los mensajes del usuario */
+  margin-left: 0; /* Añade un margen a la izquierda para los mensajes del usuario */
+  margin-right: 22rem; /* Reinicia el margen a la derecha para los mensajes del usuario */
+}
+
+#messages > li:nth-child(even) {
+  background-color: #e6e6e6; /* Color de fondo para los mensajes del veterinario */
+  margin-left: 22rem; /* Reinicia el margen a la izquierda para los mensajes del veterinario */
+  margin-right: 0; /* Añade un margen a la derecha para los mensajes del veterinario */
 }
  /* The sidebar menu */
  .sidenav {
@@ -90,3 +105,18 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 } 
+
+.menu-container {
+  display: inline-block; /* Asegura que el contenedor del menú no ocupe toda la línea */
+  width: 20%; /* Define el ancho del contenedor del menú */
+  height: 100%; /* Ajusta la altura del contenedor al 100% del viewport */
+  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+  border-right: 1px solid #ccc; /* Agrega una línea vertical entre las dos partes */
+}
+
+.chat-container {
+  display: inline-block; /* Asegura que el contenedor del chat no ocupe toda la línea */
+  width: 80%; /* Define el ancho del contenedor del chat */
+  height: 100%; /* Ajusta la altura del contenedor al 100% del viewport */
+  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+}
