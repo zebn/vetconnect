@@ -2,7 +2,7 @@ extends layout
 block content
     ul#messages 
         each message in messages
-            li= message.Email+': ' + message.textMessage
+            li= message.username+': ' + message.textMessage
     form#form(action='')
         input#input(autocomplete='off')
         button Send

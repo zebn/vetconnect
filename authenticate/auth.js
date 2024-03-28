@@ -2,6 +2,7 @@ const socketIo = require('socket.io')
 const db = require('../model/db');
 
 var checkLogin = (request, response, next) => {
+    console.log(request.body);
     let username = request.body.username;
     let password = request.body.password;
     // Ensure the input fields exists and are not empty
@@ -59,14 +60,12 @@ var checkAuthToken = (request, response, next) => {
                 return true
             }
             else {
-                response.redirect('/login');
                 next();
                 return false
             }
         });
     } else {
         if (!request.session.username || !request.session.loggedin) {
-            response.redirect('/login');
             next();
             return false
         }
@@ -82,7 +81,6 @@ var checkAuthToken = (request, response, next) => {
                     next();
                 }
                 else {                    
-                    response.redirect('/login');
                     next();
                     return true;
                 }
