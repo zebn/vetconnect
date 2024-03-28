@@ -13,7 +13,8 @@ class Message {
 
     async getAllMessages(idChat){
         return new Promise((resolve, reject) => {
-            db.connection.query('select * from message m inner join user u on m.idUser = u.idUser where idChat = ?', [idChat], function (error, results, fields) {
+            db.connection.query('select m.idMessage, m.dateMessage, m.textMessage, m.binaryMessage, m.idChat, m.idUser, u.username, r.nameRole from message m inner join user u on m.idUser = u.idUser left join  role r on r.idRole = u.idRole where idChat = ?', [idChat], function (error, results, fields) {
+                console.log(results);
                 if (error) {reject(err)};
                 resolve(results)
             });
