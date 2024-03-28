@@ -1,46 +1,59 @@
 extends layout
 block content
-    .menu-container
-    #chatcontainer.chat-container
-        ul#messages 
-            each message in messages
-                li= message.username+': ' + message.textMessage
-        form#form(action='')
-            input#input(autocomplete='off')
-            button Send
-                script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
-                script.
-                    document.body.getElementById("chatcontainer").scrollHeight
-                    const socket = io().connect();
-                    const form = document.getElementById('form');
-                    const input = document.getElementById('input');
-                    const messages = document.getElementById('messages');
-                    let roomId = '#{roomId}';
-                    //- console.log(!{username});
-                    let username = '#{username}';
-                    let userId = '#{userId}';
-                    let role = '#{role}';
-                    dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
-                    console.log(`Connecting socket...`);
-                    if (socket && roomId && userId) {
-                        socket.emit('join', dataConnection);
-                    }
-                    form.addEventListener('submit', (e) => {
-                        e.preventDefault();
-                        if (input.value) {
-                            let data= {
-                                message:input.value,
-                                roomId:roomId,
-                                username:username,
-                                userId:userId
-                            }
-                            socket.emit('chat message', data);
-                            input.value = '';
-                        }
-                    });
-                    socket.on('chat message', (data) => {
-                        const item = document.createElement('li');
-                        item.textContent = data.username+': '+data.message;
-                        messages.appendChild(item);
-                        window.scrollTo(0, document.body.getElementById("chatcontainer").scrollHeight);
-                    });
+    .container-fluid
+        .row
+            .col-lg-3.border-end
+            .col-lg-9
+                ul#messages 
+                    each message in messages
+                        if (message.nameRole=="ROLE_ADMIN")
+                            li.adminmessage= message.username+': ' + message.textMessage
+                        if (message.nameRole=="ROLE_USER")
+                            li.usermessage= message.username+': ' + message.textMessage
+                form#form.form-inline(action='')
+                    .input-group
+                        input#input.form-control(type='text' autocomplete='off')
+                        button.btn.btn-primary(type='submit') Enviar
+                            script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
+                            script.
+                                var messagesContainer = document.getElementById("messages");
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                const socket = io().connect();
+                                const form = document.getElementById('form');
+                                const input = document.getElementById('input');
+                                const messages = document.getElementById('messages');
+                                let roomId = '#{roomId}';
+                                //- console.log(!{username});
+                                let username = '#{username}';
+                                let userId = '#{userId}';
+                                let role = '#{role}';
+                                dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
+                                console.log(`Connecting socket...`);
+                                if (socket && roomId && userId) {
+                                    socket.emit('join', dataConnection);
+                                }
+                                form.addEventListener('submit', (e) => {
+                                    e.preventDefault();
+                                    if (input.value) {
+                                        let data= {
+                                            message:input.value,
+                                            roomId:roomId,
+                                            username:username,
+                                            userId:userId,
+                                            nameRole:role
+                                        }
+                                        socket.emit('chat message', data);
+                                        input.value = '';
+                                    }
+                                });
+                                socket.on('chat message', (data) => {
+                                    const item = document.createElement('li');
+                                    item.textContent = data.username+': '+data.message;
+                                    if (data.nameRole=="ROLE_ADMIN")
+                                    item.classList.add('adminmessage');
+                                    if (data.nameRole=="ROLE_USER")
+                                    item.classList.add('usermessage');
+                                    messages.appendChild(item);
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                    //- window.scrollTo(0, document.getElementById("messages").scrollHeight);
+                                });

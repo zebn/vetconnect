@@ -14,29 +14,6 @@ body {
   right: 0;
 }
 
-#input {
-  flex-grow: 1;
-  border-radius: 20px;
-  padding: 10px;
-  border: none;
-  outline: none;
-
-}
-
-#input:focus {
-  outline: none;
-}
-
-#form > button {
-  background-color: #007bff; /* Color de fondo del botón de enviar */
-  color: #ffffff; /* Color del texto del botón de enviar */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
 #form > button:hover {
   background-color: #0056b3; /* Cambia el color de fondo del botón al pasar el mouse */
 }
@@ -56,14 +33,14 @@ body {
   max-width: 20%; /* Limita el ancho de los mensajes para que no se extiendan demasiado */
 }
 
-#messages > li:nth-child(odd) {
-  background-color: #f0f0f0; /* Color de fondo para los mensajes del usuario */
+.adminmessage {
+  background-color: #0059ff; /* Color de fondo para los mensajes del usuario */
   margin-left: 0; /* Añade un margen a la izquierda para los mensajes del usuario */
   margin-right: 22rem; /* Reinicia el margen a la derecha para los mensajes del usuario */
 }
 
-#messages > li:nth-child(even) {
-  background-color: #e6e6e6; /* Color de fondo para los mensajes del veterinario */
+.usermessage {
+  background-color: #ff0000; /* Color de fondo para los mensajes del veterinario */
   margin-left: 22rem; /* Reinicia el margen a la izquierda para los mensajes del veterinario */
   margin-right: 0; /* Añade un margen a la derecha para los mensajes del veterinario */
 }
@@ -106,17 +83,3 @@ body {
   .sidenav a {font-size: 18px;}
 } 
 
-.menu-container {
-  display: inline-block; /* Asegura que el contenedor del menú no ocupe toda la línea */
-  width: 20%; /* Define el ancho del contenedor del menú */
-  height: 100%; /* Ajusta la altura del contenedor al 100% del viewport */
-  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
-  border-right: 1px solid #ccc; /* Agrega una línea vertical entre las dos partes */
-}
-
-.chat-container {
-  display: inline-block; /* Asegura que el contenedor del chat no ocupe toda la línea */
-  width: 80%; /* Define el ancho del contenedor del chat */
-  height: 100%; /* Ajusta la altura del contenedor al 100% del viewport */
-  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
-}
