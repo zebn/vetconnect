@@ -1,19 +1,29 @@
 extends layout
 
 block content
-        .row.mt-5.d-flex.justify-content-between.mx-3
-            .col-lg-4.d-none.d-lg-block
-               img.img-fluid(src='img/vetconnect2.jpg' alt='Gato encima de tableta' style=' width: auto; height: auto;  border-radius: 0 50% 50% 0' )
-            .col-lg-4.mt-lg-5.mb-lg-0.my-5
-                h1.mb-4 Bienvenidos a VETCONNECT
-                p.fs-4.text-start
-                    | En nuestro sitio, ofrecemos consultas veterinarias a través de un práctico chat en línea. Aquí, encontrarás soluciones confiables y accesibles para todas tus necesidades veterinarias, con la comodidad de acceder a asesoramiento profesional sin salir de casa. Nuestro equipo de expertos está dedicado a brindarte el mejor cuidado y orientación para tus queridas mascotas en tiempo real.
-                p.fs-4.text-start.mb-5
-                    | ¡Comienza a cuidar de tus amigos peludos hoy mismo a través de nuestro servicio de chat veterinario!
-                p.text-center 
-                    a.btn.btn-primary.px-4.py-2(href='/signup' role='button') SOY PACIENTE
-                p.text-center
-                    a.btn.btn-primary.px-4.py-2(href='/contact' role='button') SOY DOCTOR
-            .col-lg-4.d-none.d-lg-block
-                img.img-fluid(src='img/vetconnect1.jpg' alt='Perro encima de ordenador' style=' width: auto; height: auto;   border-radius: 50% 0 0 50%')
+    div.container
+      .row.justify-content-center
+        .col-md-6
+            h1.my-5 Formulario de Contacto para Veterinarios
+            form(action='/contact' method='post')
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='username') *Email: 
+                    .col-sm-8
+                        input#username.form-control(type='email' name='username' maxlength="45" required)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='tel-number') *Teléfono:
+                    .col-sm-8
+                        input#tel-number.form-control(type='tel' name='tel-number' required)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='info') Información adicional: 
+                    .col-sm-8
+                        textarea#info.form-control(rows='3' maxlength="255")
+                .mb-5.row.align-items-center
+                    label.form-label.col-sm-4(for='cv') Añadir CV: 
+                    .col-sm-8
+                        input(name='cv' type='file' accept='application/pdf')
+                .mb-3.row.align-items-center
+                    .col-sm-8.offset-sm-4
+                        button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
+    span.float-end.me-5 Los campos con (*) son obligatorios.
             
