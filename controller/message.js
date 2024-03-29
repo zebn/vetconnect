@@ -16,7 +16,6 @@ class Message {
             db.connection.query('select m.idMessage, m.dateMessage, m.textMessage, m.binaryMessage, m.idChat, m.idUser, u.username, r.nameRole from message m inner join user u on m.idUser = u.idUser left join  role r on r.idRole = u.idRole where idChat = ? ORDER BY m.dateMessage;', [idChat], function (error, results, fields) {
                 if (error) {reject(error)};                
                 results.forEach(element => {
-                    console.log(element.dateMessage);
                     element.dateMessage=(new Date(Date.parse(element.dateMessage))).toUTCString();
                 });
                 resolve(results)
