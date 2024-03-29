@@ -6,14 +6,17 @@ const message = require('../controller/message');
 router.get('/:roomId', auth.checkAuthToken, async function (request, response, next) {
   const messages = await message.getAllMessages(request.params.roomId);
   const users = await message.getUsersForChat(request.params.roomId);
+  const chats = await message.getAllChatsForUser(request.session.userId);
   console.log(messages);
-  response.render('chat', { 
-    username: request.session.username, 
-    roomId: request.params.roomId, 
-    role:request.session.role, 
+  response.render('chat', {
+    username: request.session.username,
+    roomId: request.params.roomId,
+    role: request.session.role,
     userId: request.session.userId,
-    messages:messages,
-    users:users});
+    messages: messages,
+    users: users,
+    chats: chats
+  });
 });
 
 // router.get('/create/:roomId',auth.checkAuthToken, function (request, response, next) {
