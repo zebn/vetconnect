@@ -31,6 +31,7 @@ class SocketController {
                     , [[data.message, data.roomId, data.userId, new Date()]], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
+                        data.dateMessage=new Date();
                         io.to(data.roomId).emit('chat message', data);
                     });
             });

@@ -60,13 +60,13 @@ var checkAuthToken = (request, response, next) => {
                 return true
             }
             else {
-                next();
+                response.redirect("/login");
                 return false
             }
         });
     } else {
         if (!request.session.username || !request.session.loggedin) {
-            next();
+            response.redirect("/login");
             return false
         }
         else {
@@ -81,7 +81,7 @@ var checkAuthToken = (request, response, next) => {
                     next();
                 }
                 else {                    
-                    next();
+                    response.redirect("/login");
                     return true;
                 }
             });

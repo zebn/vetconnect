@@ -14,8 +14,7 @@ class Message {
     async getAllMessages(idChat){
         return new Promise((resolve, reject) => {
             db.connection.query('select m.idMessage, m.dateMessage, m.textMessage, m.binaryMessage, m.idChat, m.idUser, u.username, r.nameRole from message m inner join user u on m.idUser = u.idUser left join  role r on r.idRole = u.idRole where idChat = ? ORDER BY m.dateMessage;', [idChat], function (error, results, fields) {
-                console.log(results);
-                if (error) {reject(err)};
+                if (error) {reject(error)};
                 resolve(results)
             });
         });
@@ -23,8 +22,17 @@ class Message {
 
     async getAllChatsForUser(idUser){
         return new Promise((resolve, reject) => {
-            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where idUser = ? AND isFinished = 0', [idUser], function (error, results, fields) {
-                if (error) {reject(err)};
+            db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where idUser = ? AND c.isFinished = 0', [idUser], function (error, results, fields) {
+                if (error) {reject(error)};
+                resolve(results)
+            });
+        });
+    }
+
+    async getUsersForChat(idChat){
+        return new Promise((resolve, reject) => {
+            db.connection.query('select * from chatuser cu inner join user u on cu.idUser = u.idUser left join role r on r.idRole = u.idRole where cu.idChat = ?', [idChat], function (error, results, fields) {
+                if (error) {reject(error)};
                 resolve(results)
             });
         });
@@ -33,7 +41,7 @@ class Message {
     async getAllChatsWithoutDoctor(){
         return new Promise((resolve, reject) => {
             db.connection.query('select * from chatuser cu inner join chat c on cu.idChat = c.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', function (error, results, fields) {
-                if (error) {reject(err)};
+                if (error) {reject(error)};
                 resolve(results)
             });
         });
