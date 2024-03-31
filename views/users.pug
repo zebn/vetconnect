@@ -1,21 +1,87 @@
 extends layout
 block content
-    div.text-center
-        p Hola #{username}!
+    .container-fluid
+    .row
+        nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
+         .position-sticky.pt-3
+            ul.nav.flex-column.text-primary.mb-2
+                li.nav-item
+                    h5.ms-3.fw-bold Hola #{username}!
+                li.nav-item
+                    p.ms-3 Orders
+                li.nav-item
+                    p.ms-3 Products
+                li.nav-item
+                    p.ms-3 Customers
+                li.nav-item
+                    p.ms-3 Reports
+                li.nav-item
+                     p.ms-3 Integrations
+            h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                span Mascota
+            ul.nav.flex-column.text-primary.mb-2
+                li.nav-item
+                    p.ms-3 Orders
+                li.nav-item
+                    p.ms-3 Products
+                li.nav-item
+                    p.ms-3 Customers
+                li.nav-item
+                    p.ms-3 Reports
+                li.nav-item
+                     p.ms-3 Integrations
+        main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
+            .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+                h1.h2 Mis consultas
+                .btn-toolbar.mb-2.mb-md-0
+                    .btn-group.me-2
+                        button.btn.btn-sm.btn-outline-secondary(type='button') Share
+                        button.btn.btn-sm.btn-outline-secondary(type='button') Export
+                    button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
+                        span(data-feather='calendar')
+                         |             This week
             if (chats.length==0&&role=="ROLE_USER")
-                button(type='button', onclick='createRoom()')#createButton Crear nueva consulta
-            br
-            ul#chats Mis consultas 
-                each chat in chats
-                    li
-                        a(href="/chat/"+chat.idChat)
-                            button(type="button") Unir consulta #{chat.nameChat}
-            if chatsWithoutDoctor.length>0
-                ul#chats Consultas pendientes sin doctor
+                button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
+            if (chats.length>0)                
+                .row
+                    each chat in chats
+                        .col-lg-3.mt-3
+                            .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                .card-header #{chat.nameChat}
+                                .card-body
+                                    h5.card-title Light card title
+                                    p.card-text
+                                    | Some quick example text to build on the card title and make up the bulk of the card's content.
+                                    a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
+            if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
+                h2 Consultas sin doctor
+                .row
                     each chatWithoutDoctor in chatsWithoutDoctor
-                        li
-                            a(href="/chat/"+chatWithoutDoctor.idChat)
-                                button(type="button") Unir consulta #{chatWithoutDoctor.nameChat}
+                        .col-lg-3.mt-3
+                            .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                .card-header #{chatWithoutDoctor.nameChat}
+                                .card-body
+                                    h5.card-title Light card title
+                                    p.card-text
+                                    | Some quick example text to build on the card title and make up the bulk of the card's content.
+                                    a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
+
+    //- div.text-center
+    //-     p Hola #{username}!
+    //-         if (chats.length==0&&role=="ROLE_USER")
+    //-             button(type='button', onclick='createRoom()')#createButton Crear nueva consulta
+    //-         br
+    //-         ul#chats Mis consultas 
+    //-             each chat in chats
+    //-                 li
+    //-                     a(href="/chat/"+chat.idChat)
+    //-                         button(type="button") Unir consulta #{chat.nameChat}
+    //-         if chatsWithoutDoctor.length>0
+    //-             ul#chats Consultas pendientes sin doctor
+    //-                 each chatWithoutDoctor in chatsWithoutDoctor
+    //-                     li
+    //-                         a(href="/chat/"+chatWithoutDoctor.idChat)
+    //-                             button(type="button") Unir consulta #{chatWithoutDoctor.nameChat}
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         console.log(#{roomId});
@@ -30,14 +96,39 @@ block content
         socket.emit('create', dataConnection, (response) => {
         document.getElementById("createButton").remove();
         console.log(response.roomName);
-        const button = document.createElement('button');
-        button.textContent= 'Unir consulta '+ response.roomName;
-        const a = document.createElement('a');
-        a.href="/chat/"+response.roomId;
-        a.appendChild(button);
-        const item = document.createElement('li');
-        item.appendChild(a)
-        chats.appendChild(item);
+        const main = document.getElementById("main");
+        // Create div element with class 'card text-dark bg-light mb-3'
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card text-dark bg-light mb-3';
+        cardDiv.style.maxWidth = '18rem';
+        // Create div element with class 'card-header' and set its text content
+        const cardHeader = document.createElement('div');
+        cardHeader.className = 'card-header';
+        cardHeader.textContent = response.roomName;
+        // Create div element with class 'card-body'
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.className = 'card-body';
+        // Create h5 element with class 'card-title' and set its text content
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = 'card-title';
+        cardTitle.textContent = 'Light card title';
+        // Create p element with class 'card-text' and set its text content
+        const cardText = document.createElement('p');
+        cardText.className = 'card-text';
+        cardText.textContent = "Some quick example text to build on the card title and make up the bulk of the card's content.";
+        // Create a element with class 'btn btn-primary' and set its attributes
+        const link = document.createElement('a');
+        link.href = "/chat/"+response.idChat;
+        link.className = 'btn btn-primary';
+        link.textContent = 'Unir consulta';
+        // Append all the created elements to the appropriate parent elements
+        cardDiv.appendChild(cardHeader);
+        cardDiv.appendChild(cardBodyDiv);
+        cardBodyDiv.appendChild(cardTitle);
+        cardBodyDiv.appendChild(cardText);
+        cardBodyDiv.appendChild(link);
+        // Append the cardDiv to the document body or any other desired parent element
+        main.appendChild(cardDiv);
         }); 
         }
 
