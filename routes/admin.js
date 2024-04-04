@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var auth = require('../authenticate/auth');
 var user = require('../controller/user');
+var chat = require('../controller/chat');
 
 /* GET users listing. */
 router.get('/:dataId', auth.checkAuthToken, async function (request, response, next) {
@@ -10,34 +11,37 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
   var columns;
 
-  if (request.params.dataId = "users") {
+  var title;
+
+  if (request.params.dataId == "users") {
     data = JSON.parse(JSON.stringify(await user.getAllUsers()));
 
-    columns = [
-      { "data": "idUser" },
-      { "data": "username" },
-      { "data": "nameRole" },
-      { "data": "username" },
-      { defaultContent: '<input type="button" class="btn btn-primary" value="Editar"/> <input type="button" class="btn btn-danger" value="Borrar"/>' }
-    ];
+    title="Usuarios"
+
+    columns = [  "idUser" ,  "username" ,   "nameRole" ,"isActive","edit" ];
+
+    data.forEach(element => {
+      element.edit=`<a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <a class="btn btn-danger" href="/admin/users/delete/${element.idUser}" role="button">Borrar</a>`;
+    });
   }
 
-  if (request.params.dataId = "chats") {
-    data = JSON.parse(JSON.stringify(await user.getAllUsers()));
+  if (request.params.dataId == "chats") {
 
-    columns = [
-      { "data": "idUser" },
-      { "data": "username" },
-      { "data": "nameRole" },
-      { "data": "username" },
-      { defaultContent: '<input type="button" class="btn btn-primary" value="Editar"/> <input type="button" class="btn btn-danger" value="Borrar"/>' }
-    ];
+    title="Consultas"
+
+    data = JSON.parse(JSON.stringify(await chat.getAllChats()));
+
+    columns = [  "idChat" ,  "nameChat" ,   "isFinished" ,"isNeedDoctor","edit"  ];
+    data.forEach(element => {
+      element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <a class="btn btn-danger" href="/admin/chats/delete/${element.idChat}" role="button">Borrar</a>`;
+    });
+  
   }
 
   console.log(data);
 
   if (request.session.role == "ROLE_ADMIN")
-    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns });
+    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,title:title });
   else {
     response.render('error', { username: request.session.username, role: request.session.role, userId: request.session.userId, error: { status: "403 Forbidden", stack: "" } });
   }
