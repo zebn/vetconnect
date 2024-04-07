@@ -4,8 +4,8 @@ var auth = require('../authenticate/auth');
 
 router.get('/', function(request, response, next) {
   if (!request.cookies['username']||!request.cookies['role']){
-    username=null;
-    role=null;
+    username=request.session.username;
+    role=request.session.role;
   }  
   else{
     username=request.cookies['username'];
@@ -14,5 +14,5 @@ router.get('/', function(request, response, next) {
   response.render('index', { username: username, role:role});
 });
 
-
 module.exports = router;
+
