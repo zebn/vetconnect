@@ -47,6 +47,17 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   }
 });
 
+router.get('/users/edit/:userId', async function(request, response, next) {  
+  var userInfo=await user.getUserInfo(request.params.userId);
+  var groups = await group.getAllGroups();
+  response.render('useredit', { username: response.locals.username, role:response.locals.role,userInfo:userInfo,gropus:groups});
+});
+
+router.post('/users/edit/:userId', async function(request, response, next) {  
+ await user.editUser(request.params.userId,request.body.role,request.body.group, request.body.level, request.body.name, request.body.surname, request.body.username, request.body.age, request.body.hand,  request.body.backhand);  
+ response.redirect('/admin/users/')
+});
+
 
 
 module.exports = router;

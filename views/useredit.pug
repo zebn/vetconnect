@@ -1,0 +1,63 @@
+extends layout
+block content
+    div.container
+      .row.justify-content-center
+        .col-md-6
+            h1.my-5.text-center Editar Usuario
+            form(action='/admin/users/edit/'+userInfo.user_id method='post')
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='id') ID: 
+                    .col-sm-8
+                        input#id.form-control(type='text' name='id' disabled value = userInfo.user_id)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='username') *Email:
+                    .col-sm-8
+                        input#username.form-control(type='email' name='username' maxlength="45" value = userInfo.email)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='name') *Nombre: 
+                    .col-sm-8
+                        input#name.form-control(type='text' name='name' maxlength="45" value = userInfo.name)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='surname') *Apellidos: 
+                    .col-sm-8
+                        input#surname.form-control(type='text' name='surname' maxlength="45" value = userInfo.surname) 
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='age') Fecha de nacimiento:
+                    .col-sm-8
+                        input#age.form-control(type='text' name='age' min='1899-01-01' max="2020-12-31" value = userInfo.age)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='role') Rol: 
+                    .col-sm-8
+                        select#role.form-select(name='role' aria-label='Elige una opción')                            
+                            option(value='', selected='') Elige una opción
+                            option(value='1', selected=userInfo.role_id == 1) Admin
+                            option(value='2', selected=userInfo.role_id == 2) Usuario
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='group') Grupo: 
+                    .col-sm-8
+                        select#group.form-select(name='group' aria-label='Elige una opción')
+                          option(selected='') Elige una opción
+                          option(value='1', selected=userInfo.group_id == 1) Veterano_1
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='level') Nivel: 
+                    .col-sm-8
+                        select#level.form-select(name='level' aria-label='Elige una opción')
+                          option(selected='') Elige una opción
+                          option(value='1', selected=userInfo.group_id == 1) Principiante
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='hand') Brazo hábil: 
+                    .col-sm-8
+                        select#hand.form-select(name='hand' aria-label='Elige una opción')
+                          option(selected='') Elige una opción
+                          option(value='Derecho', selected=userInfo.hand == "Derecho") Derecho
+                          option(value='Izquierdo', selected=userInfo.hand == "Izquierdo") Izquierdo
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='backhand') Revés: 
+                    .col-sm-8
+                        select#backhand.form-select(name='backhand' aria-label='Elige una opción')
+                          option(selected='') Elige una opción
+                          option(value='A dos manos', selected=userInfo.backhand == "A dos manos") A dos manos
+                          option(value='A una mano', selected=userInfo.backhand == "A una mano") A una mano
+                .mb-3.row.align-items-center
+                    .col-sm-8.offset-sm-4
+                        button.btn.btn-success.px-4.py-2.ms-5(type='submit') Enviar
