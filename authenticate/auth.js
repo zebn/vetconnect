@@ -60,15 +60,20 @@ var checkAuthToken = (request, response, next) => {
                 return true
             }
             else {
-                request.session.loggedin = false;
-                response.redirect("/login");
+                response.clearCookie("username");
+                response.clearCookie("role");
+                response.clearCookie("token");
+                request.session.destroy((err) => {
+                    response.redirect('/login');
+                  })          
                 return false
             }
         });
     } else {
         if (!request.session.username || !request.session.loggedin) {
-            request.session.loggedin = false;
-            response.redirect("/login");
+            request.session.destroy((err) => {
+                response.redirect('/login');
+              })          
             return false
         }
         else {
@@ -83,8 +88,9 @@ var checkAuthToken = (request, response, next) => {
                     next();
                 }
                 else {  
-                    request.session.loggedin = false;                  
-                    response.redirect("/login");
+                    request.session.destroy((err) => {
+                        response.redirect('/login');
+                      })              
                     return true;
                 }
             });

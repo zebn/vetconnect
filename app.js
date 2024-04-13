@@ -47,6 +47,27 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+app.use(function (req, res, next) {
+  var loggedin;
+  var username;
+  var userId;
+  var role;
+  if (req.cookies['username'] && req.cookies['role']) {
+    username = req.cookies['username'];
+    role = req.cookies['role'];
+  }
+  else {
+    if (req.session.username && req.session.role && req.session.loggedin) {
+      username = req.session.username;
+      role = req.session.role;
+      userId = req.session.userId;
+    }
+  }
+  res.locals = { loggedin: loggedin, username: username, userId: userId, role: role };
+  next();
+});
+
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

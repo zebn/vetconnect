@@ -1,37 +1,50 @@
 extends layout
 block content
-    .container-fluid
-    .row
-        nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
-         .position-sticky.pt-3
-            ul.nav.flex-column.text-primary.mb-2
-                li.nav-item
-                    h5.ms-3.fw-bold Hola #{username}!
-                li.nav-item
-                    p.ms-3 Orders
-                li.nav-item
-                    p.ms-3 Products
-                li.nav-item
-                    p.ms-3 Customers
-                li.nav-item
-                    p.ms-3 Reports
-                li.nav-item
-                     p.ms-3 Integrations
-            h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
-                span Mascota
-            ul.nav.flex-column.text-primary.mb-2
-                li.nav-item
-                    p.ms-3 Orders
-                li.nav-item
-                    p.ms-3 Products
-                li.nav-item
-                    p.ms-3 Customers
-                li.nav-item
-                    p.ms-3 Reports
-                li.nav-item
-                     p.ms-3 Integrations
-        main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
-            .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    .rounded.bg-white.mt-5.mb-5
+        .row
+            .col-md-2.border-right
+                .d-flex.flex-column.align-items-center.text-center.p-3.py-5
+                    img.rounded-circle.mt-5(width='150px' src='https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg')
+                    span.font-weight-bold #{userInfo.name}
+                    span.text-black-50 #{username}
+                    span  
+            .col-md-3.border-right.border-start.border-end
+                .p-3.py-5
+                    .d-flex.justify-content-between.align-items-center
+                        h4.text-right Información personal
+                .row
+                    .col-md-6
+                        label.labels Nombre
+                        input.form-control(type='text' placeholder='' value=userInfo.name disabled)
+                    .col-md-6
+                        label.labels Surname
+                        input.form-control(type='text' value=userInfo.surname placeholder='' disabled)
+                .row.mt-3
+                    .col-md-12
+                        label.labels Email
+                        input.form-control(type='text' value=username placeholder='' disabled)
+                    .col-md-12
+                        label.labels Fecha de nacimiento
+                        input.form-control(type='text' value=userInfo.age placeholder='' disabled)
+                    .col-md-12
+                .row.mt-3.border-bottom.pb-3
+                    .col-md-12
+                        .p-3.py-5
+                            h5.text-right Cambiar contraseña
+                    .col-md-12.mt-2
+                        form(action='/users', method='POST')
+                            .form-group
+                                label.labels(label-for='oldPassword') Contraseña actual
+                                input#oldPassword.form-control(type='password', name='oldPassword', required)
+                            .form-group.mt-3
+                                label.labels(label-for='newPassword') Nueva contraseña
+                                input#newPassword.form-control(type='password', name='newPassword', required)
+                            .form-group.mt-3
+                                label.labels(label-for='confirmPassword') Confirmar nueva contraseña
+                                input#confirmPassword.form-control(type='password', name='confirmPassword', required)
+                            .mt-3.text-center
+                                button.btn.btn-success.profile-button(type='submit') Cambiar contraseña       
+            .col-md-7
                 h1.h2 Mis consultas
                 .btn-toolbar.mb-2.mb-md-0
                     .btn-group.me-2
@@ -40,31 +53,68 @@ block content
                     button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
                         span(data-feather='calendar')
                          |             This week
-            if (chats.length==0&&role=="ROLE_USER")
-                button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
-            if (chats.length>0)                
-                .row
-                    each chat in chats
-                        .col-lg-3.mt-3
-                            .card.text-bg-light.mb-3(style='max-width: 18rem;')
-                                .card-header #{chat.nameChat}
-                                .card-body
-                                    h5.card-title Light card title
-                                    p.card-text
-                                    | Some quick example text to build on the card title and make up the bulk of the card's content.
-                                    a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
-            if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
-                h2 Consultas sin doctor
-                .row
-                    each chatWithoutDoctor in chatsWithoutDoctor
-                        .col-lg-3.mt-3
-                            .card.text-bg-light.mb-3(style='max-width: 18rem;')
-                                .card-header #{chatWithoutDoctor.nameChat}
-                                .card-body
-                                    h5.card-title Light card title
-                                    p.card-text
-                                    | Some quick example text to build on the card title and make up the bulk of the card's content.
-                                    a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
+                if (chats.length==0&&role=="ROLE_USER")
+                    button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
+                if (chats.length>0)                
+                    .row
+                        each chat in chats
+                            .col-lg-3.mt-3
+                                .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                    .card-header #{chat.nameChat}
+                                    .card-body
+                                        h5.card-title Light card title
+                                        p.card-text
+                                        | Some quick example text to build on the card title and make up the bulk of the card's content.
+                                        a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
+                if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
+                    h2 Consultas sin doctor
+                    .row
+                        each chatWithoutDoctor in chatsWithoutDoctor
+                            .col-lg-3.mt-3
+                                .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                    .card-header #{chatWithoutDoctor.nameChat}
+                                    .card-body
+                                        h5.card-title Light card title
+                                        p.card-text
+                                        | Some quick example text to build on the card title and make up the bulk of the card's content.
+                                        a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
+    //- .container-fluid
+    //- .row
+    //-     main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
+    //-         .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    //-             h1.h2 Mis consultas
+    //-             .btn-toolbar.mb-2.mb-md-0
+    //-                 .btn-group.me-2
+    //-                     button.btn.btn-sm.btn-outline-secondary(type='button') Share
+    //-                     button.btn.btn-sm.btn-outline-secondary(type='button') Export
+    //-                 button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
+    //-                     span(data-feather='calendar')
+    //-                      |             This week
+    //-         if (chats.length==0&&role=="ROLE_USER")
+    //-             button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
+    //-         if (chats.length>0)                
+    //-             .row
+    //-                 each chat in chats
+    //-                     .col-lg-3.mt-3
+    //-                         .card.text-bg-light.mb-3(style='max-width: 18rem;')
+    //-                             .card-header #{chat.nameChat}
+    //-                             .card-body
+    //-                                 h5.card-title Light card title
+    //-                                 p.card-text
+    //-                                 | Some quick example text to build on the card title and make up the bulk of the card's content.
+    //-                                 a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
+    //-         if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
+    //-             h2 Consultas sin doctor
+    //-             .row
+    //-                 each chatWithoutDoctor in chatsWithoutDoctor
+    //-                     .col-lg-3.mt-3
+    //-                         .card.text-bg-light.mb-3(style='max-width: 18rem;')
+    //-                             .card-header #{chatWithoutDoctor.nameChat}
+    //-                             .card-body
+    //-                                 h5.card-title Light card title
+    //-                                 p.card-text
+    //-                                 | Some quick example text to build on the card title and make up the bulk of the card's content.
+    //-                                 a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
 
     //- div.text-center
     //-     p Hola #{username}!
