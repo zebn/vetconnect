@@ -1,65 +1,256 @@
 extends layout
 block content
-    .container-fluid
-        .row
-            .col-lg-3.border-end
-                ul#users 
-                    each user in users
-                        if (user.nameRole=="ROLE_ADMIN")
-                            li.adminmessage= user.username
-                        if (user.nameRole=="ROLE_USER")
-                            li.usermessage= user.username
-            .col-lg-9
-                ul#messages 
-                    each message in messages
-                        if (message.nameRole=="ROLE_ADMIN")
-                            li.adminmessage= message.username+': ' + message.textMessage+': '+message.dateMessage
-                        if (message.nameRole=="ROLE_USER")
-                            li.usermessage= message.username+': ' + message.textMessage+': '+message.dateMessage 
-                form#form.form-inline(action='')
-                        #inputgroup.input-group
-                            input#input.form-control(autocomplete='off')
-                            button.btn.btn-primary Enviar
-                                script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
-                                script.
-                                    var messagesContainer = document.getElementById("messages");
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                    const socket = io().connect();
-                                    const form = document.getElementById('form');
-                                    const input = document.getElementById('input');
-                                    const messages = document.getElementById('messages');
-                                    let roomId = '#{roomId}';
-                                    //- console.log(!{username});
-                                    let username = '#{username}';
-                                    let userId = '#{userId}';
-                                    let role = '#{role}';
-                                    dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
-                                    console.log(`Connecting socket...`);
-                                    if (socket && roomId && userId) {
-                                        socket.emit('join', dataConnection);
-                                    }
-                                    form.addEventListener('submit', (e) => {
-                                        e.preventDefault();
-                                        if (input.value) {
-                                            let data= {
-                                                message:input.value,
-                                                roomId:roomId,
-                                                username:username,
-                                                userId:userId,
-                                                nameRole:role
-                                            }
-                                            socket.emit('chat message', data);
-                                            input.value = '';
-                                        }
-                                    });
-                                    socket.on('chat message', (data) => {
-                                        const item = document.createElement('li');
-                                        item.textContent = data.username+': '+data.message+': '+data.dateMessage
-                                        if (data.nameRole=="ROLE_ADMIN")
-                                        item.classList.add('adminmessage');
-                                        if (data.nameRole=="ROLE_USER")
-                                        item.classList.add('usermessage');
-                                        messages.appendChild(item);
-                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                        //- window.scrollTo(0, document.getElementById("messages").scrollHeight);
-                                    });
+    main.content
+        .container.p-0
+            h1.h3.mb-3 Messages
+            .card
+                .row.g-0
+                     .col-12.col-lg-5.col-xl-3.border-right
+                        .px-4.d-none.d-md-block
+                             .d-flex.align-items-center
+                                 .flex-grow-1
+                                    input.form-control.my-3(type='text' placeholder='Search...')
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .badge.bg-success.float-right 5
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar5.png' alt='Vanessa Tucker' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Vanessa Tucker
+                        .small
+                        span.fas.fa-circle.chat-online
+                        |  Online
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .badge.bg-success.float-right 2
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar2.png' alt='William Harris' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | William Harris
+                        .small
+                        span.fas.fa-circle.chat-online
+                        |  Online
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Sharon Lessman
+                        .small
+                        span.fas.fa-circle.chat-online
+                        |  Online
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar4.png' alt='Christina Mason' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Christina Mason
+                        .small
+                        span.fas.fa-circle.chat-offline
+                        |  Offline
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar5.png' alt='Fiona Green' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Fiona Green
+                        .small
+                        span.fas.fa-circle.chat-offline
+                        |  Offline
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar2.png' alt='Doris Wilder' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Doris Wilder
+                        .small
+                        span.fas.fa-circle.chat-offline
+                        |  Offline
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar4.png' alt='Haley Kennedy' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Haley Kennedy
+                        .small
+                        span.fas.fa-circle.chat-offline
+                        |  Offline
+                a.list-group-item.list-group-item-action.border-0(href='#')
+                    .d-flex.align-items-start
+                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Jennifer Chang' width='40' height='40')
+                    .flex-grow-1.ml-3
+                        | Jennifer Chang
+                        .small
+                        span.fas.fa-circle.chat-offline
+                        |  Offline
+                hr.d-block.d-lg-none.mt-1.mb-0
+                .col-12.col-lg-7.col-xl-9
+                .py-2.px-4.border-bottom.d-none.d-lg-block
+                    .d-flex.align-items-center.py-1
+                    .position-relative
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                    .flex-grow-1.pl-3
+                        strong Sharon Lessman
+                        .text-muted.small
+                        em Typing...
+                    div
+                        button.btn.btn-primary.btn-lg.mr-1.px-3
+                        svg.feather.feather-phone.feather-lg(xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round')
+                            path(d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z')
+                        button.btn.btn-info.btn-lg.mr-1.px-3.d-none.d-md-inline-block
+                        svg.feather.feather-video.feather-lg(xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round')
+                            polygon(points='23 7 16 12 23 17 23 7')
+                            rect(x='1' y='5' width='15' height='14' rx='2' ry='2')
+                        button.btn.btn-light.border.btn-lg.px-3
+                        svg.feather.feather-more-horizontal.feather-lg(xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round')
+                            circle(cx='12' cy='12' r='1')
+                            circle(cx='19' cy='12' r='1')
+                            circle(cx='5' cy='12' r='1')
+                .position-relative
+                    .chat-messages.p-4
+                    .chat-message-right.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:33 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:34 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
+                    .chat-message-right.mb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:35 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Cum ea graeci tractatos.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:36 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Sed pulvinar, massa vitae interdum pulvinar, risus lectus porttitor magna, vitae commodo lectus mauris et velit.
+                        | 									Proin ultricies placerat imperdiet. Morbi varius quam ac venenatis tempus.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:37 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Cras pulvinar, sapien id vehicula aliquet, diam velit elementum orci.
+                    .chat-message-right.mb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:38 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:39 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
+                    .chat-message-right.mb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:40 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Cum ea graeci tractatos.
+                    .chat-message-right.mb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:41 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Morbi finibus, lorem id placerat ullamcorper, nunc enim ultrices massa, id dignissim metus urna eget purus.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:42 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Sed pulvinar, massa vitae interdum pulvinar, risus lectus porttitor magna, vitae commodo lectus mauris et velit.
+                        | 									Proin ultricies placerat imperdiet. Morbi varius quam ac venenatis tempus.
+                    .chat-message-right.mb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='Chris Wood' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:43 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                        .font-weight-bold.mb-1 You
+                        | 									Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
+                    .chat-message-left.pb-4
+                        div
+                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                        .text-muted.small.text-nowrap.mt-2 2:44 am
+                        .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                        .font-weight-bold.mb-1 Sharon Lessman
+                        | 									Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal commodo.
+                .flex-grow-0.py-3.px-4.border-top
+                    .input-group
+                    input.form-control(type='text' placeholder='Type your message')
+                    button.btn.btn-primary Send
+    //- .container-fluid
+    //-     .row
+    //-         .col-lg-3.border-end
+    //-             ul#users 
+    //-                 each user in users
+    //-                     if (user.nameRole=="ROLE_ADMIN")
+    //-                         li.adminmessage= user.username
+    //-                     if (user.nameRole=="ROLE_USER")
+    //-                         li.usermessage= user.username
+    //-         .col-lg-9
+    //-             ul#messages 
+    //-                 each message in messages
+    //-                     if (message.nameRole=="ROLE_ADMIN")
+    //-                         li.adminmessage= message.username+': ' + message.textMessage+': '+message.dateMessage
+    //-                     if (message.nameRole=="ROLE_USER")
+    //-                         li.usermessage= message.username+': ' + message.textMessage+': '+message.dateMessage 
+    //-             form#form.form-inline(action='')
+    //-                     #inputgroup.input-group
+    //-                         input#input.form-control(autocomplete='off')
+    //-                         button.btn.btn-primary Enviar
+    //-                             script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
+    //-                             script.
+    //-                                 var messagesContainer = document.getElementById("messages");
+    //-                                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    //-                                 const socket = io().connect();
+    //-                                 const form = document.getElementById('form');
+    //-                                 const input = document.getElementById('input');
+    //-                                 const messages = document.getElementById('messages');
+    //-                                 let roomId = '#{roomId}';
+    //-                                 //- console.log(!{username});
+    //-                                 let username = '#{username}';
+    //-                                 let userId = '#{userId}';
+    //-                                 let role = '#{role}';
+    //-                                 dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
+    //-                                 console.log(`Connecting socket...`);
+    //-                                 if (socket && roomId && userId) {
+    //-                                     socket.emit('join', dataConnection);
+    //-                                 }
+    //-                                 form.addEventListener('submit', (e) => {
+    //-                                     e.preventDefault();
+    //-                                     if (input.value) {
+    //-                                         let data= {
+    //-                                             message:input.value,
+    //-                                             roomId:roomId,
+    //-                                             username:username,
+    //-                                             userId:userId,
+    //-                                             nameRole:role
+    //-                                         }
+    //-                                         socket.emit('chat message', data);
+    //-                                         input.value = '';
+    //-                                     }
+    //-                                 });
+    //-                                 socket.on('chat message', (data) => {
+    //-                                     const item = document.createElement('li');
+    //-                                     item.textContent = data.username+': '+data.message+': '+data.dateMessage
+    //-                                     if (data.nameRole=="ROLE_ADMIN")
+    //-                                     item.classList.add('adminmessage');
+    //-                                     if (data.nameRole=="ROLE_USER")
+    //-                                     item.classList.add('usermessage');
+    //-                                     messages.appendChild(item);
+    //-                                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    //-                                     //- window.scrollTo(0, document.getElementById("messages").scrollHeight);
+    //-                                 });
