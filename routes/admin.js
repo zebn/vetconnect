@@ -16,12 +16,16 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   if (request.params.dataId == "users") {
     data = JSON.parse(JSON.stringify(await user.getAllUsers()));
 
+    
+
     title="Usuarios"
 
-    columns = [  "idUser" ,  "username" ,   "nameRole" ,"isActive","edit" ];
+    columns = [  "idUser" ,  "username" ,   "nameRole" ,"isActive","groups","edit" ];
 
     data.forEach(element => {
       element.edit=`<a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <a class="btn btn-danger" href="/admin/users/delete/${element.idUser}" role="button">Borrar</a>`;
+      
+      
     });
   }
 
