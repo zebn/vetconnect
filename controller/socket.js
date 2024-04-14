@@ -1,5 +1,6 @@
 const socketIo = require('socket.io')
 const db = require('../model/db');
+var moment = require('moment');
 
 
 class SocketController {
@@ -31,7 +32,7 @@ class SocketController {
                     , [[data.message, data.roomId, data.userId, new Date()]], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
-                        data.dateMessage=new Date().toUTCString();
+                        data.dateMessage=moment(new Date().toUTCString()).fromNow();
                         io.to(data.roomId).emit('chat message', data);
                     });
             });

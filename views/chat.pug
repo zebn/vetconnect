@@ -16,7 +16,7 @@ block content
                                 a.list-group-item.list-group-item-action.border-0(href='#')
                                     .badge.bg-success.float-right 5
                                     .d-flex.align-items-start
-                                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar5.png' alt=user.username width='40' height='40')
+                                        img.rounded-circle.mr-1(src='/img/doctor.png' alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
                                             | #{user.username}
                                             .small
@@ -26,7 +26,7 @@ block content
                                 a.list-group-item.list-group-item-action.border-0(href='#')
                                     .badge.bg-success.float-right 2
                                     .d-flex.align-items-start
-                                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar2.png' alt=user.username width='40' height='40')
+                                        img.rounded-circle.mr-1(src='/img/user.png' alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
                                             | #{user.username}
                                             .small
@@ -37,7 +37,7 @@ block content
                         .py-2.px-4.border-bottom.d-none.d-lg-block
                             .d-flex.align-items-center.py-1
                                 .position-relative
-                                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                                    img.rounded-circle.mr-1(src='/img/user.png' alt='Sharon Lessman' width='40' height='40')
                                 .flex-grow-1.pl-3
                                     strong Sharon Lessman
                                     .text-muted.small
@@ -48,25 +48,26 @@ block content
                                     if (message.nameRole!=username)
                                         .chat-message-left.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt=message.username width='40' height='40')
-                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
+                                                img.rounded-circle.mr-1(src='/img/doctor.png' alt=message.username width='40' height='40')                                                
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
                                                 strong.font-weight-bold.mb-1 #{message.username}:
-                                                | 									#{message.textMessage}
+                                                |   #{message.textMessage}
+                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                     if (message.username== username)
                                         .chat-message-right.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt=message.username width='40' height='40')
-                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
+                                                img.rounded-circle.mr-1(src='/img/user.png' alt=message.username width='40' height='40')
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
-                                                | 									#{message.textMessage}
+                                                |   #{message.textMessage}
+                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                         form#form.form-inline(action='')
                             .flex-grow-0.py-3.px-4.border-top
                                 #inputgroup.input-group
                                     input#input.form-control(autocomplete='off' type='text' placeholder='Type your message')
                                     button.btn.btn-primary Enviar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js')
     script.
         var messagesContainer = document.getElementById("messages");
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -102,21 +103,25 @@ block content
         function appendMessage(data) {
             const item = document.createElement('div');
 
+            //- data.dateMessage=moment(data.dateMessage).fromNow();
+
             if ((data.username!= username)) {
                 item.classList.add('chat-message-left', 'pb-4');
+                avatar="/img/doctor.png"
             } else if ((data.username== username)) {
                 item.classList.add('chat-message-right', 'pb-4');
                 data.username="You"
+                avatar="/img/user.png"
             }
 
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
-            imageElement.src = 'https://bootdey.com/img/Content/avatar/avatar3.png';
+            imageElement.src = avatar;
             imageElement.alt = data.username;
             imageElement.width = 40;
             imageElement.height = 40;
 
-            const dateElement = document.createElement('span');
+            const dateElement = document.createElement('div');
             dateElement.classList.add('text-muted', 'small', 'text-nowrap', 'mt-2');
             dateElement.textContent = data.dateMessage;
 
@@ -134,7 +139,7 @@ block content
             contentElement.appendChild(messageTextNode);
 
             item.appendChild(imageElement);
-            item.appendChild(dateElement);
+            contentElement.appendChild(dateElement);
             item.appendChild(contentElement);
 
             messages.appendChild(item);
