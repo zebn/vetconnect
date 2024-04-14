@@ -54,9 +54,9 @@ block content
                                     .card-header #{chat.nameChat}
                                     .card-body
                                         h5.card-title Light card title
-                                        p.card-text
-                                        | Some quick example text to build on the card title and make up the bulk of the card's content.
-                                        a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
+                                        p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
+                                        a.btn.btn-primary(href="/chat/"+chat.idChat) Unir
+                                        a.btn.btn-danger.ms-2(href="") Cerrar
                 if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
                     h2 Consultas sin doctor
                     .row
@@ -66,9 +66,9 @@ block content
                                     .card-header #{chatWithoutDoctor.nameChat}
                                     .card-body
                                         h5.card-title Light card title
-                                        p.card-text
-                                        | Some quick example text to build on the card title and make up the bulk of the card's content.
-                                        a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
+                                        p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
+                                        a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
+                                        a.btn.btn-danger.ms-2(href="") Cerrar
     //- .container-fluid
     //- .row
     //-     main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
