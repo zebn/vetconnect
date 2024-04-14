@@ -67,7 +67,6 @@ block content
                                     input#input.form-control(autocomplete='off' type='text' placeholder='Type your message')
                                     button.btn.btn-primary Enviar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js')
     script.
         var messagesContainer = document.getElementById("messages");
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -102,9 +101,6 @@ block content
         // Function to append a new message to the chat interface
         function appendMessage(data) {
             const item = document.createElement('div');
-
-            //- data.dateMessage=moment(data.dateMessage).fromNow();
-
             if ((data.username!= username)) {
                 item.classList.add('chat-message-left', 'pb-4');
                 avatar="/img/doctor.png"
