@@ -1,65 +1,146 @@
 extends layout
+
 block content
-    .container-fluid
-        .row
-            .col-lg-3.border-end
-                ul#users 
-                    each user in users
-                        if (user.nameRole=="ROLE_ADMIN")
-                            li.adminmessage= user.username
-                        if (user.nameRole=="ROLE_USER")
-                            li.usermessage= user.username
-            .col-lg-9
-                ul#messages 
-                    each message in messages
-                        if (message.nameRole=="ROLE_ADMIN")
-                            li.adminmessage= message.username+': ' + message.textMessage+': '+message.dateMessage
-                        if (message.nameRole=="ROLE_USER")
-                            li.usermessage= message.username+': ' + message.textMessage+': '+message.dateMessage 
-                form#form.form-inline(action='')
-                        #inputgroup.input-group
-                            input#input.form-control(autocomplete='off')
-                            button.btn.btn-primary Enviar
-                                script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
-                                script.
-                                    var messagesContainer = document.getElementById("messages");
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                    const socket = io().connect();
-                                    const form = document.getElementById('form');
-                                    const input = document.getElementById('input');
-                                    const messages = document.getElementById('messages');
-                                    let roomId = '#{roomId}';
-                                    //- console.log(!{username});
-                                    let username = '#{username}';
-                                    let userId = '#{userId}';
-                                    let role = '#{role}';
-                                    dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
-                                    console.log(`Connecting socket...`);
-                                    if (socket && roomId && userId) {
-                                        socket.emit('join', dataConnection);
-                                    }
-                                    form.addEventListener('submit', (e) => {
-                                        e.preventDefault();
-                                        if (input.value) {
-                                            let data= {
-                                                message:input.value,
-                                                roomId:roomId,
-                                                username:username,
-                                                userId:userId,
-                                                nameRole:role
-                                            }
-                                            socket.emit('chat message', data);
-                                            input.value = '';
-                                        }
-                                    });
-                                    socket.on('chat message', (data) => {
-                                        const item = document.createElement('li');
-                                        item.textContent = data.username+': '+data.message+': '+data.dateMessage
-                                        if (data.nameRole=="ROLE_ADMIN")
-                                        item.classList.add('adminmessage');
-                                        if (data.nameRole=="ROLE_USER")
-                                        item.classList.add('usermessage');
-                                        messages.appendChild(item);
-                                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                                        //- window.scrollTo(0, document.getElementById("messages").scrollHeight);
-                                    });
+    main.content
+        .container.p-0
+            h1.h3.mb-3 Messages
+            .card
+               .row.g-0
+                    .col-12.col-lg-5.col-xl-3.border-right.border-end
+                        .px-4.d-none.d-md-block
+                            .d-flex.align-items-center
+                                .flex-grow-1
+                                    input.form-control.my-3(type='text' placeholder='Search...')
+                        each user in users
+                            if (user.nameRole=="ROLE_ADMIN")
+                                a.list-group-item.list-group-item-action.border-0(href='#')
+                                    .badge.bg-success.float-right 5
+                                    .d-flex.align-items-start
+                                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar5.png' alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
+                                            | #{user.username}
+                                            .small
+                                                span.fas.fa-circle.chat-online
+                                                |  Online
+                            if (user.nameRole=="ROLE_USER")
+                                a.list-group-item.list-group-item-action.border-0(href='#')
+                                    .badge.bg-success.float-right 2
+                                    .d-flex.align-items-start
+                                        img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar2.png' alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
+                                            | #{user.username}
+                                            .small
+                                                span.fas.fa-circle.chat-online
+                                                |  Online
+                        hr.d-block.d-lg-none.mt-1.mb-0
+                    .col-12.col-lg-7.col-xl-9
+                        .py-2.px-4.border-bottom.d-none.d-lg-block
+                            .d-flex.align-items-center.py-1
+                                .position-relative
+                                    img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt='Sharon Lessman' width='40' height='40')
+                                .flex-grow-1.pl-3
+                                    strong Sharon Lessman
+                                    .text-muted.small
+                                        em Typing...
+                        .position-relative
+                            #messages.chat-messages.p-4
+                                each message in messages
+                                    if (message.nameRole!=username)
+                                        .chat-message-left.pb-4
+                                            div
+                                                img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt=message.username width='40' height='40')
+                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
+                                            .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                                                strong.font-weight-bold.mb-1 #{message.username}:
+                                                | 									#{message.textMessage}
+                                    if (message.username== username)
+                                        .chat-message-right.pb-4
+                                            div
+                                                img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt=message.username width='40' height='40')
+                                                .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
+                                            .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                                                strong.font-weight-bold.mb-1 You:
+                                                | 									#{message.textMessage}
+                        form#form.form-inline(action='')
+                            .flex-grow-0.py-3.px-4.border-top
+                                #inputgroup.input-group
+                                    input#input.form-control(autocomplete='off' type='text' placeholder='Type your message')
+                                    button.btn.btn-primary Enviar
+    script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
+    script.
+        var messagesContainer = document.getElementById("messages");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        const socket = io().connect();
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        let roomId = '#{roomId}';
+        //- console.log(!{username});
+        let username = '#{username}';
+        let userId = '#{userId}';
+        let role = '#{role}';
+        dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
+        console.log(`Connecting socket`);
+        if (socket && roomId && userId) {
+            socket.emit('join', dataConnection);
+        }
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                let data= {
+                    message:input.value,
+                    roomId:roomId,
+                    username:username,
+                    userId:userId,
+                    nameRole:role
+                }
+                socket.emit('chat message', data);
+                input.value = '';
+            }
+        });
+        // Function to append a new message to the chat interface
+        function appendMessage(data) {
+            const item = document.createElement('div');
+
+            if ((data.username!= username)) {
+                item.classList.add('chat-message-left', 'pb-4');
+            } else if ((data.username== username)) {
+                item.classList.add('chat-message-right', 'pb-4');
+                data.username="You"
+            }
+
+            const imageElement = document.createElement('img');
+            imageElement.classList.add('rounded-circle', 'mr-1');
+            imageElement.src = 'https://bootdey.com/img/Content/avatar/avatar3.png';
+            imageElement.alt = data.username;
+            imageElement.width = 40;
+            imageElement.height = 40;
+
+            const dateElement = document.createElement('span');
+            dateElement.classList.add('text-muted', 'small', 'text-nowrap', 'mt-2');
+            dateElement.textContent = data.dateMessage;
+
+            const contentElement = document.createElement('div');
+            contentElement.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', 'ml-3');
+
+            const usernameElement = document.createElement('strong');
+            usernameElement.classList.add('font-weight-bold', 'mb-1');
+            usernameElement.textContent = data.username;
+
+            const messageTextNode = document.createTextNode(data.message);
+
+            contentElement.appendChild(usernameElement);
+            contentElement.appendChild(document.createTextNode(': '));
+            contentElement.appendChild(messageTextNode);
+
+            item.appendChild(imageElement);
+            item.appendChild(dateElement);
+            item.appendChild(contentElement);
+
+            messages.appendChild(item);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        socket.on('chat message', (data) => {
+        // Call the appendMessage function with the received message data
+        appendMessage(data);
+        });

@@ -5,7 +5,6 @@ block content
             .col-md-2.border-right
                 .d-flex.flex-column.align-items-center.text-center.p-3.py-5
                     img.rounded-circle.mt-5(width='150px' src='https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg')
-                    span.font-weight-bold #{userInfo.name}
                     span.text-black-50 #{username}
                     span  
             .col-md-3.border-right.border-start.border-end
@@ -14,18 +13,10 @@ block content
                         h4.text-right Información personal
                 .row
                     .col-md-6
-                        label.labels Nombre
-                        input.form-control(type='text' placeholder='' value=userInfo.name disabled)
-                    .col-md-6
-                        label.labels Surname
-                        input.form-control(type='text' value=userInfo.surname placeholder='' disabled)
                 .row.mt-3
                     .col-md-12
                         label.labels Email
                         input.form-control(type='text' value=username placeholder='' disabled)
-                    .col-md-12
-                        label.labels Fecha de nacimiento
-                        input.form-control(type='text' value=userInfo.age placeholder='' disabled)
                     .col-md-12
                 .row.mt-3.border-bottom.pb-3
                     .col-md-12
@@ -168,7 +159,7 @@ block content
         cardText.textContent = "Some quick example text to build on the card title and make up the bulk of the card's content.";
         // Create a element with class 'btn btn-primary' and set its attributes
         const link = document.createElement('a');
-        link.href = "/chat/"+response.idChat;
+        link.href = "/chat/"+response.insertId;
         link.className = 'btn btn-primary';
         link.textContent = 'Unir consulta';
         // Append all the created elements to the appropriate parent elements
