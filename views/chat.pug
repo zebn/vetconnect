@@ -45,21 +45,21 @@ block content
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
-                                    if (message.nameRole=="ROLE_ADMIN")
+                                    if (message.nameRole!=username)
                                         .chat-message-left.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar3.png' alt=message.username width='40' height='40')
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
-                                                .font-weight-bold.mb-1 #{message.username}
+                                                strong.font-weight-bold.mb-1 #{message.username}:
                                                 | 									#{message.textMessage}
-                                    if (message.nameRole=="ROLE_USER")
+                                    if (message.username== username)
                                         .chat-message-right.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='https://bootdey.com/img/Content/avatar/avatar1.png' alt=message.username width='40' height='40')
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
-                                                .font-weight-bold.mb-1 You
+                                                strong.font-weight-bold.mb-1 You:
                                                 | 									#{message.textMessage}
                         form#form.form-inline(action='')
                             .flex-grow-0.py-3.px-4.border-top
@@ -102,10 +102,11 @@ block content
         function appendMessage(data) {
             const item = document.createElement('div');
 
-            if (data.nameRole == "ROLE_ADMIN") {
+            if ((data.username!= username)) {
                 item.classList.add('chat-message-left', 'pb-4');
-            } else if (data.nameRole == "ROLE_USER") {
+            } else if ((data.username== username)) {
                 item.classList.add('chat-message-right', 'pb-4');
+                data.username="You"
             }
 
             const imageElement = document.createElement('img');
