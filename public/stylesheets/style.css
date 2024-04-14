@@ -27,17 +27,18 @@
   max-width: 20%; /* Limita el ancho de los mensajes para que no se extiendan demasiado */
 }
 
-.adminmessage {
+/* .adminmessage {
   background-color: #0059ff; /* Color de fondo para los mensajes del usuario */
-  margin-left: 0; /* Añade un margen a la izquierda para los mensajes del usuario */
-  margin-right: 22rem; /* Reinicia el margen a la derecha para los mensajes del usuario */
-}
+  /* margin-left: 0; /* Añade un margen a la izquierda para los mensajes del usuario */
+ /*  margin-right: 22rem; /* Reinicia el margen a la derecha para los mensajes del usuario */
+/* }
 
-.usermessage {
+/* .usermessage {
   background-color: #ff0000; /* Color de fondo para los mensajes del veterinario */
-  margin-left: 22rem; /* Reinicia el margen a la izquierda para los mensajes del veterinario */
-  margin-right: 0; /* Añade un margen a la derecha para los mensajes del veterinario */
-}
+ /* margin-left: 22rem; /* Reinicia el margen a la izquierda para los mensajes del veterinario */
+ /* margin-right: 0; /* Añade un margen a la derecha para los mensajes del veterinario */
+/*} */
+
  /* The sidebar menu */
  .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
@@ -51,7 +52,6 @@
   padding-top: 20px;
 }
 
-/* The navigation menu links */
 .sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
@@ -60,20 +60,45 @@
   display: block;
 }
 
-/* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
   color: #f1f1f1;
 }
 
-/* Style page content */
 .main {
-  margin-left: 160px; /* Same as the width of the sidebar */
+  margin-left: 160px;
   padding: 0px 10px;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
-} 
+}
 
+/* Estilos para el cuerpo de la página */
+body {margin-top: 20px;}
+
+/* Estilos específicos para la sección de chat */
+.chat-online {color: #34ce57}
+.chat-offline {color: #e4606d}
+.chat-messages, .usermessage, .adminmessage {
+  display: flex;
+  flex-direction: column;
+  max-height: 800px;
+  overflow-y: scroll;
+}
+
+.chat-message-left, .chat-message-right {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.chat-message-left, .usermessage {margin-right: auto}
+.chat-message-right, .adminmessage {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+
+.py-3 {padding-top: 1rem!important; padding-bottom: 1rem!important;}
+.px-4 {padding-right: 1.5rem!important; padding-left: 1.5rem!important;}
+.flex-grow-0 {flex-grow: 0!important;}
+.border-top {border-top: 1px solid #dee2e6!important;}
