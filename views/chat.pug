@@ -7,51 +7,46 @@ block content
             .card
                .row.g-0
                     .col-12.col-lg-5.col-xl-3.border-right.border-end
-                        .px-4.d-none.d-md-block
+                        .py-2.px-4.border-bottom.d-none.d-md-block
                             .d-flex.align-items-center
                                 .flex-grow-1
                                     h5.mt-2 Participantes 
                         each user in users
-                            if (user.nameRole=="ROLE_ADMIN")
-                                a.list-group-item.list-group-item-action.border-0(href='#')
-                                    .badge.bg-success.float-right 5
-                                    .d-flex.align-items-start
+                            if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
+                                    .d-flex.align-items-start.mt-2
                                         img.rounded-circle.mr-1(src='/img/doctor.png' alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
-                                            | #{user.username}
-                                            .small
-                                                span.fas.fa-circle.chat-online
-                                                |  Online
+                                            | #{user.name} 
                             if (user.nameRole=="ROLE_USER")
-                                a.list-group-item.list-group-item-action.border-0(href='#')
-                                    .badge.bg-success.float-right 2
-                                    .d-flex.align-items-start
+                                    .d-flex.align-items-start.mt-2
                                         img.rounded-circle.mr-1(src='/img/user.png' alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
-                                            | #{user.username}
-                                            .small
-                                                span.fas.fa-circle.chat-online
-                                                |  Online
+                                            | #{user.name} 
+                                            .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
                         .py-2.px-4.border-bottom.d-none.d-lg-block
                             .d-flex.align-items-center.py-1
-                                h5 Consulta
+                                h5 #{chatInfo.nameChat}
+                                    if (chatInfo.isFinished==1)
+                                        | Consulta finalizada
+                                    if (chatInfo.isNeedDoctor==1)
+                                        | Consulta pendiente de doctor
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
                                     if (message.username!=username)
                                         .chat-message-left.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src=message.img alt=message.username width='40' height='40')                                                
+                                                img.rounded-circle.mr-1(src=message.img alt=message.name width='40' height='40')                                                
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
-                                                strong.font-weight-bold.mb-1 #{message.username}:
+                                                strong.font-weight-bold.mb-1 #{message.name}:
                                                 |   #{message.textMessage}
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                     if (message.username== username)
                                         .chat-message-right.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src=message.img alt=message.username width='40' height='40')
+                                                img.rounded-circle.mr-1(src=message.img alt=message.name width='40' height='40')
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
                                                 |   #{message.textMessage}
@@ -72,6 +67,7 @@ block content
         let roomId = '#{roomId}';
         //- console.log(!{username});
         let username = '#{username}';
+        let name = '#{name}';
         let userId = '#{userId}';
         let role = '#{role}';
         dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
@@ -86,6 +82,7 @@ block content
                     message:input.value,
                     roomId:roomId,
                     username:username,
+                    name:name,
                     userId:userId,
                     nameRole:role
                 }
@@ -100,13 +97,15 @@ block content
                 item.classList.add('chat-message-left', 'pb-4');
             } else if ((data.username== username)) {
                 item.classList.add('chat-message-right', 'pb-4');
-                data.username="You"
+                data.name="You"
             }
+
+            console.log(data.userInfo)
 
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
             imageElement.src = data.img;
-            imageElement.alt = data.username;
+            imageElement.alt = data.name;
             imageElement.width = 40;
             imageElement.height = 40;
 
@@ -119,7 +118,7 @@ block content
 
             const usernameElement = document.createElement('strong');
             usernameElement.classList.add('font-weight-bold', 'mb-1');
-            usernameElement.textContent = data.username;
+            usernameElement.textContent = data.name;
 
             const messageTextNode = document.createTextNode(data.message);
 

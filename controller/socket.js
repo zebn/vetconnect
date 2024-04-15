@@ -31,7 +31,6 @@ class SocketController {
                 db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage) VALUES (?);"
                     , [[data.message, data.roomId, data.userId, new Date()]], function (error, results, fields) {
                         if (error) throw error;
-                        console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
                         data.dateMessage=moment(new Date().toUTCString()).fromNow();
                         if ((data.nameRole=="ROLE_ADMIN")||(data.nameRole=="ROLE_DOCTOR")) {
                             data.img="/img/doctor.png"
