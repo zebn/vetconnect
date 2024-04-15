@@ -5,11 +5,6 @@ async function getUserInfo(userId) {
         db.connection.query('select * from user u where u.idUser =?',
             [userId], function (error, results, fields) {
                 if (error) throw error;
-                results.forEach(element => {
-                    element.age=(new Date(Date.parse(element.age))).toLocaleDateString('es-ES', {day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'}) 
-                });
                 resolve(results[0]);
             });
     });
