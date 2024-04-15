@@ -20,7 +20,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     title="Usuarios"
 
-    columns = [  "ID" ,  "Email" ,   "Rol" ,"Estado", "" ];
+    columns = [  "ID" ,  "Email" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
 
     data.forEach(element => {
       element.edit = `<form action="/admin/users/delete/${element.idUser}" method="POST"> <a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
@@ -33,13 +33,22 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   });
   
   router.post('/users/edit/:userId', async function (request, response, next) {
-  
-    await user.editUser(request.params.userId, request.body.role, request.body.group, request.body.name, request.body.surname, request.body.username, request.body.age, request.body.hand, request.body.backhand);
+     await user.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
     response.redirect('/admin/users/')
   });
 
   router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
     await user.deleteUser(request.params.userId);
+    response.redirect('/admin/users/')
+  });
+
+  router.get('/users/add', async function (request, response, next) {
+    response.render('useradd', { username: response.locals.username, role: response.locals.role });
+  });
+  
+  router.post('/users/add', async function (request, response, next) {
+    console.log(request.body.isActive);   
+    await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
     response.redirect('/admin/users/')
   });
 
@@ -56,10 +65,8 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   
   }
 
-  console.log(data);
-
   if (request.session.role == "ROLE_ADMIN")
-    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,title:title });
+    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,title:title,dataId: request.params.dataId  });
   else {
     response.render('error', { username: request.session.username, role: request.session.role, userId: request.session.userId, error: { status: "403 Forbidden", stack: "" } });
   }
