@@ -11,7 +11,7 @@ router.get('/:roomId', auth.checkAuthToken, async function (request, response, n
   const chats = await message.getAllChatsForUser(request.session.userId);
   const chatInfo = await chat.getChatInfo(request.params.roomId);
   const userInfo = JSON.parse(JSON.stringify(await user.getUserInfo(request.session.userId)));
-  console.log(userInfo);
+  console.log(chatInfo);
   response.render('chat', {
     chatInfo: chatInfo,
     username: request.session.username,

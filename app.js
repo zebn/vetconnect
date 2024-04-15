@@ -33,20 +33,6 @@ app.use(session({
   // store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
 }));
 
-app.use('/', indexRouter);
-app.use('/', loginRouter);
-app.use('/users', usersRouter);
-app.use('/chat', chatRouter);
-app.use('/admin', adminRouter);
-app.use('/contact', contactRouter);
-
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
 app.use(function (req, res, next) {
   var loggedin;
   var username;
@@ -64,8 +50,25 @@ app.use(function (req, res, next) {
     }
   }
   res.locals = { loggedin: loggedin, username: username, userId: userId, role: role };
+  console.log(res.locals);
   next();
 });
+
+
+app.use('/', indexRouter);
+app.use('/', loginRouter);
+app.use('/users', usersRouter);
+app.use('/chat', chatRouter);
+app.use('/admin', adminRouter);
+app.use('/contact', contactRouter);
+
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
 
 
 // error handler

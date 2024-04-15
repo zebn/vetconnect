@@ -2,7 +2,6 @@ const socketIo = require('socket.io')
 const db = require('../model/db');
 
 var checkLogin = (request, response, next) => {
-    console.log(request.body);
     let username = request.body.username;
     let password = request.body.password;
     // Ensure the input fields exists and are not empty
