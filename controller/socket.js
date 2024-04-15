@@ -1,6 +1,9 @@
 const socketIo = require('socket.io')
 const db = require('../model/db');
 var moment = require('moment');
+var path = require('path');
+const fs = require('fs');
+var crypto = require("crypto");
 
 
 class SocketController {
@@ -28,16 +31,32 @@ class SocketController {
             };
 
             socket.on('chat message', (data) => {
-                db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage) VALUES (?);"
-                    , [[data.message, data.roomId, data.userId, new Date()]], function (error, results, fields) {
+                if (data.file)
+                 {
+                    var filename=data.userId + '_'+data.roomId + '_' + data.filename
+                 }
+                filename
+                db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage,file) VALUES (?);"
+                    , [[data.message, data.roomId, data.userId, new Date(), filename]], function (error, results, fields) {
                         if (error) throw error;
-                        data.dateMessage=moment(new Date().toUTCString()).fromNow();
-                        if ((data.nameRole=="ROLE_ADMIN")||(data.nameRole=="ROLE_DOCTOR")) {
-                            data.img="/img/doctor.png"
+                        data.dateMessage = moment(new Date().toUTCString()).fromNow();
+                        if ((data.nameRole == "ROLE_ADMIN") || (data.nameRole == "ROLE_DOCTOR")) {
+                            data.img = "/img/doctor.png"
                         } else {
-                            data.img="/img/user.png"
+                            data.img = "/img/user.png"
                         }
-                        io.to(data.roomId).emit('chat message', data);
+                        if (data.file) {
+                            let uploadPath;
+                            // name of the input is sampleFile
+                            uploadPath = path.join(__dirname, '..', 'public', 'upload',filename );
+                            fs.writeFile(uploadPath, data.file, (err) => {
+                                if (err) throw console.log(error);
+                                data.file=filename;
+                                io.to(data.roomId).emit('chat message', data);
+                            });
+
+                        }
+                        else { io.to(data.roomId).emit('chat message', data); }
                     });
             });
 

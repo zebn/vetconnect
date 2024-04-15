@@ -5,7 +5,7 @@ block content
         .container.p-0
             h1.h3.mb-3 
             .card
-               .row.g-0
+                .row.g-0
                     .col-12.col-lg-5.col-xl-3.border-right.border-end
                         .py-2.px-4.border-bottom.d-none.d-md-block
                             .d-flex.align-items-center
@@ -13,16 +13,16 @@ block content
                                     h5.mt-2 Participantes 
                         each user in users
                             if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
-                                    .d-flex.align-items-start.mt-2
-                                        img.rounded-circle.mr-1(src='/img/doctor.png' alt=user.username width='40' height='40')
-                                        .flex-grow-1.ml-3
-                                            | #{user.name} 
+                                .d-flex.align-items-start.mt-2
+                                    img.rounded-circle.mr-1(src='/img/doctor.png' alt=user.username width='40' height='40')
+                                    .flex-grow-1.ml-3
+                                        | #{user.name} 
                             if (user.nameRole=="ROLE_USER")
-                                    .d-flex.align-items-start.mt-2
-                                        img.rounded-circle.mr-1(src='/img/user.png' alt=user.username width='40' height='40')
-                                        .flex-grow-1.ml-3
-                                            | #{user.name} 
-                                            .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
+                                .d-flex.align-items-start.mt-2
+                                    img.rounded-circle.mr-1(src='/img/user.png' alt=user.username width='40' height='40')
+                                    .flex-grow-1.ml-3
+                                        | #{user.name} 
+                                        .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
                         .py-2.px-4.border-bottom.d-none.d-lg-block
@@ -42,6 +42,10 @@ block content
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
                                                 strong.font-weight-bold.mb-1 #{message.name}:
                                                 |   #{message.textMessage}
+                                                if (message.file)
+                                                    .text-muted.small.text-nowrap.mt-2
+                                                        a(href='/upload/'+message.file  target="_blank")
+                                                            img.mt-5(width='150px' src='/upload/'+message.file)                                                 
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                     if (message.username== username)
                                         .chat-message-right.pb-4
@@ -50,11 +54,18 @@ block content
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
                                                 |   #{message.textMessage}
+                                                if (message.file)
+                                                    .text-muted.small.text-nowrap.mt-2
+                                                        a(href='/upload/'+message.file  target="_blank")
+                                                            img.mt-5(width='150px' src='/upload/'+message.file)                                                
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                         form#form.form-inline(action='')
                             .flex-grow-0.py-3.px-4.border-top
                                 #inputgroup.input-group
                                     input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
+                                    span.publisher-btn.file-group
+                                        i.fa.fa-paperclip.file-browser
+                                        input#inputfile(type='file')                                 
                                     button.btn.btn-primary Enviar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
@@ -63,6 +74,7 @@ block content
         const socket = io().connect();
         const form = document.getElementById('form');
         const input = document.getElementById('input');
+        const inputfile = document.getElementById('inputfile');
         const messages = document.getElementById('messages');
         let roomId = '#{roomId}';
         //- console.log(!{username});
@@ -70,6 +82,8 @@ block content
         let name = '#{name}';
         let userId = '#{userId}';
         let role = '#{role}';
+        let file = null;
+        let filename =null;        
         dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
         console.log(`Connecting socket`);
         if (socket && roomId && userId) {
@@ -77,6 +91,14 @@ block content
         }
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            console.log(inputfile.files[0]);
+            file = null;
+            filename =null; 
+            if (inputfile.files[0])
+            {
+            file = inputfile.files[0];
+            filename =inputfile.files[0].name
+            }
             if (input.value) {
                 let data= {
                     message:input.value,
@@ -84,10 +106,13 @@ block content
                     username:username,
                     name:name,
                     userId:userId,
-                    nameRole:role
+                    nameRole:role,
+                    file:file,
+                    filename:filename
                 }
                 socket.emit('chat message', data);
                 input.value = '';
+                inputfile.value = '';
             }
         });
         // Function to append a new message to the chat interface
@@ -100,7 +125,6 @@ block content
                 data.name="You"
             }
 
-            console.log(data.userInfo)
 
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
@@ -109,9 +133,21 @@ block content
             imageElement.width = 40;
             imageElement.height = 40;
 
+            const a = document.createElement('a');
+            const img = document.createElement('img');
+
+            // Set attributes
+            a.href = '/upload/' + data.file;
+            a.target = '_blank';
+            a.innerHTML=data.file;
+
+            // Append img to a
+            a.appendChild(img);
+
             const dateElement = document.createElement('div');
             dateElement.classList.add('text-muted', 'small', 'text-nowrap', 'mt-2');
             dateElement.textContent = data.dateMessage;
+
 
             const contentElement = document.createElement('div');
             contentElement.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', 'ml-3');
@@ -128,6 +164,7 @@ block content
 
             item.appendChild(imageElement);
             contentElement.appendChild(dateElement);
+            contentElement.appendChild(a);
             item.appendChild(contentElement);
 
             messages.appendChild(item);
