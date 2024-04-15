@@ -3,14 +3,14 @@ extends layout
 block content
     main.content
         .container.p-0
-            h1.h3.mb-3 Messages
+            h1.h3.mb-3 
             .card
                .row.g-0
                     .col-12.col-lg-5.col-xl-3.border-right.border-end
                         .px-4.d-none.d-md-block
                             .d-flex.align-items-center
                                 .flex-grow-1
-                                    input.form-control.my-3(type='text' placeholder='Search...')
+                                    h5.mt-2 Participantes 
                         each user in users
                             if (user.nameRole=="ROLE_ADMIN")
                                 a.list-group-item.list-group-item-action.border-0(href='#')
@@ -36,16 +36,11 @@ block content
                     .col-12.col-lg-7.col-xl-9
                         .py-2.px-4.border-bottom.d-none.d-lg-block
                             .d-flex.align-items-center.py-1
-                                .position-relative
-                                    img.rounded-circle.mr-1(src='/img/user.png' alt='Sharon Lessman' width='40' height='40')
-                                .flex-grow-1.pl-3
-                                    strong Sharon Lessman
-                                    .text-muted.small
-                                        em Typing...
+                                h5 Consulta
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
-                                    if (message.nameRole!=username)
+                                    if (message.username!=username)
                                         .chat-message-left.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='/img/doctor.png' alt=message.username width='40' height='40')                                                
@@ -64,7 +59,7 @@ block content
                         form#form.form-inline(action='')
                             .flex-grow-0.py-3.px-4.border-top
                                 #inputgroup.input-group
-                                    input#input.form-control(autocomplete='off' type='text' placeholder='Type your message')
+                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
                                     button.btn.btn-primary Enviar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
