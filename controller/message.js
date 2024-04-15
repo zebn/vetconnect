@@ -18,6 +18,11 @@ class Message {
                 if (error) {reject(error)};                
                 results.forEach(element => {
                     element.dateMessage=moment(element.dateMessage).fromNow();
+                    if ((element.nameRole=="ROLE_ADMIN")||(element.nameRole=="ROLE_DOCTOR")) {
+                        element.img="/img/doctor.png"
+                    } else {
+                        element.img="/img/user.png"
+                    }
                 });
                 resolve(results)
             });

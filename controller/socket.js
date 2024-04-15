@@ -33,6 +33,11 @@ class SocketController {
                         if (error) throw error;
                         console.log(`User: ${data.username},msg: ${data.message}, room: ${data.roomId}`);
                         data.dateMessage=moment(new Date().toUTCString()).fromNow();
+                        if ((data.nameRole=="ROLE_ADMIN")||(data.nameRole=="ROLE_DOCTOR")) {
+                            data.img="/img/doctor.png"
+                        } else {
+                            data.img="/img/user.png"
+                        }
                         io.to(data.roomId).emit('chat message', data);
                     });
             });
