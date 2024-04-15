@@ -38,6 +38,11 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     response.redirect('/admin/users/')
   });
 
+  router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
+    await user.deleteUser(request.params.userId);
+    response.redirect('/admin/users/')
+  });
+
   if (request.params.dataId == "chats") {
 
     title="Consultas"

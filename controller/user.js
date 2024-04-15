@@ -31,7 +31,7 @@ async function getAllUsers(){
 
 async function deleteUser(userId) {
     return new Promise((resolve, reject) => {
-        db.connection.query('DELETE FROM user WHERE user_id = ?;',
+        db.connection.query('DELETE FROM user WHERE idUser = ?;',
             [userId], function (error, results, fields) {
                 if (error) throw error;
                 resolve();
