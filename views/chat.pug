@@ -65,16 +65,34 @@ block content
                                     input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
                                     span.publisher-btn.file-group
                                         i.fa.fa-paperclip.file-browser
-                                        input#inputfile(type='file')                                 
+                                        input#inputfile(type='file' style='display:none;') 
                                     button.btn.btn-primary Enviar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
+        // Get the file input element
+        const fileInput = document.getElementById('inputfile');
+        // Add event listener to trigger file input when paperclip icon is clicked
+        document.querySelector('.file-browser').addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        // Add event listener to handle file selection
+        fileInput.addEventListener('change', function() {
+            // Get the selected file
+            const file = this.files[0];
+
+            // Do something with the selected file, such as uploading it
+            if (file) {
+                console.log('Selected file:', file);
+                // You can upload the file here or perform any other desired action
+            }
+        });
         var messagesContainer = document.getElementById("messages");
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
         const socket = io().connect();
         const form = document.getElementById('form');
         const input = document.getElementById('input');
-        const inputfile = document.getElementById('inputfile');
+
         const messages = document.getElementById('messages');
         let roomId = '#{roomId}';
         //- console.log(!{username});
@@ -90,14 +108,14 @@ block content
             socket.emit('join', dataConnection);
         }
         form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            console.log(inputfile.files[0]);
+            e.preventDefault();            
             file = null;
-            filename =null; 
-            if (inputfile.files[0])
+            filename =null;             
+            if (fileInput.files[0])
             {
-            file = inputfile.files[0];
-            filename =inputfile.files[0].name
+            file = fileInput.files[0];
+            filename =fileInput.files[0].name
+            console.log('Selected file:',fileInput.files[0],file,filename)
             }
             if (input.value) {
                 let data= {
@@ -110,9 +128,10 @@ block content
                     file:file,
                     filename:filename
                 }
+                console.log('data to send:',data)
                 socket.emit('chat message', data);
                 input.value = '';
-                inputfile.value = '';
+                //- inputfile.value = '';
             }
         });
         // Function to append a new message to the chat interface
@@ -171,6 +190,7 @@ block content
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
         socket.on('chat message', (data) => {
+        console.log('message:',data)
         // Call the appendMessage function with the received message data
         appendMessage(data);
         });
