@@ -9,6 +9,17 @@ async function getAllChats(){
     });
 }
 
+async function getChatInfo(idChat){
+    return new Promise((resolve, reject) => {
+        db.connection.query('select * from chat where idChat =?',
+        [idChat], function (error, results, fields) {
+            if (error) {reject(error)};                
+            resolve(results[0])
+        });
+    });
+}
+
 module.exports = {
-    getAllChats
+    getAllChats,
+    getChatInfo
 };
