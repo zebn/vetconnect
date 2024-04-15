@@ -43,7 +43,7 @@ block content
                                     if (message.username!=username)
                                         .chat-message-left.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src='/img/doctor.png' alt=message.username width='40' height='40')                                                
+                                                img.rounded-circle.mr-1(src=message.img alt=message.username width='40' height='40')                                                
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
                                                 strong.font-weight-bold.mb-1 #{message.username}:
                                                 |   #{message.textMessage}
@@ -51,7 +51,7 @@ block content
                                     if (message.username== username)
                                         .chat-message-right.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src='/img/user.png' alt=message.username width='40' height='40')
+                                                img.rounded-circle.mr-1(src=message.img alt=message.username width='40' height='40')
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
                                                 |   #{message.textMessage}
@@ -98,16 +98,14 @@ block content
             const item = document.createElement('div');
             if ((data.username!= username)) {
                 item.classList.add('chat-message-left', 'pb-4');
-                avatar="/img/doctor.png"
             } else if ((data.username== username)) {
                 item.classList.add('chat-message-right', 'pb-4');
                 data.username="You"
-                avatar="/img/user.png"
             }
 
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
-            imageElement.src = avatar;
+            imageElement.src = data.img;
             imageElement.alt = data.username;
             imageElement.width = 40;
             imageElement.height = 40;
