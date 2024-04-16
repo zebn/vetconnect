@@ -62,9 +62,12 @@ block content
                         form#form.form-inline(action='')
                             .flex-grow-0.py-3.px-4.border-top
                                 #inputgroup.input-group
-                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
-                                    input#inputfile.form-control(type='file')                              
-                                    button.btn.btn-primary Enviar
+                                    .col-6
+                                        input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
+                                    .col-3                        
+                                        button.btn.btn-primary Enviar
+                                    .col-3.mb-3
+                                        input#inputfile.form-control(type='file') 
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         // Get the file input element
