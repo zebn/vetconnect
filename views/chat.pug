@@ -70,23 +70,9 @@ block content
         // Get the file input element
         const fileInput = document.getElementById('inputfile');
         // Add event listener to trigger file input when paperclip icon is clicked
-        document.querySelector('.file-browser').addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        // Add event listener to handle file selection
-        fileInput.addEventListener('change', function() {
-            // Get the selected file
-            const file = this.files[0];
-
-            // Do something with the selected file, such as uploading it
-            if (file) {
-                console.log('Selected file:', file);
-                // You can upload the file here or perform any other desired action
-            }
-        });
         var messagesContainer = document.getElementById("messages");
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
         const socket = io().connect();
         const form = document.getElementById('form');
         const input = document.getElementById('input');
@@ -129,7 +115,7 @@ block content
                 console.log('data to send:',data)
                 socket.emit('chat message', data);
                 input.value = '';
-                //- inputfile.value = '';
+                inputfile.value = '';
             }
         });
         // Function to append a new message to the chat interface
