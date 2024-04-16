@@ -22,7 +22,7 @@ async function changePassword(password,userId) {
 
 async function getAllUsers(){
     return new Promise((resolve, reject) => {
-        db.connection.query('select u.idUser,u.username,r.nameRole,u.isActive from user u inner join role r on r.idRole = u.idRole', function (error, results, fields) {
+        db.connection.query('select u.idUser,u.username,u.name,u.familiarName,u.familiarType,r.nameRole,u.isActive from user u inner join role r on r.idRole = u.idRole', function (error, results, fields) {
             if (error) {reject(error)};                
             resolve(results)
         });
@@ -39,11 +39,21 @@ async function deleteUser(userId) {
     });
 }
 
-async function editUser(userId, roleId, groupId, levelId, name, surname, username, age, hand,  backhand) {
+async function editUser(username, name, familiarName, familiarType, idRole, isActive, idUser) {
     return new Promise((resolve, reject) => {
-        db.connection.query('UPDATE user SET role_id = ?, group_id = ?, level_id = ?, name = ?, surname = ?, email = ?,  hand = ?, backhand = ? WHERE user_id = ?;',
-            [roleId, groupId, levelId, name, surname, username, hand,  backhand ,userId], function (error, results, fields) {
+        db.connection.query('UPDATE user SET username = ?, name = ?, familiarName = ?, familiarType = ?, idRole = ?,  isActive = ? WHERE idUser = ?;',
+            [username, name, familiarName, familiarType, idRole, isActive,idUser], function (error, results, fields) {
                 if (error) throw error;
+                resolve();
+            });
+    });
+}
+
+async function addUser(username, name, familiarName, familiarType, role, isActive) {
+    return new Promise((resolve, reject) => {
+        db.connection.query('INSERT INTO user (username, name, familiarName, familiarType, idRole, isActive) VALUES (?, ?, ?, ?, ?, ?);',
+            [username, name, familiarName, familiarType, role, isActive], function (error, results, fields) {
+                if (error) console.log(error);
                 resolve();
             });
     });
@@ -54,6 +64,7 @@ module.exports = {
     changePassword,
     getAllUsers,
     deleteUser,
-    editUser
+    editUser,
+    addUser
 };
 

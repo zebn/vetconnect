@@ -53,7 +53,6 @@ app.use(function (req, res, next) {
     }
   }
   res.locals = { loggedin: loggedin, username: username, userId: userId, role: role };
-  console.log(res.locals);
   next();
 });
 

@@ -35,7 +35,6 @@ class SocketController {
                  {
                     var filename=data.userId + '_'+data.roomId + '_' + data.filename
                  }
-                filename
                 db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage,file) VALUES (?);"
                     , [[data.message, data.roomId, data.userId, new Date(), filename]], function (error, results, fields) {
                         if (error) throw error;
@@ -52,11 +51,13 @@ class SocketController {
                             fs.writeFile(uploadPath, data.file, (err) => {
                                 if (err) throw console.log(error);
                                 data.file=filename;
+                                console.log('message with file',data);
                                 io.to(data.roomId).emit('chat message', data);
                             });
-
                         }
-                        else { io.to(data.roomId).emit('chat message', data); }
+                        else { 
+                            console.log('message without file',data);
+                            io.to(data.roomId).emit('chat message', data); }
                     });
             });
 
