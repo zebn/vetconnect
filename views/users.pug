@@ -37,13 +37,6 @@ block content
                                 button.btn.btn-success.profile-button(type='submit') Cambiar contraseña       
             .col-md-7
                 h1.h2 Mis consultas
-                .btn-toolbar.mb-2.mb-md-0
-                    .btn-group.me-2
-                        button.btn.btn-sm.btn-outline-secondary(type='button') Share
-                        button.btn.btn-sm.btn-outline-secondary(type='button') Export
-                    button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
-                        span(data-feather='calendar')
-                         |             This week
                 if (chats.length==0&&role=="ROLE_USER")
                     button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
                 if (chats.length>0)                

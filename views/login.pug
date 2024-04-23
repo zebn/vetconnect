@@ -5,7 +5,11 @@ block content
         .col-md-6
             h1.my-5.text-center Iniciar sesión
             if (error)
-                .my-5.text-center #{error}
+                .my-5.text-center.text-danger #{error}
+            if (result=="successRegister")
+                .my-5.text-center.text-success Se ha registrado exitosamente
+            if (result=="changePasswordSuccess")
+                .my-5.text-center.text-success Contraseña ha sido cambiada
             form(action='/login' method='post')
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='username') Email: 
@@ -22,6 +26,12 @@ block content
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
                         button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Entrar
+                .mb-3.row.align-items-center
+                    .col-sm-8.offset-sm-4
+                        a.link-primary.link-offset-2.link-underline-opacity-25.link-underline-opacity-100-hover(href="/passwordremind") Olvidé la contraseña
+                .mb-3.row.align-items-center
+                    .col-sm-8.offset-sm-4
+                        a.link-primary.link-offset-2.link-underline-opacity-25.link-underline-opacity-100-hover(href="/signup") Registrar
 
     //- h1 Sign in
     //- form(action='/login' method='post')

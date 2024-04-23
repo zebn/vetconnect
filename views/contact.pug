@@ -4,16 +4,18 @@ block content
     div.container
       .row.justify-content-center
         .col-md-6
-            h1.my-5.text-center Formulario para Veterinarios
-            form(action='/contact' method='post')
+            h1.my-5.text-center Formulario para Entrenadores
+            if (result)
+                .my-5.text-center.text-success #{result}
+            form(action='/contact' method='POST' enctype="multipart/form-data")
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='username') *Email: 
+                    label.form-label.col-sm-4(for='email') *Email: 
                     .col-sm-8
-                        input#username.form-control(type='email' name='username' maxlength="45" required)
+                        input#username.form-control(type='email' name='email' maxlength="45" required)
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='tel-number') *Teléfono:
+                    label.form-label.col-sm-4(for='telnumber') *Teléfono:
                     .col-sm-8
-                        input#tel-number.form-control(type='tel' name='tel-number' required)
+                        input#tel-number.form-control(type='tel' name='telnumber' required)
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='info') Información adicional: 
                     .col-sm-8
@@ -24,6 +26,7 @@ block content
                         input#cv.form-control(name='cv' type='file' accept='application/pdf')
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
-                        button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
-    span.float-end.me-5 Los campos con (*) son obligatorios.
-            
+                        button.btn.btn-success.px-4.py-2.ms-5(type='submit') Enviar
+        .mb-3.row.align-items-center
+            .col-sm-8.offset-sm-4
+                span.me-5.float-end Los campos con (*) son obligatorios.  

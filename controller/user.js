@@ -1,4 +1,6 @@
 const db = require('../model/db');
+const crypto = require('crypto');
+var path = require('path');
 
 async function getUserInfo(userId) {
     return new Promise((resolve, reject) => {
@@ -10,15 +12,17 @@ async function getUserInfo(userId) {
     });
 }
 
-async function changePassword(password,userId) {
+async function changePassword(password, userId) {
+    password = crypto.createHash('sha256').update(password).digest('hex');
     return new Promise((resolve, reject) => {
-        db.connection.query('UPDATE user SET hashed_password = ? WHERE user_id = ?;',
-            [password,userId], function (error, results, fields) {
-                if (error) throw error;
-                resolve();
+        db.connection.query('UPDATE user SET password = ? WHERE idUser = ?;',
+            [password, userId], function (error, results, fields) {
+                if (error) resolve(error);
+                resolve(true);
             });
     });
 }
+
 
 async function getAllUsers(){
     return new Promise((resolve, reject) => {
@@ -43,8 +47,11 @@ async function editUser(username, name, familiarName, familiarType, idRole, isAc
     return new Promise((resolve, reject) => {
         db.connection.query('UPDATE user SET username = ?, name = ?, familiarName = ?, familiarType = ?, idRole = ?,  isActive = ? WHERE idUser = ?;',
             [username, name, familiarName, familiarType, idRole, isActive,idUser], function (error, results, fields) {
-                if (error) throw error;
-                resolve();
+                if (error) {
+                    if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
+                    else {  resolve(error.message); }
+                }
+                resolve(true);
             });
     });
 }
@@ -53,8 +60,11 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
     return new Promise((resolve, reject) => {
         db.connection.query('INSERT INTO user (username, name, familiarName, familiarType, idRole, isActive) VALUES (?, ?, ?, ?, ?, ?);',
             [username, name, familiarName, familiarType, role, isActive], function (error, results, fields) {
-                if (error) console.log(error);
-                resolve();
+                if (error) {
+                    if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
+                    else {  resolve(error.message); }
+                }
+                resolve(true);
             });
     });
 }

@@ -1,6 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../authenticate/auth');
+var user = require('../controller/user');
+
+router.get('/login/:result', function (request, response, next) {
+    if (request.session.loggedin) {
+        response.redirect('/users');
+    }
+    else {
+        response.render('login', { error: false,result: request.params.result });
+    }
+});
+
+
 
 router.get('/login', function (request, response, next) {
     if (request.session.loggedin) {
@@ -8,6 +20,16 @@ router.get('/login', function (request, response, next) {
     }
     else {
         response.render('login', {error: false});
+    }
+});
+
+
+router.post('/login',auth.checkLogin, function (request, response, next) {
+    if (request.session.loggedin) {
+        response.redirect('/users');
+    }
+    else {
+        response.render('login', {error: request.error});
     }
 });
 
@@ -21,24 +43,10 @@ router.get('/signup', function (request, response, next) {
 });
 
 
-
-router.post('/login',auth.checkLogin, function (request, response, next) {
-    if (request.session.loggedin) {
-        response.redirect('/users');
-    }
-    else {
-        response.render('login', {error: request.error});
-    }
-});
-
-
 router.post('/signup',auth.signUp, function (request, response, next) {
-    if (request.session.loggedin) {
-        response.redirect('/users');
-    }
-    else {
-        response.render('signup', {error: request.error});
-    }
+    if (request.error) {
+        response.render('signup', { error: request.error });        
+    }  
 });
 
 
@@ -50,10 +58,56 @@ router.get('/logout', function (request, response, next) {
       })
 });
 
+router.get('/passwordremind', function (request, response, next) {
+    response.render('passwordremind', { error: false });
+});
+
+
+router.post('/passwordremind', async function (request, response, next) {   
+    await auth.remindPassword(request.body.email);
+    response.redirect('passwordrestore');
+});
 
 
 
+router.get('/passwordrestore', function (request, response, next) {
+    response.render('passwordrestore', { error: false });
+});
 
+
+
+router.post('/passwordrestore', async function (request, response, next) {   
+    const result = JSON.parse(JSON.stringify(await auth.getUserByPasswordToken(request.body.passwordtoken)));
+    if(result.length>0)
+    {
+        request.session.userId=result[0].idUser;
+        response.redirect('passwordchange');
+    }
+    else{
+        response.render('passwordrestore', { error: "Token no es valido" });
+    }
+});
+
+
+
+router.get('/passwordchange', function (request, response, next) {
+    response.render('passwordchange', { error: false });
+
+});
+
+router.post('/passwordchange', async function (request, response, next) {
+    result = await user.changePassword(request.body.confirmPassword, request.session.userId);
+    console.log(result)
+    if(result)
+    {
+        response.redirect('/login/changePasswordSuccess');
+    }
+    else{
+        response.render('passwordrestore', { error: result });
+    }
+    
+
+});
 
 
 module.exports = router;
