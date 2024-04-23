@@ -27,31 +27,6 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     });
   }
 
-  router.get('/users/edit/:userId', async function (request, response, next) {
-    var userInfo = await user.getUserInfo(request.params.userId);
-    response.render('useredit', { username: response.locals.username, role: response.locals.role, userInfo: userInfo });
-  });
-  
-  router.post('/users/edit/:userId', async function (request, response, next) {
-     await user.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
-    response.redirect('/admin/users/')
-  });
-
-  router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
-    await user.deleteUser(request.params.userId);
-    response.redirect('/admin/users/')
-  });
-
-  router.get('/users/add', async function (request, response, next) {
-    response.render('useradd', { username: response.locals.username, role: response.locals.role });
-  });
-  
-  router.post('/users/add', async function (request, response, next) {
-    console.log(request.body.isActive);   
-    await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
-    response.redirect('/admin/users/')
-  });
-
   if (request.params.dataId == "chats") {
 
     title="Consultas"
@@ -60,7 +35,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     columns = [  "idChat" ,  "nameChat" ,   "isFinished" ,"isNeedDoctor","edit"  ];
     data.forEach(element => {
-      element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <a class="btn btn-danger" href="/admin/chats/delete/${element.idChat}" role="button">Borrar</a>`;
+      element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
     });
   
   }
@@ -72,6 +47,34 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   }
 });
 
+router.get('/users/edit/:userId', async function (request, response, next) {
+  var userInfo = await user.getUserInfo(request.params.userId);
+  response.render('useredit', { username: response.locals.username, role: response.locals.role, userInfo: userInfo });
+});
 
+router.post('/users/edit/:userId', async function (request, response, next) {
+   await user.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
+  response.redirect('/admin/users/')
+});
+
+router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
+  await user.deleteUser(request.params.userId);
+  response.redirect('/admin/users/')
+});
+
+router.get('/users/add', async function (request, response, next) {
+  response.render('useradd', { username: response.locals.username, role: response.locals.role });
+});
+
+router.post('/users/add', async function (request, response, next) {
+  console.log(request.body.isActive);   
+  await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
+  response.redirect('/admin/users/')
+});
+
+router.post('/chats/delete/:chatId', auth.checkAuthToken, async function (request, response, next) {
+  await chat.deleteChat(request.params.chatId);
+  response.redirect('/admin/chats/')
+});
 
 module.exports = router;
