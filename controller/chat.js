@@ -19,7 +19,30 @@ async function getChatInfo(idChat){
     });
 }
 
+async function deleteChat(idChat){
+    return new Promise((resolve, reject) => {
+        db.connection.query('DELETE FROM chat WHERE idChat = ?;',
+            [idChat], function (error, results, fields) {
+                if (error) throw error;
+                resolve();
+            });
+    });
+}
+
+async function finalizeChat(idChat){
+    return new Promise((resolve, reject) => {
+        db.connection.query('UPDATE chat SET isFinished = 1 WHERE idChat = ?;',
+            [idChat], function (error, results, fields) {
+                if (error) throw error;
+                resolve();
+            });
+    });
+}
+
+
 module.exports = {
     getAllChats,
-    getChatInfo
+    getChatInfo,
+    deleteChat,
+    finalizeChat
 };
