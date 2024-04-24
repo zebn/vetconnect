@@ -49,9 +49,9 @@ block content
                                         .card-body
                                             h5.card-title #{chat.nameChat}
                                             p.card-text #{chat.nameChat}
-                                            a.btn.btn-primary(href="/chat/"+chat.idChat) Unir
                                             form(action="/users/finalize/"+chat.idChat method="POST")
-                                                button(type="submit").btn.btn-danger.ms-2 Finalizar
+                                                a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
+                                                button(type="submit").btn.btn-danger.ms-1 Finalizar    
                     if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
                         h2 Consultas sin doctor
                         .row
@@ -62,9 +62,9 @@ block content
                                         .card-body
                                             h5.card-title #{chatWithoutDoctor.nameChat}
                                             p.card-text #{chatWithoutDoctor.nameChat}
-                                            a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
                                             form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
-                                                button(type="submit").btn.btn-danger.ms-2 Finalizar
+                                                a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
+                                                button(type="submit").btn.btn-danger.ms-1 Finalizar
     //- .container-fluid
     //- .row
     //-     main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
