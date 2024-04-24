@@ -14,12 +14,12 @@ block content
                         each user in users
                             if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
                                 .d-flex.align-items-start.mt-2
-                                    img.rounded-circle.mr-1(src='/img/doctor.png' alt=user.username width='40' height='40')
+                                    img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
                                     .flex-grow-1.ml-3
                                         | #{user.name} 
                             if (user.nameRole=="ROLE_USER")
                                 .d-flex.align-items-start.mt-2
-                                    img.rounded-circle.mr-1(src='/img/user.png' alt=user.username width='40' height='40')
+                                    img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
                                     .flex-grow-1.ml-3
                                         | #{user.name} 
                                         .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})

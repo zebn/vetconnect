@@ -18,4 +18,10 @@ router.post('/finalize/:chatId', auth.checkAuthToken, async function (request, r
   response.redirect('/users/')
 });
 
+router.post('/imagedchange', auth.checkAuthToken, async function(request, response, next) {
+  await user.changeImage(request.files.profileimage,request.session.userId);
+  response.redirect('/users');
+});
+
+
 module.exports = router;

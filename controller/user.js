@@ -69,12 +69,32 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
     });
 }
 
+async function changeImage(profileimage, userId) {
+    return new Promise((resolve, reject) => {
+        let uploadPath;
+        if (!profileimage) {
+            throw 'No files were uploaded.';
+        }
+        uploadPath = path.join(__dirname, '..', 'public', 'upload', userId.toString() + '_' + profileimage.name);
+        profileimage.mv(uploadPath, function (err) {
+            if (err) throw console.log(error);
+            db.connection.query('UPDATE user SET img = ? WHERE idUser = ? ', [userId.toString() + '_' + profileimage.name, userId], function (error, results, fields) {
+                if (error) console.log(error);
+                resolve();
+            });
+        });
+    }
+    )
+};
+
+
 module.exports = {
     getUserInfo,
     changePassword,
     getAllUsers,
     deleteUser,
     editUser,
-    addUser
+    addUser,
+    changeImage
 };
 
