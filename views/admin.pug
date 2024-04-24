@@ -19,11 +19,11 @@ block content
                 h2 Gestión de #{title}
                 .btn-toolbar.mb-2.mb-md-0
                     .btn-group.me-2
-                        button.btn.btn-sm.btn-outline-secondary(type='button') Share
-                        button.btn.btn-sm.btn-outline-secondary(type='button') Export
-                    button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
-                        span(data-feather='calendar')
-                         |             This week
+                    //-     button.btn.btn-sm.btn-outline-secondary(type='button') Share
+                    //-     button.btn.btn-sm.btn-outline-secondary(type='button') Export
+                    //- button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
+                    //-     span(data-feather='calendar')
+                    //-      |             This week
             if (dataId=="users")
                 a.btn.btn-warning(href='/admin/'+dataId+'/add') Añadir
             table#datatable.table.table-striped.table-light(style='width:100%')

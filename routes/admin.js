@@ -20,9 +20,10 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     title="Usuarios"
 
-    columns = [  "ID" ,  "Email" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
+    columns = [  "ID" ,"Imagen" , "Email" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
 
     data.forEach(element => {
+      element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>`
       element.edit = `<form action="/admin/users/delete/${element.idUser}" method="POST"> <a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
     });
   }
