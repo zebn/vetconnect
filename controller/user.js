@@ -80,10 +80,10 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
 
                 const mailData = {
                     from: 'ap7456@gmail.com',  // sender address
-                    to: email,   // list of receivers
+                    to: username,   // list of receivers
                     subject: 'Alta en club del tenis',
                     text: 'That was easy!',
-                    html: `<b>Hola! <b>${results[0].username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
+                    html: `<b>Hola! <b>${username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
                 };
 
                 return new Promise((resolve, reject) => {

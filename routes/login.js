@@ -2,51 +2,54 @@ var express = require('express');
 var router = express.Router();
 var auth = require('../authenticate/auth');
 var user = require('../controller/user');
+var Recaptcha = require('express-recaptcha').RecaptchaV2
+var recaptcha = new Recaptcha('6LdBRMcpAAAAAJ4-GNSuFdjzdjpS0-g0ldqulN2c', '6LdBRMcpAAAAAEKIfEXJQiu7v7hJpF8ESdgYjbIx')
 
-router.get('/login/:result', function (request, response, next) {
+router.get('/login/:result', recaptcha.middleware.renderWith(),function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
     }
     else {
-        response.render('login', { error: false,result: request.params.result });
+        response.render('login', { error: false, result: request.params.result, captcha: response.recaptcha  });
     }
 });
 
 
 
-router.get('/login', function (request, response, next) {
+router.get('/login', recaptcha.middleware.renderWith(), function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
     }
     else {
-        response.render('login', {error: false});
+        response.render('login', { error: false,result: false, captcha: response.recaptcha });
     }
 });
 
 
-router.post('/login',auth.checkLogin, function (request, response, next) {
-    if (request.session.loggedin) {
+router.post('/login', recaptcha.middleware.renderWith(), recaptcha.middleware.verify, auth.checkLogin, function (request, response, next) {
+    console.log(request.recaptcha.error)
+    if (request.session.loggedin && !request.recaptcha.error) {
         response.redirect('/users');
     }
     else {
-        response.render('login', {error: request.error});
+        response.render('login', { eerror: request.error,result: request.params.result, captcha: response.recaptcha});
     }
 });
 
-router.get('/signup', function (request, response, next) {
-    if (request.cookies['token']&&request.cookies['username']) {
+router.get('/signup',  recaptcha.middleware.renderWith(), function (request, response, next) {
+    if (request.cookies['token'] && request.cookies['username']) {
         response.redirect('/users');
     }
     else {
-        response.render('signup', {error: false});
+        response.render('signup', { error: false ,captcha: response.recaptcha});
     }
 });
 
 
-router.post('/signup',auth.signUp, function (request, response, next) {
+router.post('/signup',recaptcha.middleware.renderWith(), recaptcha.middleware.verify, auth.signUp, function (request, response, next) {
     if (request.error) {
-        response.render('signup', { error: request.error });        
-    }  
+        response.render('signup', { error: request.error ,captcha: response.recaptcha});
+    }
 });
 
 
@@ -55,7 +58,7 @@ router.get('/logout', function (request, response, next) {
     response.clearCookie('username');
     request.session.destroy((err) => {
         response.redirect('/');
-      })
+    })
 });
 
 router.get('/passwordremind', function (request, response, next) {
@@ -63,7 +66,7 @@ router.get('/passwordremind', function (request, response, next) {
 });
 
 
-router.post('/passwordremind', async function (request, response, next) {   
+router.post('/passwordremind', async function (request, response, next) {
     await auth.remindPassword(request.body.email);
     response.redirect('passwordrestore');
 });
@@ -76,14 +79,13 @@ router.get('/passwordrestore', function (request, response, next) {
 
 
 
-router.post('/passwordrestore', async function (request, response, next) {   
+router.post('/passwordrestore', async function (request, response, next) {
     const result = JSON.parse(JSON.stringify(await auth.getUserByPasswordToken(request.body.passwordtoken)));
-    if(result.length>0)
-    {
-        request.session.userId=result[0].idUser;
+    if (result.length > 0) {
+        request.session.userId = result[0].idUser;
         response.redirect('passwordchange');
     }
-    else{
+    else {
         response.render('passwordrestore', { error: "Token no es valido" });
     }
 });
@@ -98,14 +100,13 @@ router.get('/passwordchange', function (request, response, next) {
 router.post('/passwordchange', async function (request, response, next) {
     result = await user.changePassword(request.body.confirmPassword, request.session.userId);
     console.log(result)
-    if(result)
-    {
+    if (result) {
         response.redirect('/login/changePasswordSuccess');
     }
-    else{
+    else {
         response.render('passwordrestore', { error: result });
     }
-    
+
 
 });
 

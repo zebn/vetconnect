@@ -25,6 +25,7 @@ block content
                         input#rememberme(name='rememberme'  type='checkbox' value="yes")
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
+                        p !{captcha}
                         button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Entrar
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
@@ -32,16 +33,12 @@ block content
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
                         a.link-primary.link-offset-2.link-underline-opacity-25.link-underline-opacity-100-hover(href="/signup") Registrar
-
-    //- h1 Sign in
-    //- form(action='/login' method='post')
-    //-     section
-    //-         label(for='username') Username
-    //-         input#username(name='username' type='text' autocomplete='username' required='' autofocus='')
-    //-     section
-    //-         label(for='current-password') Password
-    //-         input#current-password(name='password' type='password' autocomplete='current-password' required='')
-    //-     section
-    //-         label(for='rememberme') Remember me
-    //-         input#rememberme(name='rememberme'  type='checkbox' value="yes")
-    //-     button(type='submit') Sign in
+    script.
+        function cb(token){
+            console.log('token', token);
+            var input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('name', 'g-recaptcha-response');
+            input.setAttribute('value', token);
+            document.getElementsByTagName('form')[0].appendChild(input);
+        }
