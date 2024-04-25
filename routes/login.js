@@ -5,7 +5,7 @@ var user = require('../controller/user');
 var Recaptcha = require('express-recaptcha').RecaptchaV2
 var recaptcha = new Recaptcha('6LdBRMcpAAAAAJ4-GNSuFdjzdjpS0-g0ldqulN2c', '6LdBRMcpAAAAAEKIfEXJQiu7v7hJpF8ESdgYjbIx')
 
-router.get('/login/:result', recaptcha.middleware.renderWith(),function (request, response, next) {
+router.get('/login/:result', recaptcha.middleware.renderWith({ hl: 'es' }),function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
     }
@@ -16,7 +16,7 @@ router.get('/login/:result', recaptcha.middleware.renderWith(),function (request
 
 
 
-router.get('/login', recaptcha.middleware.renderWith(), function (request, response, next) {
+router.get('/login', recaptcha.middleware.renderWith({ hl: 'es' }), function (request, response, next) {
     if (request.session.loggedin) {
         response.redirect('/users');
     }
@@ -26,7 +26,7 @@ router.get('/login', recaptcha.middleware.renderWith(), function (request, respo
 });
 
 
-router.post('/login', recaptcha.middleware.renderWith(), recaptcha.middleware.verify, auth.checkLogin, function (request, response, next) {
+router.post('/login', recaptcha.middleware.renderWith({ hl: 'es' }), recaptcha.middleware.verify, auth.checkLogin, function (request, response, next) {
     console.log(request.recaptcha.error)
     if (request.session.loggedin && !request.recaptcha.error) {
         response.redirect('/users');
@@ -36,7 +36,7 @@ router.post('/login', recaptcha.middleware.renderWith(), recaptcha.middleware.ve
     }
 });
 
-router.get('/signup',  recaptcha.middleware.renderWith(), function (request, response, next) {
+router.get('/signup',  recaptcha.middleware.renderWith({ hl: 'es' }), function (request, response, next) {
     if (request.cookies['token'] && request.cookies['username']) {
         response.redirect('/users');
     }
@@ -46,7 +46,7 @@ router.get('/signup',  recaptcha.middleware.renderWith(), function (request, res
 });
 
 
-router.post('/signup',recaptcha.middleware.renderWith(), recaptcha.middleware.verify, auth.signUp, function (request, response, next) {
+router.post('/signup',recaptcha.middleware.renderWith({ hl: 'es' }), recaptcha.middleware.verify, auth.signUp, function (request, response, next) {
     if (request.error) {
         response.render('signup', { error: request.error ,captcha: response.recaptcha});
     }

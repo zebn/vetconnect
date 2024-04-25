@@ -119,9 +119,12 @@
   justify-content:center;}
 
  .popup{
+    position:fixed;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
     display:inline-block;
     width:400px;
-    min-height:200px;
     background-color:white;
     border-radius: 5px;
     display:flex;
