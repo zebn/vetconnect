@@ -1,6 +1,7 @@
 const db = require('../model/db');
 const crypto = require('crypto');
 var path = require('path');
+const nodemailer = require('nodemailer');
 
 async function getUserInfo(userId) {
     return new Promise((resolve, reject) => {
@@ -24,10 +25,10 @@ async function changePassword(password, userId) {
 }
 
 
-async function getAllUsers(){
+async function getAllUsers() {
     return new Promise((resolve, reject) => {
         db.connection.query('select u.idUser,u.img,u.username,u.name,u.familiarName,u.familiarType,r.nameRole,u.isActive from user u inner join role r on r.idRole = u.idRole', function (error, results, fields) {
-            if (error) {reject(error)};                
+            if (error) { reject(error) };
             resolve(results)
         });
     });
@@ -46,10 +47,10 @@ async function deleteUser(userId) {
 async function editUser(username, name, familiarName, familiarType, idRole, isActive, idUser) {
     return new Promise((resolve, reject) => {
         db.connection.query('UPDATE user SET username = ?, name = ?, familiarName = ?, familiarType = ?, idRole = ?,  isActive = ? WHERE idUser = ?;',
-            [username, name, familiarName, familiarType, idRole, isActive,idUser], function (error, results, fields) {
+            [username, name, familiarName, familiarType, idRole, isActive, idUser], function (error, results, fields) {
                 if (error) {
                     if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
-                    else {  resolve(error.message); }
+                    else { resolve(error.message); }
                 }
                 resolve(true);
             });
@@ -62,9 +63,42 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
             [username, name, familiarName, familiarType, role, isActive], function (error, results, fields) {
                 if (error) {
                     if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
-                    else {  resolve(error.message); }
+                    else { resolve(error.message); }
                 }
-                resolve(true);
+                const transporter = nodemailer.createTransport({
+                    port: 587,               // true for 465, false for other ports
+                    host: process.env.MAILHOST,
+                    auth: {
+                        user: process.env.MAILUSER,
+                        pass: process.env.MAILPASS,
+                    },
+                    secure: false,
+                    tls: {
+                        ciphers: 'SSLv3'
+                    }
+                });
+
+                const mailData = {
+                    from: 'ap7456@gmail.com',  // sender address
+                    to: email,   // list of receivers
+                    subject: 'Alta en club del tenis',
+                    text: 'That was easy!',
+                    html: `<b>Hola! <b>${results[0].username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
+                };
+
+                return new Promise((resolve, reject) => {
+                    transporter.sendMail(mailData, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            resolve(err)
+                        }
+                        else {
+                            console.log(info);
+                            response.redirect('/login/successRegister');
+                            resolve(true);
+                        }
+                    });
+                });
             });
     });
 }

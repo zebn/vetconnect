@@ -3,10 +3,12 @@ html
   head
     title= title
     script(src='/javascripts/jquery-3.5.1.js')
+    script(src='/javascripts/popper.min.js')
+    script(src='/javascripts/bootstrap.min.js')
     link(rel='stylesheet' href='/stylesheets/dataTables.dataTables.css')
     link(rel='stylesheet' href='/stylesheets/bootstrap.css')
     link(rel='stylesheet' href='/stylesheets/style.css')
-    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css')  
+    link(rel='stylesheet' href='https://kit.fontawesome.com/888cc8fb7e.js' crossorigin="anonymous")  
   body
     .popup-overlay
       .popup
@@ -61,9 +63,6 @@ html
               li.mb-2 Email: vetconnet@gmail.com
               li.mb-2 Lunes a viernes: 9:00 a 21:00
               li.mb-2 Sábados: 9:00 a 14:00
-
-script(src='https://unpkg.com/@popperjs/core@2')
-script(src='/javascripts/bootstrap.min.js')
 script.
   jQuery(document).ready(function($) {
   //check to see if the submited cookie is set, if not check if the popup has been closed, if not then display the popup

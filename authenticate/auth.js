@@ -1,7 +1,7 @@
 const socketIo = require('socket.io')
 const db = require('../model/db');
 const crypto = require('crypto');
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
 
 var checkLogin = (request, response, next) => {
     let username = request.body.username;
@@ -66,7 +66,7 @@ var checkAuthToken = (request, response, next) => {
                 response.clearCookie("token");
                 request.session.destroy((err) => {
                     response.redirect('/login');
-                  })          
+                })
                 return false
             }
         });
@@ -74,7 +74,7 @@ var checkAuthToken = (request, response, next) => {
         if (!request.session.username || !request.session.loggedin) {
             request.session.destroy((err) => {
                 response.redirect('/login');
-              })          
+            })
             return false
         }
         else {
@@ -88,10 +88,10 @@ var checkAuthToken = (request, response, next) => {
                     request.session.role = results[0].nameRole;
                     next();
                 }
-                else {  
+                else {
                     request.session.destroy((err) => {
                         response.redirect('/login');
-                      })              
+                    })
                     return true;
                 }
             });
@@ -118,14 +118,51 @@ var signUp = (request, response, next) => {
 
 
     // Format the date string to 'YYYY-MM-DD' format
-    request.body.age = request.body.age ? new Date(request.body.age).toISOString().slice(0, 10) : null;    
-    db.connection.query('INSERT INTO user (name, username , password, familiarName, familiarType ) VALUES (?, ?, ?, ?, ?)', [request.body.name +' '+ request.body.surname, request.body.username, request.body.password, request.body.mascotname, request.body.mascottype], function (error, results, fields) {
+    request.body.age = request.body.age ? new Date(request.body.age).toISOString().slice(0, 10) : null;
+    db.connection.query('INSERT INTO user (name, username , password, familiarName, familiarType ) VALUES (?, ?, ?, ?, ?)', [request.body.name + ' ' + request.body.surname, request.body.username, request.body.password, request.body.mascotname, request.body.mascottype], function (error, results, fields) {
         if (error) {
             if (error.errno == 1062) { request.error = "Este correo ya está registrado"; }
             else { request.error = error.message }
             next();
         }
-        else { response.redirect('/login/successRegister'); }
+        else {
+            const transporter = nodemailer.createTransport({
+                port: 587,               // true for 465, false for other ports
+                host: process.env.MAILHOST,
+                auth: {
+                    user: process.env.MAILUSER,
+                    pass: process.env.MAILPASS,
+                },
+                secure: false,
+                tls: {
+                    ciphers: 'SSLv3'
+                }
+            });
+
+            const mailData = {
+                from: 'ap7456@gmail.com',  // sender address
+                to: email,   // list of receivers
+                subject: 'Alta en club del tenis',
+                text: 'That was easy!',
+                html: `<b>Hola! <b>${results[0].username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
+            };
+
+            return new Promise((resolve, reject) => {
+                transporter.sendMail(mailData, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        response.redirect('/login/successRegister');
+                        resolve(err)
+                    }
+                    else {
+                        console.log(info);
+                        response.redirect('/login/successRegister');
+                        resolve('Correo enviado')
+                    }
+                });
+            });
+
+        }
     });
 };
 
@@ -133,11 +170,11 @@ var signUp = (request, response, next) => {
 async function getUserByPasswordToken(passwordToken) {
     return new Promise((resolve, reject) => {
         db.connection.query('select * from user u where u.passwordToken = ?', [passwordToken], function (error, results, fields) {
-            if (error)  resolve(error);
-            resolve(results) ;
+            if (error) resolve(error);
+            resolve(results);
         });
     });
-    
+
 };
 
 
@@ -179,7 +216,7 @@ async function remindPassword(email) {
                 });
             });
         }
-        else{
+        else {
             return false
         }
 

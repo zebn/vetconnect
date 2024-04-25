@@ -108,7 +108,7 @@
   position:fixed;
   top:0;
   left:0;
-  rigth:0;
+  right:0;
   bottom:0;
   background-color:rgba(0,0,0,.5);
   width:100%;
@@ -116,8 +116,9 @@
   text-align:center;
   padding:1rem;
   align-items:center;
-  justify-content:center;
-  .popup{
+  justify-content:center;}
+
+ .popup{
     display:inline-block;
     width:400px;
     min-height:200px;
@@ -129,13 +130,5 @@
     align-items:center;
     justify-content:center;
   }
-}
 
-p{
-  flex: 0 1 100%;
-  padding:0 1rem;
-  margin:0;
-  margin-top:1rem;
-  font-family:sans-serif;
-}
 
