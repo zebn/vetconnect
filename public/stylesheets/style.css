@@ -1,3 +1,8 @@
+a, a:hover {
+	text-decoration: none;
+	transition: color 0.3s ease-in-out;
+}
+
 #form {
   background-color: #f5f5f5; /* Color de fondo del formulario de chat */
   padding: 0px;
