@@ -118,20 +118,21 @@
   align-items:center;
   justify-content:center;}
 
- .popup{
+  .popup{
     position:fixed;
-    height: 25%;
+    height: 15%;
     bottom: 0;
     width: 100%;
     display:inline-block;
     width:100%;
     background-color:white;
     border-radius: 5px;
-    display:flex;
+    /* display:flex; */
     flex-direction: row;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items:center;
     justify-content:center;
-  }
-
+    }
+  
+  
 

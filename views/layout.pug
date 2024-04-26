@@ -13,13 +13,11 @@ html
     .popup-overlay
       .popup
         p
-          | ¡Hola! 👋 
+          a.m-1.submit.btn.btn-primary(href='javascript:;') Aceptar   
+          a.m-1.close.btn.btn-primary(href='javascript:;') Cerrar    
         p 
-          | Nos encanta tenerte aquí. Para brindarte la mejor experiencia posible en nuestro sitio, utilizamos cookies y tecnologías similares. Estas cookies nos ayudan a entender cómo utilizas nuestro sitio y a personalizar tu experiencia de navegación. Al hacer clic en "Aceptar", nos das tu consentimiento para usar todas las cookies. Sin embargo, también puedes elegir las opciones de cookies que prefieras seleccionando "Configuración de cookies". Puedes cambiar de opinión en cualquier momento y volver a esta página para ajustar tus preferencias de cookies. 
-        p 
-          | ¡Gracias por ser parte de nuestra comunidad! 🍪
-        a.m-5.close.btn.btn-primary(href='javascript:;') Cerrar
-        a.m-5.submit.btn.btn-primary(href='javascript:;') Aceptar        
+          | Nos encanta tenerte aquí. Para brindarte la mejor experiencia posible en nuestro sitio, utilizamos cookies y tecnologías similares. Estas cookies nos ayudan a entender cómo utilizas nuestro sitio y a personalizar tu experiencia de navegación. Al hacer clic en "Aceptar", nos das tu consentimiento para usar todas las cookies.
+          a(aria-current='Política de cookies' href='/cookies') Ver nuestra política de cookies        
     nav.navbar.navbar-expand-lg.bg-body-tertiary.bg-primary
       .container-fluid
         a.navbar-brand(href='/').text-white.ms-2 VETCONNECT
