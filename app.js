@@ -14,6 +14,7 @@ var loginRouter = require('./routes/login');
 var chatRouter = require('./routes/chat');
 var adminRouter = require('./routes/admin');
 var contactRouter = require('./routes/contact');
+var legalRouter = require('./routes/legal');
 
 
 
@@ -59,6 +60,7 @@ app.use(function (req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/', loginRouter);
+app.use('/', legalRouter);
 app.use('/users', usersRouter);
 app.use('/chat', chatRouter);
 app.use('/admin', adminRouter);
