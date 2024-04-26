@@ -102,3 +102,36 @@
 .px-4 {padding-right: 1.5rem!important; padding-left: 1.5rem!important;}
 .flex-grow-0 {flex-grow: 0!important;}
 .border-top {border-top: 1px solid #dee2e6!important;}
+
+.popup-overlay{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color:rgba(0,0,0,.5);
+  width:100%;
+  height:100%;
+  text-align:center;
+  padding:1rem;
+  align-items:center;
+  justify-content:center;}
+
+ .popup{
+    position:fixed;
+    height: 25%;
+    bottom: 0;
+    width: 100%;
+    display:inline-block;
+    width:100%;
+    background-color:white;
+    border-radius: 5px;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content:center;
+  }
+
+

@@ -4,6 +4,8 @@ block content
       .row.justify-content-center
         .col-md-6
             h1.my-5 Formulario de Registro
+            if (error)
+                .my-5.text-center.text-danger #{error}
             form(action='/signup' method='post')
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='name') *Nombre: 
@@ -18,27 +20,28 @@ block content
                     .col-sm-8
                         input#username.form-control(type='email' name='username' maxlength="45" required)
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='current-password') *Contraseña: 
+                    label.form-label.col-sm-4(for='password') *Contraseña: 
                     .col-sm-8
-                        input#current-password.form-control(type='password' name='current-password' required)
+                        input#password.form-control(type='password' name='password' required)
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='mascot-name') Nombre de mascota: 
                     .col-sm-8
-                        input#mascot-name.form-control(type='text' name='mascot-name' maxlength="45")
+                        input#mascotname.form-control(type='text' name='mascotname' maxlength="45")
                 .mb-5.row.align-items-center
                     label.form-label.col-sm-4(for='mascot-type') Tipo de mascota: 
                     .col-sm-8
-                        input#mascot-type.form-control(type='text' name='mascot-type' maxlength="45")
+                        input#mascottype.form-control(type='text' name='mascottype' maxlength="45")
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
+                        p !{captcha}
                         button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
     span.float-end.me-5 Los campos con (*) son obligatorios.
-
-    //- form(action='/signup' method='post')
-    //-   section
-    //-     label(for='username') Username
-    //-     input#username(name='username' type='text' autocomplete='username' required='')
-    //-   section
-    //-     label(for='new-password') Password
-    //-     input#new-password(name='password' type='password' autocomplete='new-password' required='')
-    //-   button(type='submit') Sign up
+    script.
+        function cb(token){
+            console.log('token', token);
+            var input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('name', 'g-recaptcha-response');
+            input.setAttribute('value', token);
+            document.getElementsByTagName('form')[0].appendChild(input);
+        }
