@@ -11,27 +11,28 @@ block content
                             .d-flex.align-items-center
                                 .flex-grow-1
                                     h5.mt-2 Participantes 
-                        each user in users
-                            if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
-                                .d-flex.align-items-start.mt-2
-                                    img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
-                                    .flex-grow-1.ml-3
-                                        | #{user.name} 
-                            if (user.nameRole=="ROLE_USER")
-                                .d-flex.align-items-start.mt-2
-                                    img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
-                                    .flex-grow-1.ml-3
-                                        | #{user.name} 
-                                        .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
+                        #users
+                            each user in users
+                                if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
+                                    .d-flex.align-items-start.mt-2
+                                        img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
+                                            | #{user.name} 
+                                if (user.nameRole=="ROLE_USER")
+                                    .d-flex.align-items-start.mt-2
+                                        img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
+                                            | #{user.name} 
+                                            .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
                         .py-2.px-4.border-bottom.d-none.d-lg-block
-                            .d-flex.align-items-center.py-1
+                            .d-flex.justify-content-between.py-1
                                 h5 #{chatInfo.nameChat}
-                                    if (chatInfo.isFinished==1)
-                                        | Consulta finalizada
-                                    if (chatInfo.isNeedDoctor==1)
-                                        | Consulta pendiente de doctor
+                                if (chatInfo.isFinished==1)
+                                    p.float-end Consulta pendiente de doctor
+                                if (chatInfo.isNeedDoctor==1)
+                                    p.float-end Consulta pendiente de doctor
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
@@ -87,11 +88,14 @@ block content
         let name = '#{name}';
         let userId = '#{userId}';
         let role = '#{role}';
+        let nickname = '#{nickname}';
+        let img = '#{img}';
         let file = null;
         let filename =null;        
-        dataConnection = {username: username, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
+        dataConnection = {username: username, img:img, name:name,nickname:nickname, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
         console.log(`Connecting socket`);
         if (socket && roomId && userId) {
+            console.log('Joining.. ' + dataConnection)
             socket.emit('join', dataConnection);
         }
         form.addEventListener('submit', (e) => {
@@ -176,8 +180,45 @@ block content
             messages.appendChild(item);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+        function appendUser(data) {
+        // Assuming user object with properties img, username, and name
+        var user = {
+            img: data.img,
+            username: data.username,
+            name: data.name,
+            nickname: data.nickname
+        };
+
+        // Create elements
+        var div = document.createElement('div');
+        var img = document.createElement('img');
+        var innerDiv = document.createElement('div');
+        var textNode = document.createTextNode(user.name);
+
+        // Set attributes and properties
+        div.classList.add('d-flex', 'align-items-start', 'mt-2');
+        img.classList.add('rounded-circle', 'mr-1');
+        img.src = '/upload/' + user.img;
+        img.alt = user.username;
+        img.width = '40';
+        img.height = '40';
+        innerDiv.classList.add('flex-grow-1', 'ml-3');
+
+        // Append elements
+        innerDiv.appendChild(textNode);
+        div.appendChild(img);
+        div.appendChild(innerDiv);
+
+        // Append the entire structure to a parent element (assuming a parent with id 'container')
+        document.getElementById('users').appendChild(div);            
+        }        
         socket.on('chat message', (data) => {
         console.log('message:',data)
         // Call the appendMessage function with the received message data
         appendMessage(data);
+        });
+        socket.on('join', (data) => {
+        console.log('joined:',data)
+        // Call the appendMessage function with the received message data
+        appendUser(data);
         });

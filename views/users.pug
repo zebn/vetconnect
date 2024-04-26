@@ -69,60 +69,6 @@ block content
                                             form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
                                                 a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
                                                 button(type="submit").btn.btn-danger.ms-1 Finalizar
-    //- .container-fluid
-    //- .row
-    //-     main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
-    //-         .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
-    //-             h1.h2 Mis consultas
-    //-             .btn-toolbar.mb-2.mb-md-0
-    //-                 .btn-group.me-2
-    //-                     button.btn.btn-sm.btn-outline-secondary(type='button') Share
-    //-                     button.btn.btn-sm.btn-outline-secondary(type='button') Export
-    //-                 button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
-    //-                     span(data-feather='calendar')
-    //-                      |             This week
-    //-         if (chats.length==0&&role=="ROLE_USER")
-    //-             button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
-    //-         if (chats.length>0)                
-    //-             .row
-    //-                 each chat in chats
-    //-                     .col-lg-3.mt-3
-    //-                         .card.text-bg-light.mb-3(style='max-width: 18rem;')
-    //-                             .card-header #{chat.nameChat}
-    //-                             .card-body
-    //-                                 h5.card-title Light card title
-    //-                                 p.card-text
-    //-                                 | Some quick example text to build on the card title and make up the bulk of the card's content.
-    //-                                 a.btn.btn-primary(href="/chat/"+chat.idChat) Unir consulta
-    //-         if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
-    //-             h2 Consultas sin doctor
-    //-             .row
-    //-                 each chatWithoutDoctor in chatsWithoutDoctor
-    //-                     .col-lg-3.mt-3
-    //-                         .card.text-bg-light.mb-3(style='max-width: 18rem;')
-    //-                             .card-header #{chatWithoutDoctor.nameChat}
-    //-                             .card-body
-    //-                                 h5.card-title Light card title
-    //-                                 p.card-text
-    //-                                 | Some quick example text to build on the card title and make up the bulk of the card's content.
-    //-                                 a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir consulta
-
-    //- div.text-center
-    //-     p Hola #{username}!
-    //-         if (chats.length==0&&role=="ROLE_USER")
-    //-             button(type='button', onclick='createRoom()')#createButton Crear nueva consulta
-    //-         br
-    //-         ul#chats Mis consultas 
-    //-             each chat in chats
-    //-                 li
-    //-                     a(href="/chat/"+chat.idChat)
-    //-                         button(type="button") Unir consulta #{chat.nameChat}
-    //-         if chatsWithoutDoctor.length>0
-    //-             ul#chats Consultas pendientes sin doctor
-    //-                 each chatWithoutDoctor in chatsWithoutDoctor
-    //-                     li
-    //-                         a(href="/chat/"+chatWithoutDoctor.idChat)
-    //-                             button(type="button") Unir consulta #{chatWithoutDoctor.nameChat}
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         console.log(#{roomId});
@@ -130,9 +76,9 @@ block content
         {
         const socket = io().connect();
         let roomId = '#{roomId}';
-        let username = '#{username}';
+        let nickname = '#{userInfo.nickname}';
         let userId = '#{userId}';  
-        dataConnection = {username: username, userId: userId,socketId:socket.id};
+        dataConnection = {nickname: nickname, userId: userId,socketId:socket.id};
         if (socket && userId) 
         socket.emit('create', dataConnection, (response) => {
         document.getElementById("createButton").remove();

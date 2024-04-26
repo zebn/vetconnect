@@ -20,7 +20,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     title="Usuarios"
 
-    columns = [  "ID" ,"Imagen" , "Email" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
+    columns = [  "ID" ,"Nick" ,"Imagen" , "Correo" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
 
     data.forEach(element => {
       element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>`

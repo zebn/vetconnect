@@ -27,6 +27,11 @@ class SocketController {
                                 });
                         }
                         socket.join(data.roomId);
+                        console.log(results);
+                        if (results.affectedRows>0)
+                        {
+                            io.to(data.roomId).emit('join', data);
+                        }                        
                     });
             };
 
@@ -63,13 +68,13 @@ class SocketController {
 
             socket.on('create', (data, callback) => {
                 db.connection.query("INSERT INTO chat (nameChat) VALUES (?);"
-                    , [`Consulta ${data.username}`], function (error, results, fields) {
+                    , [`Consulta ${data.nickname}`], function (error, results, fields) {
                         if (error) throw error;
                         console.log(`${data.userId} created room ${results.insertId}`);
                         joinRoom({ userId: data.userId, roomId: results.insertId });
                         callback({
                             roomId: results.insertId,
-                            roomName: `Consulta ${data.username}`
+                            roomName: `Consulta ${data.nickname}`
                         });
                         // io.sockets.socket(data.socketId).emit('new room', { userId: data.userId, roomId: results.insertId,roomName:`Consulta ${data.username}`});
                     });

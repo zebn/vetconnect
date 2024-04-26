@@ -16,6 +16,8 @@ router.get('/:roomId', auth.checkAuthToken, async function (request, response, n
     chatInfo: chatInfo,
     username: request.session.username,
     name: userInfo.name,
+    nickname: userInfo.nickname,
+    img: userInfo.img,
     roomId: request.params.roomId,
     role: request.session.role,
     userId: request.session.userId,

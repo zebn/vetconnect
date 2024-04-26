@@ -27,7 +27,7 @@ async function changePassword(password, userId) {
 
 async function getAllUsers() {
     return new Promise((resolve, reject) => {
-        db.connection.query('select u.idUser,u.img,u.username,u.name,u.familiarName,u.familiarType,r.nameRole,u.isActive from user u inner join role r on r.idRole = u.idRole', function (error, results, fields) {
+        db.connection.query('select u.idUser,u.nickname,u.img,u.username,u.name,u.familiarName,u.familiarType,r.nameRole,u.isActive from user u inner join role r on r.idRole = u.idRole', function (error, results, fields) {
             if (error) { reject(error) };
             resolve(results)
         });
