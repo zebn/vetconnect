@@ -120,11 +120,11 @@
 
  .popup{
     position:fixed;
-    height: 100px;
+    height: 25%;
     bottom: 0;
     width: 100%;
     display:inline-block;
-    width:400px;
+    width:100%;
     background-color:white;
     border-radius: 5px;
     display:flex;
