@@ -50,7 +50,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     columns = [  "ID" ,  "Usuario" ,   "Comentario" ,"Estrellas","",""];
     data.forEach(element => {
-      element.edit = `<a class="btn btn-primary" href="/admin/users/edit/${element.idReview}" role="button">Editar</a>`;      
+      element.edit = `<a class="btn btn-primary" href="/admin/reviews/edit/${element.idReview}" role="button">Editar</a>`;      
       element.delete = `<form action="/admin/reviews/delete/${element.idReview}" method="POST"> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
     });
   
@@ -79,13 +79,18 @@ router.get('/reviews/edit/:reviewId', async function (request, response, next) {
 });
 
 router.post('/reviews/edit/:reviewId', async function (request, response, next) {
-   await review.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
-  response.redirect('/admin/users/')
+   await review.editReview(request.body.reviewUser, request.body.reviewBody, request.body.reviewStars,request.params.reviewId);
+  response.redirect('/admin/reviews/')
 });
 
 router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
   await user.deleteUser(request.params.userId);
   response.redirect('/admin/users/')
+});
+
+router.post('/reviews/delete/:reviewId', auth.checkAuthToken, async function (request, response, next) {
+  await review.deleteReview(request.params.reviewId);
+  response.redirect('/admin/reviews/')
 });
 
 router.get('/users/add', async function (request, response, next) {

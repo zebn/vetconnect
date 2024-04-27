@@ -15,7 +15,6 @@ var chatRouter = require('./routes/chat');
 var adminRouter = require('./routes/admin');
 var contactRouter = require('./routes/contact');
 var legalRouter = require('./routes/legal');
-var reviewRouter = require('./routes/review');
 
 
 
@@ -66,7 +65,7 @@ app.use('/users', usersRouter);
 app.use('/chat', chatRouter);
 app.use('/admin', adminRouter);
 app.use('/contact', contactRouter);
-app.use('/review', reviewRouter);
+
 
 
 
