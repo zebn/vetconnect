@@ -3,7 +3,7 @@ var router = express.Router();
 var auth = require('../authenticate/auth');
 var user = require('../controller/user');
 var Recaptcha = require('express-recaptcha').RecaptchaV2
-var recaptcha = new Recaptcha('6LdBRMcpAAAAAJ4-GNSuFdjzdjpS0-g0ldqulN2c', '6LdBRMcpAAAAAEKIfEXJQiu7v7hJpF8ESdgYjbIx')
+var recaptcha = new Recaptcha(process.env.CAP1, process.env.CAP2)
 
 router.get('/login/:result', recaptcha.middleware.renderWith({ hl: 'es' }),function (request, response, next) {
     if (request.session.loggedin) {
@@ -27,12 +27,11 @@ router.get('/login', recaptcha.middleware.renderWith({ hl: 'es' }), function (re
 
 
 router.post('/login', recaptcha.middleware.renderWith({ hl: 'es' }), recaptcha.middleware.verify, auth.checkLogin, function (request, response, next) {
-    console.log(request.recaptcha.error)
-    if (request.session.loggedin && !request.recaptcha.error) {
+    if (request.session.loggedin) {
         response.redirect('/users');
     }
     else {
-        response.render('login', { eerror: request.error,result: request.params.result, captcha: response.recaptcha});
+        response.render('login', { error: request.error,result: request.params.result, captcha: response.recaptcha});
     }
 });
 
