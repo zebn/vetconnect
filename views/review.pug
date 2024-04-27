@@ -12,18 +12,21 @@
                             p.card-text #{reviews[i].bodyReview}
                             p.card-text.text-muted #{reviews[i].starsReview}
                 - i++
-    .carousel-item
-      .container
-        .row.justify-content-center
-            - var i = 3;
-            while i < reviews.length
-                .col-lg-3.col-md-3
-                    .card
-                        .card-body
-                            h5.card-title #{reviews[i].userReview}
-                            p.card-text #{reviews[i].bodyReview}
-                            p.card-text.text-muted #{reviews[i].starsReview}  
-                - i++                                     
+    - var j = 1 ;
+            while j <= Math.floor(reviews.length/3)                          
+                .carousel-item
+                    .container
+                        .row.justify-content-center
+                            - var i = 2*j;
+                            while i <=  2*(j+1)
+                                .col-lg-3.col-md-3
+                                    .card
+                                        .card-body
+                                            h5.card-title #{reviews[i].userReview}
+                                            p.card-text #{reviews[i].bodyReview}
+                                            p.card-text.text-muted #{reviews[i].starsReview}  
+                                - i++
+                - j++                                               
   button.carousel-control-prev(type='button', data-bs-target='#userReviewsCarousel', data-bs-slide='prev')
     span.carousel-control-prev-icon
     span.visually-hidden Previous
