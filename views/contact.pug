@@ -26,7 +26,8 @@ block content
                         input#cv.form-control(name='cv' type='file' accept='application/pdf')
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
-                        button.btn.btn-success.px-4.py-2.ms-5(type='submit') Enviar
+                        p !{captcha}
+                        button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
         .mb-3.row.align-items-center
             .col-sm-8.offset-sm-4
                 span.me-5.float-end Los campos con (*) son obligatorios.  

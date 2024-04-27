@@ -27,12 +27,11 @@ router.get('/login', recaptcha.middleware.renderWith({ hl: 'es' }), function (re
 
 
 router.post('/login', recaptcha.middleware.renderWith({ hl: 'es' }), recaptcha.middleware.verify, auth.checkLogin, function (request, response, next) {
-    console.log(request.recaptcha.error)
-    if (request.session.loggedin && !request.recaptcha.error) {
+    if (request.session.loggedin) {
         response.redirect('/users');
     }
     else {
-        response.render('login', { eerror: request.error,result: request.params.result, captcha: response.recaptcha});
+        response.render('login', { error: request.error,result: request.params.result, captcha: response.recaptcha});
     }
 });
 
