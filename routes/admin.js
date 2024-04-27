@@ -3,6 +3,7 @@ var router = express.Router();
 var auth = require('../authenticate/auth');
 var user = require('../controller/user');
 var chat = require('../controller/chat');
+var review = require('../controller/review');
 
 /* GET users listing. */
 router.get('/:dataId', auth.checkAuthToken, async function (request, response, next) {
@@ -41,6 +42,20 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   
   }
 
+  if (request.params.dataId == "reviews") {
+
+    title="Opiniones"
+
+    data = JSON.parse(JSON.stringify(await review.getAllReviews()));
+
+    columns = [  "ID" ,  "Usuario" ,   "Comentario" ,"Estrellas","",""];
+    data.forEach(element => {
+      element.edit = `<a class="btn btn-primary" href="/admin/users/edit/${element.idReview}" role="button">Editar</a>`;      
+      element.delete = `<form action="/admin/reviews/delete/${element.idReview}" method="POST"> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
+    });
+  
+  }
+
   if (request.session.role == "ROLE_ADMIN")
     response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,title:title,dataId: request.params.dataId  });
   else {
@@ -58,6 +73,16 @@ router.post('/users/edit/:userId', async function (request, response, next) {
   response.redirect('/admin/users/')
 });
 
+router.get('/reviews/edit/:reviewId', async function (request, response, next) {
+  var reviewInfo = await review.getReviewInfo(request.params.reviewId);
+  response.render('reviewedit', { username: response.locals.username, role: response.locals.role, reviewInfo: reviewInfo });
+});
+
+router.post('/reviews/edit/:reviewId', async function (request, response, next) {
+   await review.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
+  response.redirect('/admin/users/')
+});
+
 router.post('/users/delete/:userId', auth.checkAuthToken, async function (request, response, next) {
   await user.deleteUser(request.params.userId);
   response.redirect('/admin/users/')
@@ -71,6 +96,15 @@ router.post('/users/add', async function (request, response, next) {
   console.log(request.body.isActive);   
   await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
   response.redirect('/admin/users/')
+});
+
+router.get('/reviews/add', async function (request, response, next) {
+  response.render('reviewadd', { username: response.locals.username, role: response.locals.role });
+});
+
+router.post('/reviews/add', async function (request, response, next) {
+  await review.addReview(request.body.user, request.body.reviewBody, request.body.reviewStars);
+  response.redirect('/admin/reviews/')
 });
 
 router.post('/chats/delete/:chatId', auth.checkAuthToken, async function (request, response, next) {
