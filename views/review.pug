@@ -10,23 +10,28 @@
                         .card-body
                             h5.card-title #{reviews[i].userReview}
                             p.card-text #{reviews[i].bodyReview}
-                            p.card-text.text-muted #{reviews[i].starsReview}
+                            each star in Array(reviews[i].starsReview).fill('')
+                                i.bi.bi-star-fill.text-warning
+                            each star in Array(5 - reviews[i].starsReview).fill('')
+                                i.bi.bi-star                           
                 - i++
-    - var j = 1 ;
-            while j <= Math.floor(reviews.length/3)                          
-                .carousel-item
-                    .container
-                        .row.justify-content-center
-                            - var i = 2*j;
-                            while i <=  2*(j+1)
-                                .col-lg-3.col-md-3
-                                    .card
-                                        .card-body
-                                            h5.card-title #{reviews[i].userReview}
-                                            p.card-text #{reviews[i].bodyReview}
-                                            p.card-text.text-muted #{reviews[i].starsReview}  
-                                - i++
-                - j++                                               
+    - var numIterations = Math.ceil(reviews.length / 3);
+    - for (var j = 1; j < numIterations; j++)
+      .carousel-item
+        .container
+          .row.justify-content-center
+            - var startIdx = j * 3;
+            - var endIdx = Math.min(startIdx + 3, reviews.length);
+            - for (var i = startIdx; i < endIdx; i++)
+              .col-lg-3.col-md-3
+                .card
+                  .card-body
+                    h5.card-title #{reviews[i].userReview}
+                    p.card-text #{reviews[i].bodyReview}
+                    each star in Array(reviews[i].starsReview).fill('')
+                        i.bi.bi-star-fill.text-warning
+                    each star in Array(5 - reviews[i].starsReview).fill('')
+                        i.bi.bi-star                                                                   
   button.carousel-control-prev(type='button', data-bs-target='#userReviewsCarousel', data-bs-slide='prev')
     span.carousel-control-prev-icon
     span.visually-hidden Previous
