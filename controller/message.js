@@ -14,15 +14,10 @@ class Message {
 
     async getAllMessages(idChat){
         return new Promise((resolve, reject) => {
-            db.connection.query('select m.idMessage, m.dateMessage, m.textMessage, m.file, m.idChat, m.idUser, u.username, u.name, r.nameRole from message m left join user u on m.idUser = u.idUser left join  role r on r.idRole = u.idRole where idChat = ? ORDER BY m.dateMessage;', [idChat], function (error, results, fields) {
+            db.connection.query('select m.idMessage, m.dateMessage, m.textMessage, m.file, m.idChat, m.idUser, u.username, u.name, u.img, r.nameRole from message m left join user u on m.idUser = u.idUser left join  role r on r.idRole = u.idRole where idChat = ? ORDER BY m.dateMessage;', [idChat], function (error, results, fields) {
                 if (error) {reject(error)};                
                 results.forEach(element => {
                     element.dateMessage=moment(element.dateMessage).fromNow();
-                    if ((element.nameRole=="ROLE_ADMIN")||(element.nameRole=="ROLE_DOCTOR")) {
-                        element.img="/img/doctor.png"
-                    } else {
-                        element.img="/img/user.png"
-                    }
                 });
                 resolve(results)
             });

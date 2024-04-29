@@ -44,11 +44,11 @@ class SocketController {
                     , [[data.message, data.roomId, data.userId, new Date(), filename]], function (error, results, fields) {
                         if (error) throw error;
                         data.dateMessage = moment(new Date().toUTCString()).fromNow();
-                        if ((data.nameRole == "ROLE_ADMIN") || (data.nameRole == "ROLE_DOCTOR")) {
-                            data.img = "/img/doctor.png"
-                        } else {
-                            data.img = "/img/user.png"
-                        }
+                        // if ((data.nameRole == "ROLE_ADMIN") || (data.nameRole == "ROLE_DOCTOR")) {
+                        //     data.img = "/img/doctor.png"
+                        // } else {
+                        //     data.img = "/img/user.png"
+                        // }
                         if (data.file) {
                             let uploadPath;
                             // name of the input is sampleFile

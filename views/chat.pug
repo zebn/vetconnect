@@ -39,7 +39,7 @@ block content
                                     if (message.username!=username)
                                         .chat-message-left.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src=message.img alt=message.name width='40' height='40')                                                
+                                                img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')                                                
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
                                                 strong.font-weight-bold.mb-1 #{message.name}:
                                                 |   #{message.textMessage}
@@ -51,7 +51,7 @@ block content
                                     if (message.username== username)
                                         .chat-message-right.pb-4
                                             div
-                                                img.rounded-circle.mr-1(src=message.img alt=message.name width='40' height='40')
+                                                img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')
                                             .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
                                                 |   #{message.textMessage}
@@ -60,17 +60,30 @@ block content
                                                         a(href='/upload/'+message.file  target="_blank")
                                                             img.mt-5(width='150px' src='/upload/'+message.file)                                                
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
-                        form#form.form-inline(action='')
-                            .flex-grow-0.py-3.px-4.border-top
-                                #inputgroup.input-group
-                                    .col-6
-                                        input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")
-                                    .col-3                        
-                                        button.btn.btn-primary Enviar
-                                    .col-3.mb-3
-                                        input#inputfile.form-control(type='file') 
+                        form#form.form-inline(action='').form-horizontal
+                            .flex-grow-0.py-3.px-4.border-top.input-group                                
+                                #inputgroup.col-1
+                                    label(tabindex="0").input-group
+                                        .row
+                                            .col-1                                                
+                                                    h2
+                                                        i.bi.bi-paperclip  
+                                            .col-1                           
+                                                input#inputfile.inputfile(type='file' size="1")                                    
+                                .col-10
+                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")                                  
+                                .col-1                       
+                                    button.btn.btn-primary Enviar
+                                .row
+                                    .col-12
+                                        #paperclip.span
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
+        document.getElementById('inputfile').addEventListener('change', function(inputfile) {
+        if (inputfile.target.files[0]) {
+        document.getElementById('paperclip').append('Su elige ' + inputfile.target.files[0].name);
+        }
+        });
         // Get the file input element
         const fileInput = document.getElementById('inputfile');
         // Add event listener to trigger file input when paperclip icon is clicked
@@ -107,7 +120,7 @@ block content
             file = fileInput.files[0];
             filename =fileInput.files[0].name
             console.log('Selected file:',fileInput.files[0],file,filename)
-            }
+            }            
             if (input.value||file) {
                 let data= {
                     message:input.value,
@@ -117,12 +130,14 @@ block content
                     userId:userId,
                     nameRole:role,
                     file:file,
-                    filename:filename
+                    filename:filename,
+                    img:img
                 }
                 console.log('data to send:',data)
                 socket.emit('chat message', data);
                 input.value = '';
                 inputfile.value = '';
+                document.getElementById('paperclip').firstChild.remove();
             }
         });
         // Function to append a new message to the chat interface
@@ -138,7 +153,7 @@ block content
 
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
-            imageElement.src = data.img;
+            imageElement.src = '/upload/'+data.img;
             imageElement.alt = data.name;
             imageElement.width = 40;
             imageElement.height = 40;
