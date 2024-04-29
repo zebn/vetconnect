@@ -3,6 +3,11 @@
   height: 50px;
 }
 
+.logoFooter{
+  /* filter: invert(1); */
+  height: 30px;
+}
+
 a, a:hover {
 	text-decoration: none;
 	transition: color 0.3s ease-in-out;
