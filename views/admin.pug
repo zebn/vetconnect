@@ -42,7 +42,9 @@ block content
     script(src='/javascripts/dataTables.js')
     script(type='text/javascript').
         $(document).ready(function() {
-            $('#datatable').DataTable( {
+            let columnDefs = !{columnDefs};
+            $('#datatable').DataTable( {                
+                columnDefs: columnDefs,
                 language: {
                     "decimal":        "",
                     "emptyTable":     "No hay datos disponibles en la tabla",

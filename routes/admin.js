@@ -17,7 +17,14 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   if (request.params.dataId == "users") {
     data = JSON.parse(JSON.stringify(await user.getAllUsers()));
 
-    
+    var columnDefs = [
+      {
+          target: 0,
+          visible: false,
+          searchable: false
+      }
+  ]
+
 
     title="Usuarios"
 
@@ -26,6 +33,18 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     data.forEach(element => {
       element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>`
       element.edit = `<form action="/admin/users/delete/${element.idUser}" method="POST"> <a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
+      if (element.isActive==0){
+        element.isFinished="Desactivado"
+      }
+      else{
+        element.isActive="Activo"
+      }
+      if (element.nameRole=="ROLE_ADMIN"){
+        element.nameRole="Administrador"
+      }
+      if (element.nameRole=="ROLE_USER"){
+        element.nameRole="Usuario"
+      }
     });
   }
 
@@ -35,16 +54,50 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     data = JSON.parse(JSON.stringify(await chat.getAllChats()));
 
-    columns = [  "idChat" ,  "nameChat" ,   "isFinished" ,"isNeedDoctor","edit"  ];
+    var columnDefs = [
+      {
+          target: 0,
+          visible: false,
+          searchable: false
+      },
+      {
+        target: 3,
+        visible: false,
+        searchable: false
+    }
+  ]
+
+    columns = [  "idChat",  "Nobre del consulta" , "Finalizada" ,"Necesito un medico","",""  ];
     data.forEach(element => {
-      element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
+      element.edit=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <button type="submit" class="btn btn-danger">Borrar</button> </form> `;
+      if (element.isFinished==0){
+        element.isFinished="No"
+      }
+      else{
+        element.isFinished="Si"
+      }
+      if (element.isNeedDoctor==0){
+        element.isNeedDoctor="No"
+      }
+      else{
+        element.isNeedDoctor="Si"
+      }
+      element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>${element.nameChat}`
     });
   
   }
 
   if (request.params.dataId == "reviews") {
 
-    title="Opiniones"
+    title="Opiniones";
+
+    var columnDefs = [
+      {
+          target: 0,
+          visible: false,
+          searchable: false
+      }
+  ]
 
     data = JSON.parse(JSON.stringify(await review.getAllReviews()));
 
@@ -57,7 +110,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   }
 
   if (request.session.role == "ROLE_ADMIN")
-    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,title:title,dataId: request.params.dataId  });
+    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,columnDefs:JSON.stringify(columnDefs),title:title,dataId: request.params.dataId  });
   else {
     response.render('error', { username: request.session.username, role: request.session.role, userId: request.session.userId, error: { status: "403 Forbidden", stack: "" } });
   }
