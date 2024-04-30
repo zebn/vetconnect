@@ -20,16 +20,16 @@ block content
                                             | #{user.name} 
                                             .small
                                                 span.fas.fa-circle.chat-offline
-                                                    |  Offline
+                                                |  Offline
                                 if (user.nameRole=="ROLE_USER")
                                     .d-flex.align-items-start.mt-2(id=`id${user.idUser}`)
                                         img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
                                             | #{user.name} 
-                                            span.text-muted.small.mt-1 con #{user.familiarName} (#{user.familiarType})
+                                            span.text-muted.mt-1 con #{user.familiarName} (#{user.familiarType})
                                             .small
                                                 span.fas.fa-circle.chat-offline
-                                                    |  Offline                                            
+                                                |  Offline                                            
 
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
@@ -235,12 +235,12 @@ block content
         document.getElementById('users').appendChild(div);            
         }        
         function makeUserOnline(data) {
-        const statusSpan = document.querySelector(`#id${data.userId} .chat-offline`);
-        if (statusSpan) {
-        console.log('became online:',statusSpan)
-        statusSpan.classList.remove('chat-offline');
-        statusSpan.classList.add('chat-online');
-        statusSpan.textContent = ' Online';
+        const statusDiv = document.querySelector(`#id${data.userId} .small`);
+        if (statusDiv) {
+        console.log('became online:',statusDiv)
+        statusDiv.firstChild.classList.remove('chat-offline');
+        statusDiv.firstChild.classList.add('chat-online');
+        statusDiv.childNodes[1].textContent = ' Online';
         }
         }
         socket.on('chat message', (data) => {
