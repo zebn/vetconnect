@@ -19,7 +19,7 @@ block content
                                         .flex-grow-1.ml-3
                                             | #{user.name} 
                                             .small
-                                                span.fas.fa-circle.chat-offline
+                                                spani.bi.bi-circle-fill.chat-offline
                                                 |  Offline
                                 if (user.nameRole=="ROLE_USER")
                                     .d-flex.align-items-start.mt-2(id=`id${user.idUser}`)
@@ -28,7 +28,7 @@ block content
                                             | #{user.name} 
                                             span.text-muted.mt-1 con #{user.familiarName} (#{user.familiarType})
                                             .small
-                                                span.fas.fa-circle.chat-offline
+                                                spani.bi.bi-circle-fill.chat-offline
                                                 |  Offline                                            
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
@@ -215,7 +215,7 @@ block content
         const small = document.createElement('div');
         small.classList.add('small');
         const spanStatus = document.createElement('span');
-        spanStatus.classList.add('fas', 'fa-circle', 'chat-online');
+        spanStatus.classList.add('bi', 'bi-circle-fill', 'chat-online');
         small.appendChild(spanStatus);
         const offlineText = document.createTextNode('Online');
         small.appendChild(offlineText);
