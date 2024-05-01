@@ -31,6 +31,7 @@ class SocketController {
                         if (results.affectedRows>0)
                         {
                             io.to(data.roomId).emit('join', data);
+                            io.to(data.roomId).emit('make online', data);
                         } else
                         {
                             io.to(data.roomId).emit('make online', data);
