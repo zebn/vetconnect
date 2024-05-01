@@ -1,4 +1,3 @@
-const socketIo = require('socket.io')
 const db = require('../model/db');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
