@@ -14,25 +14,32 @@ block content
                         #users
                             each user in users
                                 if (user.nameRole=="ROLE_ADMIN"||user.nameRole=="ROLE_DOCTOR")
-                                    .d-flex.align-items-start.mt-2
-                                        img.rounded-circle.mx-1(src='/upload/'+user.img alt=user.username width='40' height='40')
-                                        .flex-grow-1.me-3
+                                    .d-flex.align-items-start.mt-2(id=`id${user.idUser}`)
+                                        img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
                                             | #{user.name} 
+                                            .small
+                                                span.fas.fa-circle.chat-offline
+                                                |  Offline
                                 if (user.nameRole=="ROLE_USER")
-                                    .d-flex.align-items-start.mt-2
-                                        img.rounded-circle.mx-1(src='/upload/'+user.img alt=user.username width='40' height='40')
-                                        .flex-grow-1.me-3
+                                    .d-flex.align-items-start.mt-2(id=`id${user.idUser}`)
+                                        img.rounded-circle.mr-1(src='/upload/'+user.img alt=user.username width='40' height='40')
+                                        .flex-grow-1.ml-3
                                             | #{user.name} 
-                                            .text-muted.small.text-nowrap.mt-1 con su mascota #{user.familiarName} (#{user.familiarType})
+                                            span.text-muted.mt-1 con #{user.familiarName} (#{user.familiarType})
+                                            .small
+                                                span.fas.fa-circle.chat-offline
+                                                |  Offline                                            
+
                         hr.d-block.d-lg-none.mt-1.mb-0
                     .col-12.col-lg-7.col-xl-9
                         .py-2.px-4.border-bottom.d-none.d-lg-block
                             .d-flex.justify-content-between.py-1
                                 h5 #{chatInfo.nameChat}
                                 if (chatInfo.isFinished==1)
-                                    p.float-end Consulta pendiente de doctor
+                                    span.float-end Consulta finzalizada
                                 if (chatInfo.isNeedDoctor==1)
-                                    p.float-end Consulta pendiente de doctor
+                                    span.float-end Consulta pendiente de doctor
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
@@ -66,8 +73,8 @@ block content
                                     label(tabindex="0").input-group
                                         .row
                                             .col-1                                                
-                                                    h2
-                                                        i.bi.bi-paperclip  
+                                                h2
+                                                    i.bi.bi-paperclip  
                                             .col-1                           
                                                 input#inputfile.inputfile(type='file' size="1")                                    
                                 .col-10
@@ -89,11 +96,9 @@ block content
         // Add event listener to trigger file input when paperclip icon is clicked
         var messagesContainer = document.getElementById("messages");
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
         const socket = io().connect();
         const form = document.getElementById('form');
         const input = document.getElementById('input');
-
         const messages = document.getElementById('messages');
         let roomId = '#{roomId}';
         //- console.log(!{username});
@@ -102,10 +107,12 @@ block content
         let userId = '#{userId}';
         let role = '#{role}';
         let nickname = '#{nickname}';
+        let familiarName = '#{familiarName}';
+        let familiarType = '#{familiarType}';
         let img = '#{img}';
         let file = null;
         let filename =null;        
-        dataConnection = {username: username, img:img, name:name,nickname:nickname, userId: userId, role: role, sessionID: socket.id, roomId: roomId};
+        dataConnection = {username: username, img:img, name:name,nickname:nickname, userId: userId, role: role, sessionID: socket.id, roomId: roomId,familiarName:familiarName,familiarType:familiarType};
         console.log(`Connecting socket`);
         if (socket && roomId && userId) {
             console.log('Joining.. ' + dataConnection)
@@ -137,7 +144,10 @@ block content
                 socket.emit('chat message', data);
                 input.value = '';
                 inputfile.value = '';
+                if (document.getElementById('paperclip').firstChild)
+                {
                 document.getElementById('paperclip').firstChild.remove();
+                }
             }
         });
         // Function to append a new message to the chat interface
@@ -149,49 +159,36 @@ block content
                 item.classList.add('chat-message-right', 'pb-4');
                 data.name="You"
             }
-
-
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
             imageElement.src = '/upload/'+data.img;
             imageElement.alt = data.name;
             imageElement.width = 40;
             imageElement.height = 40;
-
             const a = document.createElement('a');
             const img = document.createElement('img');
-
             // Set attributes
             a.href = '/upload/' + data.file;
             a.target = '_blank';
             a.innerHTML=data.file;
-
             // Append img to a
             a.appendChild(img);
-
             const dateElement = document.createElement('div');
             dateElement.classList.add('text-muted', 'small', 'text-nowrap', 'mt-2');
             dateElement.textContent = data.dateMessage;
-
-
             const contentElement = document.createElement('div');
             contentElement.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', 'ml-3');
-
             const usernameElement = document.createElement('strong');
             usernameElement.classList.add('font-weight-bold', 'mb-1');
             usernameElement.textContent = data.name;
-
             const messageTextNode = document.createTextNode(data.message);
-
             contentElement.appendChild(usernameElement);
             contentElement.appendChild(document.createTextNode(': '));
             contentElement.appendChild(messageTextNode);
-
             item.appendChild(imageElement);
             contentElement.appendChild(dateElement);
             contentElement.appendChild(a);
             item.appendChild(contentElement);
-
             messages.appendChild(item);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
@@ -201,16 +198,28 @@ block content
             img: data.img,
             username: data.username,
             name: data.name,
-            nickname: data.nickname
+            nickname: data.nickname,
+            familiarName:data.familiarName,
+            familiarType:data.familiarType
         };
-
-        // Create elements
         var div = document.createElement('div');
         var img = document.createElement('img');
         var innerDiv = document.createElement('div');
         var textNode = document.createTextNode(user.name);
-
-        // Set attributes and properties
+        const spanUserName = document.createElement('span');
+        spanUserName.appendChild(textNode);
+        div.appendChild(spanUserName);
+        const textNode2 = document.createTextNode(' con '+ user.familiarName + ' (' + user.familiarType + ')');
+        const spanText = document.createElement('span');
+        spanText.classList.add('text-muted', 'small', 'mt-1');
+        spanText.appendChild(textNode2);
+        const small = document.createElement('div');
+        small.classList.add('small');
+        const spanStatus = document.createElement('span');
+        spanStatus.classList.add('fas', 'fa-circle', 'chat-online');
+        small.appendChild(spanStatus);
+        const offlineText = document.createTextNode('Online');
+        small.appendChild(offlineText);
         div.classList.add('d-flex', 'align-items-start', 'mt-2');
         img.classList.add('rounded-circle', 'mx-1');
         img.src = '/upload/' + user.img;
@@ -218,15 +227,22 @@ block content
         img.width = '40';
         img.height = '40';
         innerDiv.classList.add('flex-grow-1', 'ml-3');
-
-        // Append elements
         innerDiv.appendChild(textNode);
+        innerDiv.appendChild(spanText);
+        innerDiv.appendChild(small);
         div.appendChild(img);
         div.appendChild(innerDiv);
-
-        // Append the entire structure to a parent element (assuming a parent with id 'container')
         document.getElementById('users').appendChild(div);            
         }        
+        function makeUserOnline(data) {
+        const statusDiv = document.querySelector(`#id${data.userId} .small`);
+        if (statusDiv) {
+        console.log('became online:',statusDiv)
+        statusDiv.firstChild.classList.remove('chat-offline');
+        statusDiv.firstChild.classList.add('chat-online');
+        statusDiv.childNodes[1].textContent = ' Online';
+        }
+        }
         socket.on('chat message', (data) => {
         console.log('message:',data)
         // Call the appendMessage function with the received message data
@@ -236,4 +252,9 @@ block content
         console.log('joined:',data)
         // Call the appendMessage function with the received message data
         appendUser(data);
+        });
+        socket.on('make online', (data) => {
+        console.log('became online:',data)
+        // Call the appendMessage function with the received message data
+        makeUserOnline(data);
         });

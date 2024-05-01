@@ -2,7 +2,7 @@ const db = require('../model/db');
 
 async function getAllChats(){
     return new Promise((resolve, reject) => {
-        db.connection.query('select * from chat c', function (error, results, fields) {
+        db.connection.query('SELECT c.idChat, c.nameChat, c.isFinished, c.isNeedDoctor, MIN(u.img) AS img FROM chat c INNER JOIN chatuser cu ON cu.idChat = c.idChat INNER JOIN user u ON cu.idUser = u.idUser GROUP BY c.idChat, c.nameChat, c.isFinished, c.isNeedDoctor', function (error, results, fields) {
             if (error) {reject(error)};                
             resolve(results)
         });
