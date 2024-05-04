@@ -52,7 +52,10 @@ block content
                                                 if (message.file)
                                                     .text-muted.small.text-nowrap.mt-2
                                                         a(href='/upload/'+message.file  target="_blank")
-                                                            img.mt-5(width='150px' src='/upload/'+message.file)                                                 
+                                                            if ((/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(message.file))
+                                                                img.mt-5(width='150px' src='/upload/'+message.file)
+                                                            else
+                                                                | #{message.file}
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                                     if (message.username== username)
                                         .chat-message-right.pb-4
@@ -64,7 +67,10 @@ block content
                                                 if (message.file)
                                                     .text-muted.small.text-nowrap.mt-2
                                                         a(href='/upload/'+message.file  target="_blank")
-                                                            img.mt-5(width='150px' src='/upload/'+message.file)                                                
+                                                            if ((/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(message.file))
+                                                                img.mt-5(width='150px' src='/upload/'+message.file)
+                                                            else
+                                                                | #{message.file}                                         
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
                         form#form.form-inline(action='').form-horizontal
                             .flex-grow-0.py-3.px-4.border-top.input-group                                
@@ -77,7 +83,7 @@ block content
                                             .col-1                           
                                                 input#inputfile.inputfile(type='file' size="1")                                    
                                 .col-10
-                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096")                                  
+                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
                                 .col-1                       
                                     button.btn.btn-primary Enviar
                                 .row
@@ -125,7 +131,6 @@ block content
             {
             file = fileInput.files[0];
             filename =fileInput.files[0].name
-            console.log('Selected file:',fileInput.files[0],file,filename)
             }            
             if (input.value||file) {
                 let data= {
