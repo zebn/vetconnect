@@ -6,11 +6,16 @@ var user = require('../controller/user');
 var chat = require('../controller/chat');
 
 /* GET users listing. */
-router.get('/', auth.checkAuthToken, async function (request, response, next) {
+router.get('/:result?', auth.checkAuthToken, async function (request, response, next) {
   const userInfo = await user.getUserInfo(request.session.userId);
   const chats = await message.getAllChatsForUser(request.session.userId);
   const chatsWithoutDoctor = await message.getAllChatsWithoutDoctor();
-  response.render('users', { username: request.session.username, role: request.session.role, userId: request.session.userId,userInfo:userInfo, chats: chats, chatsWithoutDoctor: chatsWithoutDoctor});
+  response.render('users', { username: request.session.username, role: request.session.role, userId: request.session.userId,userInfo:userInfo, chats: chats, chatsWithoutDoctor: chatsWithoutDoctor, result:request.params.result});
+});
+
+router.post('/passwordchange', auth.checkAuthToken, async function(request, response, next) {
+  let  result=await user.changeOldPassword(request.body.oldPassword,request.body.newPassword,request.body.confirmPassword,request.session.userId);
+  response.redirect('/users/'+result);
 });
 
 router.post('/finalize/:chatId', auth.checkAuthToken, async function (request, response, next) {

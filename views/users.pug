@@ -5,8 +5,9 @@ block content
             .col-md-2.border-right
                 .d-flex.flex-column.align-items-center.text-center.p-3.py-5
                     img.rounded-circle.mt-5(width='150px' src='/upload/'+userInfo.img)
-                    span.text-black-50 Hola, #{userInfo.name}!
-                    span.text-black-90 Tu mascota es #{userInfo.familiarName}
+                    span.text-black-90 Hola, #{userInfo.name}!
+                    if(userInfo.familiarName)
+                        span.text-black-50 Tu mascota es #{userInfo.familiarName}
                     span
                         form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
                             span Cambiar imagen
@@ -27,18 +28,24 @@ block content
                         .p-3.py-5
                             h5.text-right Cambiar contraseña
                     .col-md-12.mt-2
-                        form(action='/users', method='POST')
-                            .form-group
-                                label.labels(label-for='oldPassword') Contraseña actual
-                                input#oldPassword.form-control(type='password', name='oldPassword', required)
-                            .form-group.mt-3
-                                label.labels(label-for='newPassword') Nueva contraseña
-                                input#newPassword.form-control(type='password', name='newPassword', required)
-                            .form-group.mt-3
-                                label.labels(label-for='confirmPassword') Confirmar nueva contraseña
-                                input#confirmPassword.form-control(type='password', name='confirmPassword', required)
-                            .mt-3.text-center
-                                button.btn.btn-success.profile-button(type='submit') Cambiar contraseña       
+                            if (result=="success")
+                                .mb-2.text-center.text-success La contraseña ha sido cambiada
+                            if (result=="notfound") 
+                                .mb-2.text-center.text-danger Contraseñas no coinciden
+                            if (result=="notexist") 
+                                .mb-2.text-center.text-danger Contraseña no existe
+                            form(action='/users/passwordchange', method='POST')
+                                .form-group
+                                    label.labels(label-for='oldPassword') Contraseña actual
+                                    input#oldPassword.form-control(type='password' name='oldPassword'  maxlength="45"  required)
+                                .form-group.mt-3
+                                    label.labels(label-for='newPassword') Nueva contraseña
+                                    input#newPassword.form-control(type='password' name='newPassword'  minlength="8" maxlength="45" pattern="^[A-Za-z0-9_*+?@$!*?&]+$" title="Ingresa letras (mayúsculas y minúsculas), números o los símbolos especiales _+?@$!*?&." required)
+                                .form-group.mt-3
+                                    label.labels(label-for='confirmPassword') Confirmar nueva contraseña
+                                    input#confirmPassword.form-control(type='password' name='confirmPassword' required)
+                                .mt-3.text-center
+                                    button.btn.btn-primary.profile-button(type='submit') Cambiar contraseña               
             .col-md-7
                 main#main
                     h1.h2 Mis consultas

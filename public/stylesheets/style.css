@@ -1,3 +1,7 @@
+.card-fixed-size {
+  height: 300px; /* Adjust as needed */
+}
+
 .logo{
   /* filter: invert(1); */
   height: 50px;
