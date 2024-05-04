@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require("express-session");
 const fileUpload = require('express-fileupload');
+require('dotenv').config({ path:path.join(__dirname, '.env'),override: true, });
 
 
 
