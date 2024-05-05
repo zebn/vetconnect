@@ -37,8 +37,6 @@ block content
                                 h5 #{chatInfo.nameChat}
                                 if (chatInfo.isFinished==1)
                                     span.float-end Consulta finzalizada
-                                if (chatInfo.isNeedDoctor==1)
-                                    span.float-end Consulta pendiente de doctor
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages

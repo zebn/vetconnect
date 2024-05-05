@@ -2,32 +2,22 @@ extends layout
 block content
     .rounded.bg-white.mt-5.mb-5
         .row
-            .col-md-2.border-right
-                .d-flex.flex-column.align-items-center.text-center.p-3.py-5
+            .col-md-3.border-end
+                .d-flex.flex-column.align-items-center.text-center
+                    .d-flex.justify-content-between.align-items-center
+                        h1.h2 Informacion personal
                     img.rounded-circle.mt-5(width='150px' src='/upload/'+userInfo.img)
                     span.text-black-90 Hola, #{userInfo.name}!
                     if(userInfo.familiarName)
                         span.text-black-50 Tu mascota es #{userInfo.familiarName}
-                    span
+                    span.p-3.py-5
                         form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
                             span Cambiar imagen
                             input.form-control(type='file' name='profileimage' accept='image/*' onchange="form.submit()")
-            .col-md-3.border-right.border-start.border-end
-                .p-3.py-5
-                    .d-flex.justify-content-between.align-items-center
-                        h4.text-right Información personal
-                .row
-                    .col-md-6
-                .row.mt-3
-                    .col-md-12
                         label.labels Email
                         input.form-control(type='text' value=username placeholder='' disabled)
-                    .col-md-12
-                .row.mt-3.border-bottom.pb-3
-                    .col-md-12
                         .p-3.py-5
                             h5.text-right Cambiar contraseña
-                    .col-md-12.mt-2
                             if (result=="success")
                                 .mb-2.text-center.text-success La contraseña ha sido cambiada
                             if (result=="notfound") 
@@ -46,7 +36,7 @@ block content
                                     input#confirmPassword.form-control(type='password' name='confirmPassword' required)
                                 .mt-3.text-center
                                     button.btn.btn-primary.profile-button(type='submit') Cambiar contraseña               
-            .col-md-7
+            .col-md-9
                 main#main
                     h1.h2 Mis consultas
                     if (chats.length==0&&role=="ROLE_USER")
