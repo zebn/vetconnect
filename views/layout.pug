@@ -8,7 +8,6 @@ html
     link(rel='stylesheet' href='/stylesheets/dataTables.dataTables.css')
     link(rel='stylesheet' href='/stylesheets/bootstrap.css')
     link(rel='stylesheet' href='/stylesheets/bootstrap-icons/font/bootstrap-icons.css')
-    link(rel='stylesheet' href='/stylesheets/css/fontawesome.css')  
     link(rel='stylesheet' href='/stylesheets/style.css')  
   body
     .popup-overlay
@@ -29,17 +28,27 @@ html
           ul.nav.ms-auto
             if (username)
               li.nav-item
-                a.nav-link.active(aria-current='dash' href='/users').text-white CONSULTAS
+                a.nav-link.active(aria-current='dash' href='/users').text-white 
+                  i.bi.bi-person-fill 
+                  | CONSULTAS
               if (role=="ROLE_ADMIN")
                 li.nav-item
-                  a.nav-link(href='/admin/users').text-white.float-right ADMINISTRAR
+                  a.nav-link(href='/admin/users').text-white.float-right 
+                    i.bi.bi-gear-fill 
+                    | ADMINISTRAR
               li.nav-item
-                a.nav-link(href='/logout').text-white.float-right SALIR
+                  a.nav-link(href='/logout').text-white.float-right            
+                    i.bi.bi-box-arrow-right.bi-fill
+                    | SALIR   
             else
               li.nav-item
-                a.nav-link.active(aria-current='' href='/signup').text-white REGISTRAR
+                a.nav-link.active(aria-current='' href='/signup').text-white 
+                  i.bi.bi-person-plus-fill
+                  | REGISTRAR
               li.nav-item
-                a.nav-link(href='/login').text-white.float-right LOGIN
+                a.nav-link(href='/login').text-white.float-right 
+                  i.bi.bi-box-arrow-in-right  
+                  | LOGIN               
     block content
     footer.bd-footer.py-4.py-md-5.bg-secondary.text-light
         .row
