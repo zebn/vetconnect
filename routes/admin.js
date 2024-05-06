@@ -152,8 +152,12 @@ router.get('/users/add', async function (request, response, next) {
 
 router.post('/users/add', async function (request, response, next) {
   console.log(request.body.isActive);   
-  await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
-  response.redirect('/admin/users/')
+  const result = await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
+  if (result == true) {
+    response.redirect('/admin/users/')
+  } else {
+    response.render('useradd', { username: response.locals.username, role: response.locals.role, levels: levels, roles: roles, error: result });
+  }
 });
 
 router.get('/reviews/add', async function (request, response, next) {

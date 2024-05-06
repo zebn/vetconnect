@@ -29,13 +29,13 @@ async function changeOldPassword(passwordOld, passwordNew, passwordConfirm, user
     return new Promise((resolve, reject) => {
         db.connection.query('select * from user u inner join role r on r.idRole = u.idRole where u.idUser =? AND u.password =?', [userId, hashed_password], function (error, results, fields) {
             if (results.length > 0) {
-                if (passwordNew==passwordConfirm){
-                        const hashed_passwordConfirm = crypto.createHash('sha256').update(passwordConfirm).digest('hex');
-                        db.connection.query('UPDATE user SET password = ? WHERE idUser = ?;',
-                            [hashed_passwordConfirm, userId], function (error, results, fields) {
-                                if (error) resolve(error);
-                                resolve("success")
-                            });
+                if (passwordNew == passwordConfirm) {
+                    const hashed_passwordConfirm = crypto.createHash('sha256').update(passwordConfirm).digest('hex');
+                    db.connection.query('UPDATE user SET password = ? WHERE idUser = ?;',
+                        [hashed_passwordConfirm, userId], function (error, results, fields) {
+                            if (error) resolve(error);
+                            resolve("success")
+                        });
                 }
                 else {
                     resolve("notfound")
@@ -111,19 +111,18 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
                     html: `<b>Hola! <b>${username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
                 };
 
-                return new Promise((resolve, reject) => {
-                    transporter.sendMail(mailData, function (err, info) {
-                        if (err) {
-                            console.log(err);
-                            resolve(err)
-                        }
-                        else {
-                            console.log(info);
-                            response.redirect('/login/successRegister');
-                            resolve(true);
-                        }
-                    });
+                transporter.sendMail(mailData, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        resolve(err)
+                    }
+                    else {
+                        console.log(info);
+                        response.redirect('/login/successRegister');
+                        resolve(true);
+                    }
                 });
+
             });
     });
 }
