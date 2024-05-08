@@ -1,21 +1,20 @@
 extends layout
 block content
-    .rounded.bg-white.mt-5.mb-5
-        .row
-            .col-md-3.border-end
-                .d-flex.flex-column.align-items-center.text-center
-                    .d-flex.justify-content-between.align-items-center
-                        h1.h2 Informacion personal
-                    img.rounded-circle.mt-5(width='150px' src='/upload/'+userInfo.img)
-                    span.text-black-90 Hola, #{userInfo.name}!
-                    if(userInfo.familiarName)
-                        span.text-black-50 Tu mascota es #{userInfo.familiarName}
-                    span.p-3.py-5
-                        form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
-                            span Cambiar imagen
-                            input.form-control(type='file' name='profileimage' accept='image/*' onchange="form.submit()")
-                        label.labels Email
-                        input.form-control(type='text' value=username placeholder='' disabled)
+    .container
+        .main-body
+            .row.gutters-sm
+                .col-md-4.mb-3
+                    .card
+                        .card-body
+                            .d-flex.flex-column.align-items-center.text-center
+                                img.rounded-circle(src='/upload/'+userInfo.img alt='Admin' width='150')
+                                .mt-3
+                                    span.p-3.py-5
+                                        form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
+                                            .form-group
+                                                label.labels(label-for='profileimage') Cambiar imagen
+                                                input#profileimage.form-control(type='file' name='profileimage' accept='image/*' onchange="form.submit()")
+                    .card.mt-3
                         .p-3.py-5
                             h5.text-right Cambiar contraseña
                             if (result=="success")
@@ -35,37 +34,59 @@ block content
                                     label.labels(label-for='confirmPassword') Confirmar nueva contraseña
                                     input#confirmPassword.form-control(type='password' name='confirmPassword' required)
                                 .mt-3.text-center
-                                    button.btn.btn-primary.profile-button(type='submit') Cambiar contraseña               
-            .col-md-9
-                main#main
-                    h1.h2 Mis consultas
-                    if (chats.length==0&&role=="ROLE_USER")
-                        button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
-                    if (chats.length>0)                
-                        .row
-                            each chat in chats
-                                .col-lg-3.mt-3
-                                    .card.text-bg-light.mb-3(style='max-width: 18rem;')
-                                        .card-header #{chat.nameChat}
-                                        .card-body
-                                            h5.card-title #{chat.nameChat}
-                                            p.card-text #{chat.nameChat}
-                                            form(action="/users/finalize/"+chat.idChat method="POST")
-                                                a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
-                                                button(type="submit").btn.btn-danger.ms-1 Finalizar    
-                    if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
-                        h2 Consultas sin doctor
-                        .row
-                            each chatWithoutDoctor in chatsWithoutDoctor
-                                .col-lg-3.mt-3
-                                    .card.text-bg-light.mb-3(style='max-width: 18rem;')
-                                        .card-header #{chatWithoutDoctor.nameChat}
-                                        .card-body
-                                            h5.card-title #{chatWithoutDoctor.nameChat}
-                                            p.card-text #{chatWithoutDoctor.nameChat}
-                                            form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
-                                                a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
-                                                button(type="submit").btn.btn-danger.ms-1 Finalizar
+                                    button.btn.btn-primary.profile-button(type='submit') Cambiar contraseña  
+                .col-md-8
+                    .card.mb-3
+                        .card-body
+                            .row
+                                .col-sm-3
+                                    h6.mb-0 Nickname
+                                .col-sm-9.text-secondary #{userInfo.nickname}
+                            hr
+                            .row
+                                .col-sm-3
+                                    h6.mb-0 Nombre y apellido
+                                .col-sm-9.text-secondary #{userInfo.name}
+                            hr
+                            .row
+                                .col-sm-3
+                                    h6.mb-0 Correo electronico
+                                .col-sm-9.text-secondary #{userInfo.username}
+                            //- hr
+                            //- .row
+                            //-     .col-sm-12
+                            //-         a.btn.btn-info(target='__blank' href='https://www.bootdey.com/snippets/view/profile-edit-data-and-skills') Edit
+                    .row.gutters-sm
+                        .col-sm-12.mb-3
+                            main#main
+                                if (chats.length==0&&role=="ROLE_USER")
+                                    button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
+                                if (chats.length==0&&chatsWithoutDoctor.length==0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
+                                    | No hay consultas pendientes
+                                if (chats.length>0)                
+                                    h1.h2 Mis consultas:
+                                    .row
+                                        each chat in chats
+                                            .col-lg-4.mt-3
+                                                .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                                    .card-header #{chat.nameChat}
+                                                    .card-body
+                                                        p.card-text Su consulta no finalizada
+                                                        form(action="/users/finalize/"+chat.idChat method="POST")
+                                                            a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
+                                                            button(type="submit").btn.btn-danger.ms-1 Finalizar    
+                                if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
+                                    h2 Consultas sin doctor:
+                                    .row
+                                        each chatWithoutDoctor in chatsWithoutDoctor
+                                            .col-lg-4.mt-3
+                                                .card.text-bg-light.mb-3(style='max-width: 18rem;')
+                                                    .card-header #{chatWithoutDoctor.nameChat}
+                                                    .card-body
+                                                        p.card-text.text-danger Consulta pendiente de doctor
+                                                        form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
+                                                            a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
+                                                            button(type="submit").btn.btn-danger.ms-1 Finalizar
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         console.log(#{roomId});
@@ -115,4 +136,3 @@ block content
         main.appendChild(cardDiv);
         }); 
         }
-
