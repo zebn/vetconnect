@@ -40,10 +40,12 @@ block content
                             each row in element
                                 td !{row}
     script(src='/javascripts/dataTables.js')
+    script(src='/javascripts/dataTables.responsive.min.js')
     script(type='text/javascript').
         $(document).ready(function() {
             let columnDefs = !{columnDefs};
-            $('#datatable').DataTable( {                
+            $('#datatable').DataTable( {    
+                responsive: true,            
                 columnDefs: columnDefs,
                 language: {
                     "decimal":        "",
