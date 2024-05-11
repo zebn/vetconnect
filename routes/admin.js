@@ -28,11 +28,12 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
 
     title="Usuarios"
 
-    columns = [  "ID" ,"Nick" ,"Imagen" , "Correo" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "" ];
+    columns = [  "ID" ,"Nick" ,"Imagen" , "Correo" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "","" ];
 
     data.forEach(element => {
       element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>`
-      element.edit = `<form action="/admin/users/delete/${element.idUser}" method="POST"> <a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a> <button type="submit" class="btn btn-danger">Borrar</button></form>`;      
+      element.edit = `<a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a>`;
+      element.delete = `<form action="/admin/users/delete/${element.idUser}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button></form>`;            
       if (element.isActive==0){
         element.isFinished="Desactivado"
       }
@@ -67,9 +68,10 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     }
   ]
 
-    columns = [  "idChat",  "Nobre del consulta" , "Finalizada" ,"Necesito un medico","Foto",""  ];
+    columns = [  "idChat",  "Nobre de consulta" , "Finalizada" ,"Necesito un medico","Foto","",""];
     data.forEach(element => {
-      element.edit=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <button type="submit" class="btn btn-danger">Borrar</button> </form> `;
+      element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a>`;
+      element.delete=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
       if (element.isFinished==0){
         element.isFinished="No"
       }

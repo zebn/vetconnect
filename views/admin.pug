@@ -18,27 +18,28 @@ block content
                     p
                         a.nav-link(href='/admin/reviews') Opiniones
         main#main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
-            .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
-                h2 Gestión de #{title}
-                .btn-toolbar.mb-2.mb-md-0
-                    .btn-group.me-2
-                    //-     button.btn.btn-sm.btn-outline-secondary(type='button') Share
-                    //-     button.btn.btn-sm.btn-outline-secondary(type='button') Export
-                    //- button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
-                    //-     span(data-feather='calendar')
-                    //-      |             This week
-            if (dataId=="users"||dataId=="reviews")
-                a.btn.btn-warning(href='/admin/'+dataId+'/add') Añadir
-            table#datatable.table.table-striped.table-light(style='width:100%')
-                thead
-                    tr
-                        each column in columns
-                            th(scope='col') #{column}
-                tbody
-                    each element in data
+            .container
+                .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+                    h2 Gestión de #{title}
+                    .btn-toolbar.mb-2.mb-md-0
+                        .btn-group.me-2
+                        //-     button.btn.btn-sm.btn-outline-secondary(type='button') Share
+                        //-     button.btn.btn-sm.btn-outline-secondary(type='button') Export
+                        //- button.btn.btn-sm.btn-outline-secondary.dropdown-toggle(type='button')
+                        //-     span(data-feather='calendar')
+                        //-      |             This week
+                if (dataId=="users"||dataId=="reviews")
+                    a.btn.btn-warning(href='/admin/'+dataId+'/add') Añadir
+                table#datatable.table.table-striped.table-light(style='width:100%')
+                    thead
                         tr
-                            each row in element
-                                td !{row}
+                            each column in columns
+                                th(scope='col') #{column}
+                    tbody
+                        each element in data
+                            tr
+                                each row in element
+                                    td !{row}
     script(src='/javascripts/dataTables.js')
     script(src='/javascripts/dataTables.responsive.min.js')
     script(type='text/javascript').
