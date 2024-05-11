@@ -61,13 +61,13 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
           searchable: false
       },
       {
-        target: 3,
+        target: 4,
         visible: false,
         searchable: false
     }
   ]
 
-    columns = [  "idChat",  "Nobre del consulta" , "Finalizada" ,"Necesito un medico","",""  ];
+    columns = [  "idChat",  "Nobre del consulta" , "Finalizada" ,"Necesito un medico","Foto",""  ];
     data.forEach(element => {
       element.edit=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a> <button type="submit" class="btn btn-danger">Borrar</button> </form> `;
       if (element.isFinished==0){
