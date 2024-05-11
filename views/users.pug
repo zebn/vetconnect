@@ -83,7 +83,7 @@ block content
                                                 .card.text-bg-light.mb-3(style='max-width: 18rem;')
                                                     .card-header #{chatWithoutDoctor.nameChat}
                                                     .card-body
-                                                        p.card-text.text-danger Consulta pendiente de doctor
+                                                        p.card-text.text-danger Consulta pendiente
                                                         form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
                                                             a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
                                                             button(type="submit").btn.btn-danger.ms-1 Finalizar
