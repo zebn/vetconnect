@@ -32,7 +32,7 @@ html
             if (username)
               li.nav-item
                 a.nav-link.active(aria-current='dash' href='/users').text-white 
-                  i.bi.bi-person-fill 
+                  i.bi.bi-chat-dots-fill.me-1(style="transform: scaleX(-1); display: inline-block;")
                   | CONSULTAS
               if (role=="ROLE_ADMIN")
                 li.nav-item
@@ -41,7 +41,7 @@ html
                     | ADMINISTRAR
               li.nav-item
                   a.nav-link(href='/logout').text-white.float-right            
-                    i.bi.bi-box-arrow-right.bi-fill
+                    i.bi.bi-box-arrow-right.bi-fill.me-1
                     | SALIR   
             else
               li.nav-item
