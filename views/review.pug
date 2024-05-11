@@ -11,7 +11,7 @@ h1.text-center.mb-5 Opiniones
                       .card-body.d-flex.flex-column.mt-auto
                           h5.card-title #{reviews[i].userReview}
                           p.card-text #{reviews[i].bodyReview}
-                      .card-footer.bg-transparent
+                      .card-footer.bg-transparent.border-info
                           each star in Array(reviews[i].starsReview).fill('')
                               i.bi.bi-star-fill.text-warning
                           each star in Array(5 - reviews[i].starsReview).fill('')
@@ -31,7 +31,7 @@ h1.text-center.mb-5 Opiniones
                         h5.card-title #{reviews[i].userReview}
 
                         p.card-text #{reviews[i].bodyReview}
-                    .card-footer.bg-transparent
+                    .card-footer.bg-transparent.border-info
                         each star in Array(reviews[i].starsReview).fill('')
                             i.bi.bi-star-fill.text-warning
                         each star in Array(5 - reviews[i].starsReview).fill('')
