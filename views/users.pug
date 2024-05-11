@@ -12,7 +12,7 @@ block content
                                     span.p-3.py-5
                                         form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
                                             .form-group
-                                                label.labels(label-for='profileimage') Cambiar imagen
+                                                label.labels.mb-1(label-for='profileimage') Cambiar imagen
                                                 input#profileimage.form-control(type='file' name='profileimage' accept='image/*' onchange="form.submit()")
                     .card.mt-3
                         .p-3.py-5

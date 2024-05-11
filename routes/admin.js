@@ -65,10 +65,14 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
         target: 4,
         visible: false,
         searchable: false
+    },
+    {
+      targets: [5,6], // Columnas para las que deseas definir el ancho
+      width: '5%' // Tamaño deseado para las columnas
     }
   ]
 
-    columns = [  "idChat",  "Nobre de consulta" , "Finalizada" ,"Necesito un medico","Foto","",""];
+    columns = [  "idChat",  "Nombre de consulta" , "Finalizada" ,"Atendida","Foto","",""];
     data.forEach(element => {
       element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a>`;
       element.delete=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
@@ -79,12 +83,12 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
         element.isFinished="Si"
       }
       if (element.isNeedDoctor==0){
-        element.isNeedDoctor="No"
-      }
-      else{
         element.isNeedDoctor="Si"
       }
-      element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>${element.nameChat}`
+      else{
+        element.isNeedDoctor="No"
+      }
+      element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img> ${element.nameChat}`
     });
   
   }
@@ -111,8 +115,10 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   
   }
 
-  if (request.session.role == "ROLE_ADMIN")
-    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,columnDefs:JSON.stringify(columnDefs),title:title,dataId: request.params.dataId  });
+  if (request.session.role == "ROLE_ADMIN"){
+    let userInfo = await user.getUserInfo(request.session.userId);
+    response.render('admin', { username: request.session.username, role: request.session.role, userId: request.session.userId, data: data, columns: columns,columnDefs:JSON.stringify(columnDefs),title:title,dataId: request.params.dataId, userInfo:userInfo});
+  }
   else {
     response.render('error', { username: request.session.username, role: request.session.role, userId: request.session.userId, error: { status: "403 Forbidden", stack: "" } });
   }

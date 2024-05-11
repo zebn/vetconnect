@@ -7,7 +7,7 @@ block content
          .position-sticky.pt-3
             ul.nav.flex-column.text-primary.mb-2
                 li.nav-item
-                    h5.ms-3.fw-bold Hola #{username}!
+                    h5.ms-3.fw-bold.text-secondary Hola #{userInfo.nickname}!
                 li.nav-item
                     p 
                         a.nav-link(href='/admin/users') Usuarios
@@ -46,6 +46,7 @@ block content
         $(document).ready(function() {
             let columnDefs = !{columnDefs};
             $('#datatable').DataTable( {    
+                autoWidth: false,
                 responsive: true,            
                 columnDefs: columnDefs,
                 language: {
