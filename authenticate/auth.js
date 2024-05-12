@@ -123,10 +123,9 @@ var signUp = (request, response, next) => {
                 request.body.backhand = null;
             }
 
+            token = require('crypto').randomBytes(32).toString('hex');
 
-            // Format the date string to 'YYYY-MM-DD' format
-            request.body.age = request.body.age ? new Date(request.body.age).toISOString().slice(0, 10) : null;
-            db.connection.query('INSERT INTO user (name, username , password, familiarName, familiarType ) VALUES (?, ?, ?, ?, ?)', [request.body.name + ' ' + request.body.surname, request.body.username, request.body.password, request.body.mascotname, request.body.mascottype], function (error, results, fields) {
+        db.connection.query('INSERT INTO user (name, username , password, familiarName, familiarType, nickname, authToken, passwordToken ) VALUES (?, ?, ?, ?, ?, ?,?,?)', [request.body.name + ' ' + request.body.surname, request.body.username, request.body.password, request.body.mascotname, request.body.mascottype, request.body.nickname,token,token], function (error, results, fields) {
                 if (error) {
                     if (error.errno == 1062) { request.error = "Este correo ya está registrado"; }
                     else { request.error = error.message }
@@ -149,9 +148,9 @@ var signUp = (request, response, next) => {
                     const mailData = {
                         from: 'ap7456@gmail.com',  // sender address
                         to: request.body.username,   // list of receivers
-                        subject: 'Alta en club del tenis',
+                        subject: 'Alta en VETCONNECT',
                         text: 'That was easy!',
-                        html: `<b>Hola! <b>${request.body.username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
+                        html: `¡Hola <b>${request.body.nickname}!</b>  <br>¡Gracias por registarse en VETCONNECT!`
                     };
 
                     return new Promise((resolve, reject) => {
@@ -219,7 +218,7 @@ async function remindPassword(email) {
                 to: email,   // list of receivers
                 subject: 'Recordar contraseña',
                 text: 'That was easy!',
-                html: `<b>Hola! </b>  <br> Su token es <b>${results[0].passwordToken}</b>. Se puede cambiar tu contraseña: clubdeltenis.es/passwordrestore `
+                html: `<b>Hola! </b>  <br> Su clave temporal es <b>${results[0].passwordToken}</b><br> Por favor, utilice el enlace proporcionado para restablecer su contraseña: vetconnect.es/passwordrestore `
             };
 
             return new Promise((resolve, reject) => {

@@ -10,11 +10,15 @@ block content
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='name') *Nombre: 
                     .col-sm-8
-                        input#name.form-control(type='text' name='name' maxlength="45"  required)
+                        input#name.form-control(type='text' name='name' maxlength="45"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto" required)
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='surname') *Apellidos: 
                     .col-sm-8
-                        input#surname.form-control(type='text' name='surname' maxlength="45" required )
+                        input#surname.form-control(type='text' name='surname' maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto"  required )
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='nickname') *Nickname: 
+                    .col-sm-8
+                        input#nickname.form-control(type='text' name='nickname' maxlength="45" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ0-9_@$]+$" title="Ingresa letras (mayúsculas y minúsculas), números o los símbolos especiales _@$" required )
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='username') *Email: 
                     .col-sm-8
@@ -22,20 +26,22 @@ block content
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='password') *Contraseña: 
                     .col-sm-8
-                        input#password.form-control(type='password' name='password' required)
+                        input#password.form-control(type='password' name='password' pattern="^[A-Za-z0-9_*+?@$!*?&]+$" title="Ingresa letras (mayúsculas y minúsculas), números o los símbolos especiales _+?@$!*?&." required)
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='mascot-name') Nombre de mascota: 
                     .col-sm-8
-                        input#mascotname.form-control(type='text' name='mascotname' maxlength="45")
+                        input#mascotname.form-control(type='text' name='mascotname' pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto" maxlength="45")
                 .mb-5.row.align-items-center
                     label.form-label.col-sm-4(for='mascot-type') Tipo de mascota: 
                     .col-sm-8
-                        input#mascottype.form-control(type='text' name='mascottype' maxlength="45")
+                        input#mascottype.form-control(type='text' name='mascottype' pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto" maxlength="45")
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
                         p !{captcha}
                         button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
-    span.float-end.me-5 Los campos con (*) son obligatorios.
+                .mb-3.row
+                    .col-sm-8.offset-sm-4.col-lg-12.offset-lg-11
+                        span Los campos con (*) son obligatorios.
     script.
         function cb(token){
             console.log('token', token);

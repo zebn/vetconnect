@@ -7,7 +7,7 @@ block content
                     .card
                         .card-body
                             .d-flex.flex-column.align-items-center.text-center
-                                img.rounded-circle(src='/upload/'+userInfo.img alt='Admin' width='150')
+                                img.rounded-circle(src='/upload/'+userInfo.img alt=userInfo.nickname width='150')
                                 .mt-3
                                     span.p-3.py-5
                                         form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
@@ -64,19 +64,19 @@ block content
                                 if (chats.length==0&&chatsWithoutDoctor.length==0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
                                     | No hay consultas pendientes
                                 if (chats.length>0)                
-                                    h1.h2 Mis consultas:
+                                    h1.h2 Mis consultas
                                     .row
                                         each chat in chats
                                             .col-lg-4.mt-3
                                                 .card.text-bg-light.mb-3(style='max-width: 18rem;')
                                                     .card-header #{chat.nameChat}
                                                     .card-body
-                                                        p.card-text Su consulta no finalizada
+                                                        p.card-text Consulta en progreso
                                                         form(action="/users/finalize/"+chat.idChat method="POST")
                                                             a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
                                                             button(type="submit").btn.btn-danger.ms-1 Finalizar    
                                 if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
-                                    h2 Consultas sin doctor:
+                                    h2 Consultas sin atención
                                     .row
                                         each chatWithoutDoctor in chatsWithoutDoctor
                                             .col-lg-4.mt-3

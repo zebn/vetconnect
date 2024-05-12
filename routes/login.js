@@ -85,7 +85,7 @@ router.post('/passwordrestore', async function (request, response, next) {
         response.redirect('passwordchange');
     }
     else {
-        response.render('passwordrestore', { error: "Token no es valido" });
+        response.render('passwordrestore', { error: "Clave temporal no es valida" });
     }
 });
 

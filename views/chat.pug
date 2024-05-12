@@ -91,7 +91,7 @@ block content
     script.
         document.getElementById('inputfile').addEventListener('change', function(inputfile) {
         if (inputfile.target.files[0]) {
-        document.getElementById('paperclip').append('Su elige ' + inputfile.target.files[0].name);
+        document.getElementById('paperclip').append(inputfile.target.files[0].name);
         }
         });
         // Get the file input element
@@ -218,7 +218,7 @@ block content
         const small = document.createElement('div');
         small.classList.add('small');
         const spanStatus = document.createElement('span');
-        spanStatus.classList.add('bi', 'bi-circle-fill', 'chat-online');
+        spanStatus.classList.add('bi', 'bi-circle-fill', 'chat-online', 'me-1');
         small.appendChild(spanStatus);
         const offlineText = document.createTextNode('Online');
         small.appendChild(offlineText);
