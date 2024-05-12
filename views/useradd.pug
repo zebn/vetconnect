@@ -8,27 +8,36 @@ block content
                 .my-5.text-center.text-danger #{error}               
             form(action='/admin/users/add/' method='post')
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='username') *Correo:
+                    label.form-label.col-sm-4(for='name') *Nombre:
+                    .col-sm-8
+                        input#name.form-control(type='text' name='name' maxlength="45"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto" required)
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='surname') *Apellidos: 
+                    .col-sm-8
+                        input#surname.form-control(type='text' name='surname' maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto"  required )
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='nickname') *Nickname: 
+                    .col-sm-8
+                        input#nickname.form-control(type='text' name='nickname' maxlength="45" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ0-9_@$]+$" title="Ingresa letras (mayúsculas y minúsculas), números o los símbolos especiales _@$" required )
+                .mb-3.row.align-items-center
+                    label.form-label.col-sm-4(for='username') *Email:
                     .col-sm-8
                         input#username.form-control(type='email' name='username' maxlength="45"  required)
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='name') *Nombre:
-                    .col-sm-8
-                        input#name.form-control(type='text' name='name' maxlength="45"  required)
-                .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='familiarName') Nombre de mascota:
                     .col-sm-8
-                        input#familiarName.form-control(type='text' name='familiarName' maxlength="45")
+                        input#familiarName.form-control(type='text' name='familiarName' maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto")
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='familiarType') Tipo de mascota:
                     .col-sm-8
-                        input#familiarType.form-control(type='text' name='familiarType' maxlength="45")
+                        input#familiarType.form-control(type='text' name='familiarType' maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto")
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='role') *Rol: 
                     .col-sm-8
                         select#role.form-select(name='role' aria-label='Elige una opción' required)                            
-                            option(value='1') Admin
-                            option(value='2', selected) Usuario
+                            option(value='1', selected) Usuario
+                            option(value='2') Veterinario
+                            option(value='2') Administrador
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='isActive') *Estado: 
                     .col-sm-8
@@ -37,5 +46,7 @@ block content
                             option(value='2') Inactivo           
                 .mb-3.row.align-items-center
                     .col-sm-8.offset-sm-4
-                        button.btn.btn-success.px-4.py-2.ms-5(type='submit') Enviar
-    span.float-end.me-5 Los campos con (*) son obligatorios.   
+                        button.btn.btn-primary.px-4.py-2.ms-5(type='submit') Enviar
+                .mb-3.row
+                    .col-sm-8.offset-sm-4.col-lg-12.offset-lg-11
+                        span Los campos con (*) son obligatorios.
