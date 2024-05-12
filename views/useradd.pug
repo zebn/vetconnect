@@ -8,13 +8,9 @@ block content
                 .my-5.text-center.text-danger #{error}               
             form(action='/admin/users/add/' method='post')
                 .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='name') *Nombre:
+                    label.form-label.col-sm-4(for='name') *Nombre y apellidos:
                     .col-sm-8
                         input#name.form-control(type='text' name='name' maxlength="45"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto" required)
-                .mb-3.row.align-items-center
-                    label.form-label.col-sm-4(for='surname') *Apellidos: 
-                    .col-sm-8
-                        input#surname.form-control(type='text' name='surname' maxlength="45" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto"  required )
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='nickname') *Nickname: 
                     .col-sm-8
@@ -37,7 +33,7 @@ block content
                         select#role.form-select(name='role' aria-label='Elige una opción' required)                            
                             option(value='1', selected) Usuario
                             option(value='2') Veterinario
-                            option(value='2') Administrador
+                            option(value='3') Administrador
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='isActive') *Estado: 
                     .col-sm-8

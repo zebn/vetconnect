@@ -31,7 +31,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     columns = [  "ID" ,"Nick" ,"Imagen" , "Correo" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "","" ];
 
     data.forEach(element => {
-      element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img>`
+      element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}" alt="Sin imagen"></img>`
       element.edit = `<a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a>`;
       element.delete = `<form action="/admin/users/delete/${element.idUser}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button></form>`;            
       if (element.isActive==0){
@@ -45,6 +45,9 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
       }
       if (element.nameRole=="ROLE_USER"){
         element.nameRole="Usuario"
+      }
+      if (element.nameRole=="ROLE_DOCTOR"){
+        element.nameRole="Veterinario"
       }
     });
   }
@@ -88,7 +91,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
       else{
         element.isNeedDoctor="No"
       }
-      element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}"></img> ${element.nameChat}`
+      element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}" alt="Sin imagen"></img> ${element.nameChat}`
     });
   
   }
@@ -124,22 +127,22 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
   }
 });
 
-router.get('/users/edit/:userId', async function (request, response, next) {
+router.get('/users/edit/:userId', auth.checkAuthToken,async function (request, response, next) {
   var userInfo = await user.getUserInfo(request.params.userId);
   response.render('useredit', { username: response.locals.username, role: response.locals.role, userInfo: userInfo });
 });
 
-router.post('/users/edit/:userId', async function (request, response, next) {
-   await user.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId);
+router.post('/users/edit/:userId', auth.checkAuthToken,async function (request, response, next) {
+   await user.editUser(request.body.username, request.body.name, request.body.familiarName, request.body.familiarType, request.body.role,request.body.isActive,request.params.userId,request.body.nickname);
   response.redirect('/admin/users/')
 });
 
-router.get('/reviews/edit/:reviewId', async function (request, response, next) {
+router.get('/reviews/edit/:reviewId', auth.checkAuthToken,async function (request, response, next) {
   var reviewInfo = await review.getReviewInfo(request.params.reviewId);
   response.render('reviewedit', { username: response.locals.username, role: response.locals.role, reviewInfo: reviewInfo });
 });
 
-router.post('/reviews/edit/:reviewId', async function (request, response, next) {
+router.post('/reviews/edit/:reviewId', auth.checkAuthToken,async function (request, response, next) {
    await review.editReview(request.body.reviewUser, request.body.reviewBody, request.body.reviewStars,request.params.reviewId);
   response.redirect('/admin/reviews/')
 });
@@ -154,25 +157,25 @@ router.post('/reviews/delete/:reviewId', auth.checkAuthToken, async function (re
   response.redirect('/admin/reviews/')
 });
 
-router.get('/users/add', async function (request, response, next) {
+router.get('/users/add', auth.checkAuthToken,async function (request, response, next) {
   response.render('useradd', { username: response.locals.username, role: response.locals.role });
 });
 
-router.post('/users/add', async function (request, response, next) {
+router.post('/users/add', auth.checkAuthToken,async function (request, response, next) {
   console.log(request.body.isActive);   
-  const result = await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive);
+  const result = await user.addUser(request.body.username, request.body.name,request.body.familiarName, request.body.familiarType,  request.body.role,  request.body.isActive, request.body.nickname);
   if (result == true) {
     response.redirect('/admin/users/')
   } else {
-    response.render('useradd', { username: response.locals.username, role: response.locals.role, levels: levels, roles: roles, error: result });
+    response.render('useradd', { username: response.locals.username, role: response.locals.role, error: result });
   }
 });
 
-router.get('/reviews/add', async function (request, response, next) {
+router.get('/reviews/add', auth.checkAuthToken,async function (request, response, next) {
   response.render('reviewadd', { username: response.locals.username, role: response.locals.role });
 });
 
-router.post('/reviews/add', async function (request, response, next) {
+router.post('/reviews/add', auth.checkAuthToken,async function (request, response, next) {
   await review.addReview(request.body.user, request.body.reviewBody, request.body.reviewStars);
   response.redirect('/admin/reviews/')
 });

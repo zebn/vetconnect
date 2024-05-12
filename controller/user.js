@@ -69,10 +69,10 @@ async function deleteUser(userId) {
     });
 }
 
-async function editUser(username, name, familiarName, familiarType, idRole, isActive, idUser) {
+async function editUser(username, name, familiarName, familiarType, idRole, isActive, idUser, nickname) {
     return new Promise((resolve, reject) => {
-        db.connection.query('UPDATE user SET username = ?, name = ?, familiarName = ?, familiarType = ?, idRole = ?,  isActive = ? WHERE idUser = ?;',
-            [username, name, familiarName, familiarType, idRole, isActive, idUser], function (error, results, fields) {
+        db.connection.query('UPDATE user SET username = ?, name = ?, familiarName = ?, familiarType = ?, idRole = ?,  isActive = ?, nickname = ? WHERE idUser = ?;',
+            [username, name, familiarName, familiarType, idRole, isActive, nickname, idUser], function (error, results, fields) {
                 if (error) {
                     if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
                     else { resolve(error.message); }
@@ -82,10 +82,11 @@ async function editUser(username, name, familiarName, familiarType, idRole, isAc
     });
 }
 
-async function addUser(username, name, familiarName, familiarType, role, isActive) {
+async function addUser(username, name, familiarName, familiarType, role, isActive, nickname) {
     return new Promise((resolve, reject) => {
-        db.connection.query('INSERT INTO user (username, name, familiarName, familiarType, idRole, isActive) VALUES (?, ?, ?, ?, ?, ?);',
-            [username, name, familiarName, familiarType, role, isActive], function (error, results, fields) {
+        let token = require('crypto').randomBytes(32).toString('hex');
+        db.connection.query('INSERT INTO user (username, name, familiarName, familiarType, idRole, isActive, nickname,passwordToken,authToken) VALUES (?, ?, ?, ?, ?, ?, ?,?,?);',
+            [username, name, familiarName, familiarType, role, isActive, nickname,token,token], function (error, results, fields) {
                 if (error) {
                     if (error.errno == 1062) { resolve("Este correo ya está registrado"); }
                     else { resolve(error.message); }
@@ -108,7 +109,7 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
                     to: username,   // list of receivers
                     subject: 'Alta en club del tenis',
                     text: 'That was easy!',
-                    html: `<b>Hola! <b>${username}!</b></b>  <br> Gracias por registar en nuestro club del tenis!`
+                    html: `¡Hola <b>${nickname}!</b>  <br>¡Gracias por registarse en VETCONNECT! <br>Para acceder es necesario reestablecer su contraseña.`
                 };
 
                 transporter.sendMail(mailData, function (err, info) {
@@ -118,7 +119,6 @@ async function addUser(username, name, familiarName, familiarType, role, isActiv
                     }
                     else {
                         console.log(info);
-                        response.redirect('/login/successRegister');
                         resolve(true);
                     }
                 });

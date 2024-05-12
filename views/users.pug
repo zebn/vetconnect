@@ -62,9 +62,9 @@ block content
                                 if (chats.length==0&&role=="ROLE_USER")
                                     button#createButton.btn.btn-primary(type='button' onclick='createRoom()') Nueva consulta
                                 if (chats.length==0&&chatsWithoutDoctor.length==0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
-                                    | No hay consultas pendientes
+                                    h2 No hay consultas
                                 if (chats.length>0)                
-                                    h1.h2 Mis consultas
+                                    h2 Mis consultas
                                     .row
                                         each chat in chats
                                             .col-lg-4.mt-3
@@ -75,7 +75,7 @@ block content
                                                         form(action="/users/finalize/"+chat.idChat method="POST")
                                                             a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
                                                             button(type="submit").btn.btn-danger.ms-1 Finalizar    
-                                if (chatsWithoutDoctor.length>0&&role=="ROLE_ADMIN")
+                                if (chatsWithoutDoctor.length>0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
                                     h2 Consultas sin atención
                                     .row
                                         each chatWithoutDoctor in chatsWithoutDoctor
