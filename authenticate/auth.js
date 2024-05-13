@@ -123,7 +123,7 @@ var signUp = (request, response, next) => {
                 request.body.backhand = null;
             }
 
-            token = require('crypto').randomBytes(32).toString('hex');
+            let token = require('crypto').randomBytes(32).toString('hex');
 
         db.connection.query('INSERT INTO user (name, username , password, familiarName, familiarType, nickname, authToken, passwordToken ) VALUES (?, ?, ?, ?, ?, ?,?,?)', [request.body.name + ' ' + request.body.surname, request.body.username, request.body.password, request.body.mascotname, request.body.mascottype, request.body.nickname,token,token], function (error, results, fields) {
                 if (error) {
