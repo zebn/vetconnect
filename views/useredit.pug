@@ -32,9 +32,10 @@ block content
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='role') *Rol: 
                     .col-sm-8
-                        select#role.form-select(name='role' aria-label='Elige una opción' required)                            
-                            option(value='1', selected=userInfo.idRole == 1) Admin
-                            option(value='2', selected=userInfo.idRole == 2) Usuario
+                        select#role.form-select(name='role' aria-label='Elige una opción' required) 
+                            option(value='1', selected=userInfo.idRole == 1) Usuario
+                            option(value='2', selected=userInfo.idRole == 2) Veterinario
+                            option(value='3', selected=userInfo.idRole == 3) Administrador                           
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='isActive') *Estado: 
                     .col-sm-8

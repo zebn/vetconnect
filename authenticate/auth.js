@@ -21,13 +21,13 @@ var checkLogin = (request, response, next) => {
                     request.session.role = results[0].nameRole;
                     token = require('crypto').randomBytes(32).toString('hex');
                     request.session.token = token;
-                    response.cookie('username', results[0].username, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
-                    response.cookie('role', results[0].nameRole, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+                    response.cookie('username', results[0].username, { maxAge: 5 * 60 * 60 * 1000, httpOnly: true });
+                    response.cookie('role', results[0].nameRole, { maxAge: 5 * 60 * 60 * 1000, httpOnly: true });
                     db.connection.query("UPDATE user SET AuthToken=?, PasswordToken =? WHERE username = ?", [token, token, results[0].username], function (error, results, fields) {
                         if (error) throw error;
                     });
                     if (request.body.rememberme) {
-                        response.cookie('token', token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true });
+                        response.cookie('token', token, { maxAge: 5 * 60 * 60 * 1000, httpOnly: true });
                     }
                     next();
                     return true

@@ -35,8 +35,6 @@ block content
                         .py-2.px-4.border-bottom.d-none.d-lg-block
                             .d-flex.justify-content-between.py-1
                                 h5 #{chatInfo.nameChat}
-                                if (chatInfo.isFinished==1)
-                                    span.float-end Consulta finzalizada
                         .position-relative
                             #messages.chat-messages.p-4
                                 each message in messages
@@ -70,23 +68,42 @@ block content
                                                             else
                                                                 | #{message.file}                                         
                                                 .text-muted.small.text-nowrap.mt-2 #{message.dateMessage}
-                        form#form.form-inline(action='').form-horizontal
-                            .flex-grow-0.py-3.px-4.border-top.input-group                                
-                                #inputgroup.col-1
-                                    label(tabindex="0").input-group
-                                        .row
-                                            .col-1                                                
-                                                h2
-                                                    i.bi.bi-paperclip  
-                                            .col-1                           
-                                                input#inputfile.inputfile(type='file' size="1")                                    
-                                .col-10
-                                    input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
-                                .col-1                       
-                                    button.btn.btn-primary Enviar
-                                .row
-                                    .col-12
-                                        #paperclip.span
+                        if (chatInfo.isFinished==0)
+                            form#form.form-inline(action='').form-horizontal
+                                .flex-grow-0.py-3.px-4.border-top.input-group                                
+                                    #inputgroup.col-1
+                                        label(tabindex="0").input-group
+                                            .row
+                                                .col-1                                                
+                                                    h2
+                                                        i.bi.bi-paperclip  
+                                                .col-1                           
+                                                    input#inputfile.inputfile(type='file' size="1")                                    
+                                    .col-10
+                                        input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
+                                    .col-1                       
+                                        button.btn.btn-primary Enviar
+                                    .row
+                                        .col-12
+                                            #paperclip.span
+                        if (chatInfo.isFinished==1)
+                            form#form.form-inline(action='').form-horizontal
+                                .flex-grow-0.py-3.px-4.border-top.input-group                                
+                                    #inputgroup.col-1
+                                        label(tabindex="0").input-group
+                                            .row
+                                                .col-1                                                
+                                                    h2
+                                                        i.bi.bi-paperclip  
+                                                .col-1                           
+                                                    input#inputfile.inputfile(type='file' size="1")                                    
+                                    .col-10
+                                        input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096" disabled value="Consulta finalizada" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
+                                    .col-1                       
+                                        //- button.btn.btn-primary Enviar
+                                    .row
+                                        .col-12
+                                            #paperclip.span
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         document.getElementById('inputfile').addEventListener('change', function(inputfile) {
@@ -114,12 +131,13 @@ block content
         let familiarType = '#{familiarType}';
         let img = '#{img}';
         let file = null;
-        let filename =null;        
-        dataConnection = {username: username, img:img, name:name,nickname:nickname, userId: userId, role: role, sessionID: socket.id, roomId: roomId,familiarName:familiarName,familiarType:familiarType};
-        console.log(`Connecting socket`);
+        let filename =null; 
+        socket.on('connect', () => {
+        data = {socketId:socket.id,dusername: username, img:img, name:name,nickname:nickname, userId: userId, role: role, sessionID: socket.id, roomId: roomId,familiarName:familiarName,familiarType:familiarType};
+        console.log(`Connecting socket ${socket.id}`);
         if (socket && roomId && userId) {
-            console.log('Joining.. ' + dataConnection)
-            socket.emit('join', dataConnection);
+            console.log('Joining.. ' + data)
+            socket.emit('join', data);
         }
         form.addEventListener('submit', (e) => {
             e.preventDefault();            
@@ -239,24 +257,36 @@ block content
         function makeUserOnline(data) {
         const statusDiv = document.querySelector(`#id${data.userId} .small`);
         if (statusDiv) {
-        console.log('became online:',statusDiv)
         statusDiv.firstChild.classList.remove('chat-offline');
         statusDiv.firstChild.classList.add('chat-online');
+        statusDiv.firstChild.classList.add(`${data.socketId}`);
         statusDiv.childNodes[1].textContent = ' Online';
+        console.log(`${data.socketId} online`);
         }
         }
+        function makeUserOffline(socketId) {
+        const statusSpan= document.getElementsByClassName(`${socketId}`);
+        if (statusSpan) {
+        console.log('became offline:',statusSpan[0])
+        statusSpan[0].classList.remove('chat-online');
+        statusSpan[0].classList.add('chat-offline');
+        statusSpan[0].parentNode.childNodes[1].textContent = ' Offline';
+        }
+        }        
         socket.on('chat message', (data) => {
         console.log('message:',data)
-        // Call the appendMessage function with the received message data
         appendMessage(data);
         });
         socket.on('join', (data) => {
         console.log('joined:',data)
-        // Call the appendMessage function with the received message data
         appendUser(data);
         });
         socket.on('make online', (data) => {
         console.log('became online:',data)
-        // Call the appendMessage function with the received message data
         makeUserOnline(data);
         });
+        socket.on('user disconnected', socketId =>
+        {console.log(`${socketId} left`);
+        makeUserOffline(socketId);
+        })
+        });   
