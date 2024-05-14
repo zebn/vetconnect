@@ -88,8 +88,8 @@ block content
                                     .row
                                         each chatWithoutDoctor in chatsWithoutDoctor
                                             .col-lg-4.mt-3
-                                                .card.text-bg-light.mb-3.h-100.align-items-start(style='max-width: 18rem;')
-                                                    .card-header #{chatWithoutDoctor.nameChat}
+                                                .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
+                                                    .card-header(style='height: 2.5rem;') #{chatWithoutDoctor.nameChat}
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
                                                         form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
