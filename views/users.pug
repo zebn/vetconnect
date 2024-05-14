@@ -52,11 +52,14 @@ block content
                                 .col-sm-3
                                     h6.mb-0 Correo electronico
                                 .col-sm-9.text-secondary #{userInfo.username}
-                            hr
-                            .row
-                                .col-sm-3
-                                    h6.mb-0 Mascota
-                                .col-sm-9.text-secondary #{userInfo.familiarName} (#{userInfo.familiarType})                              
+                            if(userInfo.familiarName)
+                                hr
+                                .row
+                                    .col-sm-3
+                                        h6.mb-0 Mascota
+                                    .col-sm-9.text-secondary #{userInfo.familiarName} 
+                                        if(userInfo.familiarType)
+                                            span (#{userInfo.familiarType})                              
                             //- hr
                             //- .row
                             //-     .col-sm-12

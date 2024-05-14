@@ -24,11 +24,11 @@ block content
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='familiarName') Nombre de mascota:
                     .col-sm-8
-                        input#familiarName.form-control(type='text' name='familiarName' maxlength="45" value = userInfo.familiarName)
+                        input#familiarName.form-control(type='text' name='familiarName' maxlength="45" value = userInfo.familiarName pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto")
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='familiarType') Tipo de mascota:
                     .col-sm-8
-                        input#familiarType.form-control(type='text' name='familiarType' maxlength="45" value = userInfo.familiarType)
+                        input#familiarType.form-control(type='text' name='familiarType' maxlength="45" value = userInfo.familiarType pattern="[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+(?: [A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+)*" title="Ingresa solo letras del alfabeto")
                 .mb-3.row.align-items-center
                     label.form-label.col-sm-4(for='role') *Rol: 
                     .col-sm-8
