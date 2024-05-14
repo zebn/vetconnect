@@ -12,8 +12,7 @@ router.post('/',  recaptcha.middleware.renderWith({ hl: 'es' }), recaptcha.middl
   console.log(request.files)
   const cv=null;
   if (request.files) cv=request.files.cv;
-  var result = await contact.sendContact(request.body.email, request.body.telnumber, request.body.info, cv, request.recaptcha.error);
-  
+  var result = await contact.sendContact(request.body.email, request.body.telnumber, request.body.info, cv, request.recaptcha.error);  
   response.render('contact', { username: response.locals.username, role: response.locals.role, result: result ,captcha: response.recaptcha });
 });
 

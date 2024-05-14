@@ -15,9 +15,10 @@ async function getUserInfo(userId) {
 
 async function changePassword(password, userId) {
     password = crypto.createHash('sha256').update(password).digest('hex');
+    const token = require('crypto').randomBytes(32).toString('hex');
     return new Promise((resolve, reject) => {
-        db.connection.query('UPDATE user SET password = ? WHERE idUser = ?;',
-            [password, userId], function (error, results, fields) {
+        db.connection.query('UPDATE user SET password = ?, PasswordToken =? WHERE idUser = ?;',
+            [password, token, userId], function (error, results, fields) {
                 if (error) resolve(error);
                 resolve(true);
             });
