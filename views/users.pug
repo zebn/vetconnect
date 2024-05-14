@@ -52,6 +52,11 @@ block content
                                 .col-sm-3
                                     h6.mb-0 Correo electronico
                                 .col-sm-9.text-secondary #{userInfo.username}
+                            hr
+                            .row
+                                .col-sm-3
+                                    h6.mb-0 Mascota
+                                .col-sm-9.text-secondary #{userInfo.familiarName} (#{userInfo.familiarType})                              
                             //- hr
                             //- .row
                             //-     .col-sm-12
@@ -87,6 +92,17 @@ block content
                                                         form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
                                                             a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
                                                             button(type="submit").btn.btn-danger.ms-1 Finalizar
+                                                                if (chatsWithoutDoctor.length>0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
+                                h2 Consultas finalizadas
+                                .row
+                                    each chatFinished in chatsFinished
+                                        .col-lg-4.mt-3
+                                            .card.text-bg-light.mb-3.opacity-50(style='max-width: 18rem;')
+                                                .card-header #{chatFinished.nameChat}
+                                                .card-body
+                                                    p.card-text Consulta finalizada
+                                                    form(action="/users/finalize/"+chatFinished.idChat method="POST")
+                                                        a.btn.btn-primary(href="/chat/"+chatFinished.idChat) Ver historia                                                          
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
         console.log(#{roomId});

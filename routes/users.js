@@ -10,7 +10,8 @@ router.get('/:result?', auth.checkAuthToken, async function (request, response, 
   const userInfo = await user.getUserInfo(request.session.userId);
   const chats = await message.getAllChatsForUser(request.session.userId);
   const chatsWithoutDoctor = await message.getAllChatsWithoutDoctor();
-  response.render('users', { username: request.session.username, role: request.session.role, userId: request.session.userId,userInfo:userInfo, chats: chats, chatsWithoutDoctor: chatsWithoutDoctor, result:request.params.result});
+  const chatsFinished = await message.getAllFinishedChatsForUser(request.session.userId);
+  response.render('users', { username: request.session.username, role: request.session.role, userId: request.session.userId,userInfo:userInfo, chats: chats, chatsWithoutDoctor: chatsWithoutDoctor, result:request.params.result,chatsFinished:chatsFinished});
 });
 
 router.post('/passwordchange', auth.checkAuthToken, async function(request, response, next) {

@@ -39,8 +39,18 @@ async function finalizeChat(idChat){
     });
 }
 
+async function activateChat(idChat){
+    return new Promise((resolve, reject) => {
+        db.connection.query('UPDATE chat SET isFinished = 0 WHERE idChat = ?;',
+            [idChat], function (error, results, fields) {
+                if (error) throw error;
+                resolve();
+            });
+    });
+}
 
 module.exports = {
+    activateChat,
     getAllChats,
     getChatInfo,
     deleteChat,

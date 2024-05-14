@@ -75,15 +75,19 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     }
   ]
 
-    columns = [  "idChat",  "Nombre de consulta" , "Finalizada" ,"Atendida","Foto","",""];
+    columns = [  "idChat",  "Nombre de consulta" , "Finalizada" ,"Atendida","Foto","","",""];
     data.forEach(element => {
       element.edit=`<a class="btn btn-primary" href="/chat/${element.idChat}" role="button">Unir</a>`;
-      element.delete=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
+      
+      
+      
       if (element.isFinished==0){
         element.isFinished="No"
+        element.activate=`<form action="/admin/chats/finalize/${element.idChat}" method="POST"><button type="submit" class="btn btn-outline-warning">Finalizar</form>`;
       }
       else{
-        element.isFinished="Si"
+        element.isFinished="Si";
+        element.activate=`<form action="/admin/chats/activate/${element.idChat}" method="POST"><button type="submit" class="btn btn-warning">Activar</form>`;
       }
       if (element.isNeedDoctor==0){
         element.isNeedDoctor="Si"
@@ -91,6 +95,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
       else{
         element.isNeedDoctor="No"
       }
+      element.delete=`<form action="/admin/chats/delete/${element.idChat}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button> </form> `;
       element.nameChat=`<img class="rounded-circle" width="50px" src="/upload/${element.img}" alt="Sin imagen"></img> ${element.nameChat}`
     });
   
@@ -182,6 +187,16 @@ router.post('/reviews/add', auth.checkAuthToken,async function (request, respons
 
 router.post('/chats/delete/:chatId', auth.checkAuthToken, async function (request, response, next) {
   await chat.deleteChat(request.params.chatId);
+  response.redirect('/admin/chats/')
+});
+
+router.post('/chats/finalize/:chatId', auth.checkAuthToken, async function (request, response, next) {
+  await chat.finalizeChat(request.params.chatId);
+  response.redirect('/admin/chats/')
+});
+
+router.post('/chats/activate/:chatId', auth.checkAuthToken, async function (request, response, next) {
+  await chat.activateChat(request.params.chatId);
   response.redirect('/admin/chats/')
 });
 

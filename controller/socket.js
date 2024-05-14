@@ -14,9 +14,10 @@ class SocketController {
 
         io.on('connection', (socket) => {
 
+
             function joinRoom(data) {
                 db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
-                    , [[data.roomId, data.userId]], function (error, results, fields) {
+                    , [[data.roomId, data.userId]], async function (error, results, fields) {
                         if (error) throw error;
                         console.log(`${data.userId} with ${data.role} joined ${data.roomId}`);
                         if (data.role == "ROLE_DOCTOR" || data.role == "ROLE_ADMIN") {
@@ -35,6 +36,10 @@ class SocketController {
                         } else
                         {
                             io.to(data.roomId).emit('make online', data);
+                            // let sockets = await io.in(data.roomId).fetchSockets();
+                            // const socketIds = sockets.map(socket => socket.id);
+                            // console.log(socketIds);
+                            // io.to(data.roomId).emit('users online', socketIds)
                         }                         
                     });
             };
@@ -79,7 +84,7 @@ class SocketController {
                         joinRoom({ userId: data.userId, roomId: results.insertId });
                         callback({
                             roomId: results.insertId,
-                            roomName: `Consulta ${data.nickname}`
+                            roomName: `Consulta con ${data.nickname} + ${results.insertId}`
                         });
                         // io.sockets.socket(data.socketId).emit('new room', { userId: data.userId, roomId: results.insertId,roomName:`Consulta ${data.username}`});
                     });
@@ -95,9 +100,14 @@ class SocketController {
                 socket.leave(room);
             });
 
-            socket.on('disconnect', () => {
-                // console.log(session.username + ' user disconnected');
+            socket.on('make offline', (data) => {
+                console.log(`Socket ${data.username} became offline ${data.roomId}`);
+                io.to(data.roomId).emit('make offline', data);
             });
+
+            socket.on('disconnect', (data, callback) => {
+                socket.broadcast.emit('user disconnected', socket.id);
+            })
         });
     }
 
