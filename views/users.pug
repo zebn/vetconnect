@@ -76,8 +76,8 @@ block content
                                     .row
                                         each chat in chats
                                             .col-lg-4.mt-3
-                                                .card.text-bg-light.mb-3(style='max-width: 18rem;')
-                                                    .card-header #{chat.nameChat}
+                                                .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
+                                                    .card-header(style='height: 4rem;') #{chat.nameChat}
                                                     .card-body
                                                         p.card-text Consulta en progreso
                                                         form(action="/users/finalize/"+chat.idChat method="POST")
@@ -89,7 +89,7 @@ block content
                                         each chatWithoutDoctor in chatsWithoutDoctor
                                             .col-lg-4.mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 2.5rem;') #{chatWithoutDoctor.nameChat}
+                                                    .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat}
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
                                                         form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
@@ -100,8 +100,8 @@ block content
                                 .row
                                     each chatFinished in chatsFinished
                                         .col-lg-4.mt-3
-                                            .card.text-bg-light.mb-3.opacity-50(style='max-width: 18rem;')
-                                                .card-header #{chatFinished.nameChat}
+                                            .card.text-bg-light.mb-3.opacity-50.h-100(style='max-width: 18rem;')
+                                                .card-header(style='height: 4rem;') #{chatFinished.nameChat}
                                                 .card-body
                                                     p.card-text Consulta finalizada
                                                     form(action="/users/finalize/"+chatFinished.idChat method="POST")
