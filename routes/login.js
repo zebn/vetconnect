@@ -97,13 +97,13 @@ router.get('/passwordchange', function (request, response, next) {
 });
 
 router.post('/passwordchange', async function (request, response, next) {
-    result = await user.changePassword(request.body.confirmPassword, request.session.userId);
+    result = await user.changePassword(request.body.newPassword, request.body.confirmPassword,  request.session.userId);
     console.log(result)
-    if (result) {
+    if (result===true) {
         response.redirect('/login/changePasswordSuccess');
     }
     else {
-        response.render('passwordrestore', { error: result });
+        response.render('passwordchange', { error: result });
     }
 
 

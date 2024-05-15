@@ -31,7 +31,10 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
     columns = [  "ID" ,"Nick" ,"Imagen" , "Correo" , "Nombre" , "Nombre de mascota", "Tipo de mascota", "Rol" ,"Estado", "","" ];
 
     data.forEach(element => {
-      element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}" alt="Sin imagen"></img>`
+      if(element.img)
+      element.img=`<img class="rounded-circle" width="50px" src="/upload/${element.img}" alt="${element.nickname}"></img>`
+      else
+      element.img = "Sin imagen"
       element.edit = `<a class="btn btn-primary" href="/admin/users/edit/${element.idUser}" role="button">Editar</a>`;
       element.delete = `<form action="/admin/users/delete/${element.idUser}" method="POST"><button type="submit" class="btn btn-danger">Borrar</button></form>`;            
       if (element.isActive==0){
@@ -70,7 +73,7 @@ router.get('/:dataId', auth.checkAuthToken, async function (request, response, n
         searchable: false
     },
     {
-      targets: [5,6], // Columnas para las que deseas definir el ancho
+      targets: [5,6,7], // Columnas para las que deseas definir el ancho
       width: '5%' // Tamaño deseado para las columnas
     }
   ]
