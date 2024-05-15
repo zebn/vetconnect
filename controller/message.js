@@ -44,8 +44,9 @@ class Message {
 
     async getAllChatsWithoutDoctor(){
         return new Promise((resolve, reject) => {
-            db.connection.query('select * from chat c left join chatuser cu on cu.idChat = c.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', function (error, results, fields) {
+            db.connection.query('select c.* from chat c left join chatuser cu on c.idChat = cu.idChat where c.isNeedDoctor = 1 AND c.isFinished = 0', function (error, results, fields) {
                 if (error) {reject(error)};
+                console.log(results);
                 resolve(results)
             });
         });
