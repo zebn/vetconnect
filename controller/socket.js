@@ -8,13 +8,8 @@ var crypto = require("crypto");
 
 class SocketController {
     constructor(server) {
-
-
         const io = socketIo(server);
-
         io.on('connection', (socket) => {
-
-
             function joinRoom(data) {
                 db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
                     , [[data.roomId, data.userId]], async function (error, results, fields) {
@@ -36,15 +31,11 @@ class SocketController {
                         } else
                         {
                             io.to(data.roomId).emit('make online', data);
-                            // let sockets = await io.in(data.roomId).fetchSockets();
-                            // const socketIds = sockets.map(socket => socket.id);
-                            // console.log(socketIds);
-                            // io.to(data.roomId).emit('users online', socketIds)
                         }                         
                     });
             };
 
-            socket.on('chat message', (data) => {
+            socket.on('chat message', (data, callback) => {
                 if (data.file)
                  {
                     var filename=data.userId + '_'+data.roomId + '_' + data.filename
@@ -53,11 +44,6 @@ class SocketController {
                     , [[data.message, data.roomId, data.userId, new Date(), filename]], function (error, results, fields) {
                         if (error) throw error;
                         data.dateMessage = moment(new Date().toUTCString()).fromNow();
-                        // if ((data.nameRole == "ROLE_ADMIN") || (data.nameRole == "ROLE_DOCTOR")) {
-                        //     data.img = "/img/doctor.png"
-                        // } else {
-                        //     data.img = "/img/user.png"
-                        // }
                         if (data.file) {
                             let uploadPath;
                             // name of the input is sampleFile
@@ -73,6 +59,9 @@ class SocketController {
                             console.log('message without file',data);
                             io.to(data.roomId).emit('make online', data);
                             io.to(data.roomId).emit('chat message', data); }
+                            callback({
+                                messageId: results.insertId
+                            });
                     });
             });
 
