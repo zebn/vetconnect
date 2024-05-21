@@ -32,7 +32,10 @@ block content
                                             img.rounded-circle.mx-1(src='/img/user.png' alt=user.username width='40' height='40')
                                         .flex-grow-1.ml-3
                                             | #{user.name} 
-                                            span.text-muted.mt-1 con #{user.familiarName} (#{user.familiarType})
+                                            if((user.familiarName)&&(user.familiarType))
+                                                span.text-muted.mt-1 con #{user.familiarName} (#{user.familiarType})
+                                            if((user.familiarName)&&(!user.familiarType))
+                                                span.text-muted.mt-1 con #{user.familiarName}
                                             .small
                                                 spani.bi.bi-circle-fill.chat-offline
                                                 |  Offline                                            
@@ -235,10 +238,17 @@ block content
         const spanUserName = document.createElement('span');
         spanUserName.appendChild(textNode);
         div.appendChild(spanUserName);
-        const textNode2 = document.createTextNode(' con '+ user.familiarName + ' (' + user.familiarType + ')');
         const spanText = document.createElement('span');
         spanText.classList.add('text-muted', 'small', 'mt-1');
+        if (user.familiarName&&user.familiarType){
+        const textNode2 = document.createTextNode(' con '+ user.familiarName + ' (' + user.familiarType + ')');
+        spanText.appendChild(textNode2);            
+        }
+        else if (user.familiarName&&!user.familiarType)
+        {
+        const textNode2 = document.createTextNode(' con '+ user.familiarName);
         spanText.appendChild(textNode2);
+        }
         const small = document.createElement('div');
         small.classList.add('small');
         const spanStatus = document.createElement('span');
