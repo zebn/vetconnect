@@ -26,7 +26,7 @@ block content
                                         form(action='/users/imagedchange' method='POST' enctype="multipart/form-data")
                                             .form-group
                                                 label.labels.mb-1(label-for='profileimage') Cambiar imagen
-                                                input#profileimage.form-control(type='file' name='profileimage' accept='image/*' onchange="form.submit()")
+                                                input#profileimage.form-control(type='file' name='profileimage'  value='No hay archivo seleccionado' accept='image/*' onchange="form.submit()")
                     .card.mt-3
                         .p-3.py-5
                             h5.text-right Cambiar contraseña
