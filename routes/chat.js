@@ -1,14 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../authenticate/auth');
-const message = require('../controller/message');
 const chat = require('../controller/chat');
 const user = require('../controller/user');
 
 router.get('/:roomId', auth.checkAuthToken, async function (request, response, next) {
-  const messages = await message.getAllMessages(request.params.roomId);
-  const users = await message.getUsersForChat(request.params.roomId);
-  const chats = await message.getAllChatsForUser(request.session.userId);
+  const messages = await chat.getAllMessages(request.params.roomId);
+  const users = await chat.getUsersForChat(request.params.roomId);
+  const chats = await chat.getAllChatsForUser(request.session.userId);
   const chatInfo = await chat.getChatInfo(request.params.roomId);
   const userInfo = JSON.parse(JSON.stringify(await user.getUserInfo(request.session.userId)));
   console.log(chatInfo);

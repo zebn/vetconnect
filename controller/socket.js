@@ -2,7 +2,7 @@ const socketIo = require('socket.io')
 const db = require('../model/db');
 var moment = require('moment');
 var path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 var crypto = require("crypto");
 const chatbot = require('../controller/chatbot');
 const chat = require('../controller/chat');
@@ -12,62 +12,66 @@ class SocketController {
     constructor(server) {
         const io = socketIo(server);
         io.on('connection', (socket) => {
-
-            function joinRoom(data) {
-                db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
-                    , [[data.roomId, data.userId]], async function (error, results, fields) {
-                        if (error) throw error;
-                        console.log(`${data.userId} with ${data.role} joined ${data.roomId}`);
-                        if (data.role == "ROLE_DOCTOR" || data.role == "ROLE_ADMIN") {
-                            db.connection.query("UPDATE chat SET isNeedDoctor = 0 WHERE idChat = ?;"
-                                , [[data.roomId]], function (error, results, fields) {
-                                    if (error) throw error;
-                                    console.log(`${data.userId} doctor assigned to ${data.roomId}`);
-                                });
-                        }
-                        socket.join(data.roomId);
-                        console.log(results);
-                        if (results.affectedRows > 0) {
-                            io.to(data.roomId).emit('join', data);
-                            io.to(data.roomId).emit('make online', data);
-                        } else {
-                            io.to(data.roomId).emit('make online', data);
-                        }
-                    });
-            };
+            async function joinRoom(data) {
+                return new Promise((resolve, reject) => {
+                    db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
+                        , [[data.roomId, data.userId]], function (error, results, fields) {
+                            if (error) throw error;
+                            console.log(`${data.userId} with ${data.role} joined ${data.roomId}`);
+                            if (data.role == "ROLE_DOCTOR" || data.role == "ROLE_ADMIN") {
+                                db.connection.query("UPDATE chat SET isNeedDoctor = 0 WHERE idChat = ?;"
+                                    , [[data.roomId]], function (error, results, fields) {
+                                        if (error) throw error;
+                                        console.log(`${data.userId} doctor assigned to ${data.roomId}`);
+                                    });
+                            }
+                            socket.join(data.roomId);
+                            console.log(results);
+                            if (results.affectedRows > 0) {
+                                io.to(data.roomId).emit('join', data);
+                                io.to(data.roomId).emit('make online', data);
+                            } else {
+                                io.to(data.roomId).emit('make online', data);
+                            }
+                        });
+                });
+            }
 
             async function insertMessageDb(data) {
                 if (data.file) {
                     var filename = data.userId + '_' + data.roomId + '_' + data.filename
                 }
-                db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage,file) VALUES (?);"
-                    , [[data.message, data.roomId, data.userId, new Date(), filename]], async function (error, results, fields) {
-                        if (error) throw error;
-                        data.dateMessage = moment(new Date().toUTCString()).fromNow();
-                        if (data.file) {
-                            let uploadPath;
-                            // name of the input is sampleFile
-                            uploadPath = path.join(__dirname, '..', 'public', 'upload', filename);
-                            fs.writeFile(uploadPath, data.file, (err) => {
-                                if (err) throw console.log(error);
-                                data.file = filename;
-                                console.log('message with file', data);
-                            });
-                        }
-                        else {
-                            console.log('message without file', data);
-                        }
-                        return results;
-                    });
+                return new Promise((resolve, reject) => {
+                    db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage,file) VALUES (?);",
+                        [[data.message, data.roomId, data.userId, new Date(), filename]], async function (error, results, fields) {
+                            if (error) throw error;
+                            data.dateMessage = moment(new Date().toUTCString()).fromNow();
+                            if (data.file) {
+                                let uploadPath;
+                                uploadPath = path.join(__dirname, '..', 'public', 'upload', filename);
+                                console.log('message', data);
+                                await fs.writeFile(uploadPath, data.file, (err) => {
+                                    if (err) throw console.log(error);
+                                    resolve(results);
+                                });
+                            }
+                            resolve(results);
+                        });
+                });
             }
 
             socket.on('chat message', async (data, callback) => {
                 let results = await insertMessageDb(data);
+                if (data.file) {
+                    var filename = data.userId + '_' + data.roomId + '_' + data.filename
+                    data.file = filename;
+                }
+                data.dateMessage = moment(new Date().toUTCString()).fromNow();
                 io.to(data.roomId).emit('make online', data);
                 io.to(data.roomId).emit('chat message', data);
                 let chatinfo = await chat.getChatInfo(data.roomId)
                 console.log(chatinfo['nameChat'])
-                if (chatinfo['isNeedDoctor'] == true) {
+                if (chatinfo['isNeedDoctor'] == true&&data.message) {
                     console.log("test")
                     let response = await chatbot.generateResponseAI(data.message);
                     console.log(response)
@@ -75,6 +79,8 @@ class SocketController {
                         message: response.answer !== undefined ? response.answer : "Lo siento, no entiendo :(",
                         roomId: data.roomId,
                         username: "Bot@bot.com",
+                        file:null,
+                        filename:null,
                         name: "VetBot",
                         userId: 1,
                         nameRole: "ROLE_ADMIN",
@@ -89,6 +95,7 @@ class SocketController {
             });
 
             socket.on('create', (data, callback) => {
+                return new Promise((resolve, reject) => {
                 db.connection.query("INSERT INTO chat (nameChat) VALUES (?);"
                     , [`Consulta con ${data.nickname}`], function (error, results, fields) {
                         if (error) throw error;
@@ -98,12 +105,12 @@ class SocketController {
                             roomId: results.insertId,
                             roomName: `Consulta con ${data.nickname} ${results.insertId}`
                         });
-                        // io.sockets.socket(data.socketId).emit('new room', { userId: data.userId, roomId: results.insertId,roomName:`Consulta ${data.username}`});
                     });
+                });
             });
 
-            socket.on('join', (data) => {
-                joinRoom(data);
+            socket.on('join', async (data) => {
+                await joinRoom(data);
             });
 
 
@@ -115,6 +122,12 @@ class SocketController {
             socket.on('make offline', (data) => {
                 console.log(`Socket ${data.username} became offline ${data.roomId}`);
                 io.to(data.roomId).emit('make offline', data);
+            });
+
+            
+            socket.on('make online', (data) => {
+                console.log(`Socket ${data.username} became offline ${data.roomId}`);
+                io.to(data.roomId).emit('make online', data);
             });
 
             socket.on('disconnect', (data, callback) => {

@@ -849,10 +849,10 @@
         ],
         "greetings.hello": [
           {
-            "answer": "¡Hola!"
+            "answer": "¡Hola! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte"
           },
           {
-            "answer": "¡Saludos!"
+            "answer": "¡Saludos! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte"
           }
         ],
         "appointment.create": [

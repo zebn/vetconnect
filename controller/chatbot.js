@@ -19,8 +19,8 @@ async function trainChatBotIA() {
         // Respuestas para saludos y despedidas
         manager.addAnswer('es', 'greetings.bye', 'Hasta la próxima');
         manager.addAnswer('es', 'greetings.bye', '¡Nos vemos pronto!');
-        manager.addAnswer('es', 'greetings.hello', '¡Hola!');
-        manager.addAnswer('es', 'greetings.hello', '¡Saludos!');
+        manager.addAnswer('es', 'greetings.hello', '¡Hola! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte');
+        manager.addAnswer('es', 'greetings.hello', '¡Saludos! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte');
 
         // Intents y respuestas específicos de la clínica veterinaria
         manager.addDocument('es', 'quiero hacer una cita', 'appointment.create');
@@ -36,6 +36,7 @@ async function trainChatBotIA() {
         manager.addDocument('es', 'cómo llegar a la clínica', 'clinic.location');
 
         // Respuestas para intents específicos de la clínica veterinaria
+
         manager.addAnswer('es', 'appointment.create', 'Claro, ¿para qué día y hora le gustaría hacer la cita?');
         manager.addAnswer('es', 'appointment.create', 'Podemos agendar una cita para su mascota. ¿Cuándo le gustaría venir?');
 

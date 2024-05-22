@@ -1,16 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../authenticate/auth');
-const message = require('../controller/message');
 var user = require('../controller/user');
 var chat = require('../controller/chat');
 
 /* GET users listing. */
 router.get('/:result?', auth.checkAuthToken, async function (request, response, next) {
   const userInfo = await user.getUserInfo(request.session.userId);
-  const chats = await message.getAllChatsForUser(request.session.userId);
-  const chatsWithoutDoctor = await message.getAllChatsWithoutDoctor();
-  const chatsFinished = await message.getAllFinishedChatsForUser(request.session.userId);
+  const chats = await chat.getAllChatsForUser(request.session.userId);
+  const chatsWithoutDoctor = await chat.getAllChatsWithoutDoctor();
+  const chatsFinished = await chat.getAllFinishedChatsForUser(request.session.userId);
   response.render('users', { username: request.session.username, role: request.session.role, userId: request.session.userId,userInfo:userInfo, chats: chats, chatsWithoutDoctor: chatsWithoutDoctor, result:request.params.result,chatsFinished:chatsFinished});
 });
 

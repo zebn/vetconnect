@@ -147,6 +147,7 @@ block content
         if (socket && roomId && userId) {
             console.log('Joining.. ' + data)
             socket.emit('join', data);
+            socket.emit('make online', data);
         }
         form.addEventListener('submit', (e) => {
             e.preventDefault();            
