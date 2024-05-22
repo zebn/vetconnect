@@ -1,5 +1,18 @@
 extends layout
 block content
+    #exampleModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5#exampleModalLabel.modal-title Nueva consulta
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    label.labels.mb-1(label-for='textconsult') Describa su problema:
+                    textarea#textconsult.form-control(name='textconsult'  maxlength="1000"  required)
+                    span Máximo 1000 caracteres.
+                .modal-footer
+                    button#createButton.btn.btn-primary.my-3(type='button' onclick='createRoom()') Crear consulta
+                    button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cerrar
     .container
         .main-body
             .row.gutters-sm
@@ -68,7 +81,7 @@ block content
                         .col-sm-12.mb-3
                             main#main
                                 if (chats.length==0&&role=="ROLE_USER")
-                                    button#createButton.btn.btn-primary.my-3(type='button' onclick='createRoom()') Nueva consulta
+                                    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal') Nueva consulta
                                 if (chats.length==0&&chatsWithoutDoctor.length==0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
                                     h2 No hay consultas
                                 if (chats.length>0)                
@@ -77,7 +90,7 @@ block content
                                         each chat in chats
                                             .col-lg-4.mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 4rem;') #{chat.nameChat} #{chat.idChat} 
+                                                    .card-header(style='height: 4rem;') #{chat.nameChat} Ref: #{chat.idChat} 
                                                     .card-body
                                                         p.card-text Consulta en progreso
                                                         form(action="/users/finalize/"+chat.idChat method="POST")
@@ -89,7 +102,7 @@ block content
                                         each chatWithoutDoctor in chatsWithoutDoctor
                                             .col-lg-4.mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat} #{chatWithoutDoctor.idChat} 
+                                                    .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat} Ref:  #{chatWithoutDoctor.idChat} 
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
                                                         form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
@@ -102,58 +115,74 @@ block content
                                         each chatFinished in chatsFinished
                                             .col-lg-4.mt-3
                                                 .card.text-bg-light.mb-3.opacity-50.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 4rem;') #{chatFinished.nameChat} #{chatFinished.idChat} 
+                                                    .card-header(style='height: 4rem;') #{chatFinished.nameChat} Ref:  #{chatFinished.idChat} 
                                                     .card-body
                                                         p.card-text Consulta finalizada
                                                         form(action="/users/finalize/"+chatFinished.idChat method="POST")
                                                             a.btn.btn-primary(href="/chat/"+chatFinished.idChat) Ver historia                                                          
     script(src='https://cdn.socket.io/4.7.2/socket.io.min.js')
     script.
-        console.log(#{roomId});
         function createRoom()
         {
         const socket = io().connect();
-        let roomId = '#{roomId}';
         let nickname = '#{userInfo.nickname}';
         let userId = '#{userId}';  
-        dataConnection = {nickname: nickname, userId: userId,socketId:socket.id};
+        let username = '#{userInfo.nickname}'
+        let nameRole = '#{userInfo.nameRole}'
+        let img = '#{userInfo.img}'
+        dataNewRoom = {nickname: nickname, userId: userId,socketId:socket.id};
         if (socket && userId) 
-        socket.emit('create', dataConnection, (response) => {
-        document.getElementById("createButton").remove();
-        console.log(response.roomName);
-        const main = document.getElementById("main");
-        // Create div element with class 'card text-dark bg-light mb-3'
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'card text-dark bg-light mb-3 h-100';
-        cardDiv.style.width = '17rem';
-        // Create div element with class 'card-header' and set its text content
-        const cardHeader = document.createElement('div');
-        cardHeader.className = 'card-header';
-        cardHeader.style.height = '4rem';
-        cardHeader.textContent = response.roomName;
-        // Create div element with class 'card-body'
-        const cardBodyDiv = document.createElement('div');
-        cardBodyDiv.className = 'card-body';
-        // Create h5 element with class 'card-title' and set its text content
-        const cardTitle = document.createElement('h5');
-        cardTitle.className = 'card-title';
-        cardTitle.textContent = '';
-        // Create p element with class 'card-text' and set its text content
-        const cardText = document.createElement('p');
-        cardText.className = 'card-text';
-        cardText.textContent = "Haz creado nueva consulta";
-        // Create a element with class 'btn btn-primary' and set its attributes
-        const link = document.createElement('a');
-        link.href = "/chat/"+response.roomId;
-        link.className = 'btn btn-primary';
-        link.textContent = 'Unir consulta';
-        // Append all the created elements to the appropriate parent elements
-        cardDiv.appendChild(cardHeader);
-        cardDiv.appendChild(cardBodyDiv);
-        cardBodyDiv.appendChild(cardTitle);
-        cardBodyDiv.appendChild(cardText);
-        cardBodyDiv.appendChild(link);
-        // Append the cardDiv to the document body or any other desired parent element
-        main.prepend(cardDiv);
+        socket.emit('create', dataNewRoom, (response) => {
+        let dataFirstMessage= {
+        message:textconsult.value,
+        roomId:response.roomId,
+        username:username,
+        name:name,
+        userId:userId,
+        nameRole:nameRole,
+        img:img,
+        nickname:nickname
+        }
+        let roomCreatedId = response.roomId;
+        socket.emit('chat message', dataFirstMessage, (response) => {
+        console.log('data to send:',dataFirstMessage)
+        window.location.replace("/chat/"+roomCreatedId)     
+        });
+        //- document.getElementById("createButton").remove();
+        //- console.log(response.roomName);
+        //- const main = document.getElementById("main");
+        //- // Create div element with class 'card text-dark bg-light mb-3'
+        //- const cardDiv = document.createElement('div');
+        //- cardDiv.className = 'card text-dark bg-light mb-3 h-100';
+        //- cardDiv.style.width = '17rem';
+        //- // Create div element with class 'card-header' and set its text content
+        //- const cardHeader = document.createElement('div');
+        //- cardHeader.className = 'card-header';
+        //- cardHeader.style.height = '4rem';
+        //- cardHeader.textContent = response.roomName;
+        //- // Create div element with class 'card-body'
+        //- const cardBodyDiv = document.createElement('div');
+        //- cardBodyDiv.className = 'card-body';
+        //- // Create h5 element with class 'card-title' and set its text content
+        //- const cardTitle = document.createElement('h5');
+        //- cardTitle.className = 'card-title';
+        //- cardTitle.textContent = '';
+        //- // Create p element with class 'card-text' and set its text content
+        //- const cardText = document.createElement('p');
+        //- cardText.className = 'card-text';
+        //- cardText.textContent = "Haz creado nueva consulta";
+        //- // Create a element with class 'btn btn-primary' and set its attributes
+        //- const link = document.createElement('a');
+        //- link.href = "/chat/"+response.roomId;
+        //- link.className = 'btn btn-primary';
+        //- link.textContent = 'Unir consulta';
+        //- // Append all the created elements to the appropriate parent elements
+        //- cardDiv.appendChild(cardHeader);
+        //- cardDiv.appendChild(cardBodyDiv);
+        //- cardBodyDiv.appendChild(cardTitle);
+        //- cardBodyDiv.appendChild(cardText);
+        //- cardBodyDiv.appendChild(link);
+        //- // Append the cardDiv to the document body or any other desired parent element
+        //- main.prepend(cardDiv);        
         }); 
         }

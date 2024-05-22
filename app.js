@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require("express-session");
 const fileUpload = require('express-fileupload');
+var chatbot = require('./controller/chatbot');
 require('dotenv').config({ path:path.join(__dirname, '.env'),override: true, });
 
 
@@ -69,6 +70,7 @@ app.use('/admin', adminRouter);
 app.use('/contact', contactRouter);
 app.use('/questions', questionsRouter);
 
+chatbot.trainChatBotIA();
 
 
 

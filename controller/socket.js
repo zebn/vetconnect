@@ -4,16 +4,14 @@ var moment = require('moment');
 var path = require('path');
 const fs = require('fs');
 var crypto = require("crypto");
+const chatbot = require('../controller/chatbot');
+const chat = require('../controller/chat');
 
 
 class SocketController {
     constructor(server) {
-
-
         const io = socketIo(server);
-
         io.on('connection', (socket) => {
-
 
             function joinRoom(data) {
                 db.connection.query("INSERT IGNORE INTO chatuser (idChat, idUser) VALUES (?);"
@@ -29,51 +27,65 @@ class SocketController {
                         }
                         socket.join(data.roomId);
                         console.log(results);
-                        if (results.affectedRows>0)
-                        {
+                        if (results.affectedRows > 0) {
                             io.to(data.roomId).emit('join', data);
                             io.to(data.roomId).emit('make online', data);
-                        } else
-                        {
+                        } else {
                             io.to(data.roomId).emit('make online', data);
-                            // let sockets = await io.in(data.roomId).fetchSockets();
-                            // const socketIds = sockets.map(socket => socket.id);
-                            // console.log(socketIds);
-                            // io.to(data.roomId).emit('users online', socketIds)
-                        }                         
+                        }
                     });
             };
 
-            socket.on('chat message', (data) => {
-                if (data.file)
-                 {
-                    var filename=data.userId + '_'+data.roomId + '_' + data.filename
-                 }
+            async function insertMessageDb(data) {
+                if (data.file) {
+                    var filename = data.userId + '_' + data.roomId + '_' + data.filename
+                }
                 db.connection.query("INSERT INTO message (textMessage,idChat,idUser,dateMessage,file) VALUES (?);"
-                    , [[data.message, data.roomId, data.userId, new Date(), filename]], function (error, results, fields) {
+                    , [[data.message, data.roomId, data.userId, new Date(), filename]], async function (error, results, fields) {
                         if (error) throw error;
                         data.dateMessage = moment(new Date().toUTCString()).fromNow();
-                        // if ((data.nameRole == "ROLE_ADMIN") || (data.nameRole == "ROLE_DOCTOR")) {
-                        //     data.img = "/img/doctor.png"
-                        // } else {
-                        //     data.img = "/img/user.png"
-                        // }
                         if (data.file) {
                             let uploadPath;
                             // name of the input is sampleFile
-                            uploadPath = path.join(__dirname, '..', 'public', 'upload',filename );
+                            uploadPath = path.join(__dirname, '..', 'public', 'upload', filename);
                             fs.writeFile(uploadPath, data.file, (err) => {
                                 if (err) throw console.log(error);
-                                data.file=filename;
-                                console.log('message with file',data);
-                                io.to(data.roomId).emit('chat message', data);
+                                data.file = filename;
+                                console.log('message with file', data);
                             });
                         }
-                        else { 
-                            console.log('message without file',data);
-                            io.to(data.roomId).emit('make online', data);
-                            io.to(data.roomId).emit('chat message', data); }
+                        else {
+                            console.log('message without file', data);
+                        }
+                        return results;
                     });
+            }
+
+            socket.on('chat message', async (data, callback) => {
+                let results = await insertMessageDb(data);
+                io.to(data.roomId).emit('make online', data);
+                io.to(data.roomId).emit('chat message', data);
+                let chatinfo = await chat.getChatInfo(data.roomId)
+                console.log(chatinfo['nameChat'])
+                if (chatinfo['isNeedDoctor'] == true) {
+                    console.log("test")
+                    let response = await chatbot.generateResponseAI(data.message);
+                    console.log(response)
+                    let databotanswer = {
+                        message: response.answer !== undefined ? response.answer : "Lo siento, no entiendo :(",
+                        roomId: data.roomId,
+                        username: "Bot@bot.com",
+                        name: "VetBot",
+                        userId: 1,
+                        nameRole: "ROLE_ADMIN",
+                        img: "bot.jpg"
+                    }
+                    await insertMessageDb(databotanswer);
+                    io.to(data.roomId).emit('chat message', databotanswer);
+                }
+                if (callback) callback({
+                    messageId: results.insertId
+                });
             });
 
             socket.on('create', (data, callback) => {
