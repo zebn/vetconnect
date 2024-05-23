@@ -1,5 +1,9 @@
 const { NlpManager } = require('node-nlp');
+const fs = require('fs');
 const manager = new NlpManager({ languages: ['es'] });
+
+const data = fs.readFileSync('model.nlp', 'utf8');
+manager.import(data);
 
 // 1 - Train the IA
 async function trainChatBotIA() {
@@ -19,38 +23,24 @@ async function trainChatBotIA() {
         // Respuestas para saludos y despedidas
         manager.addAnswer('es', 'greetings.bye', 'Hasta la próxima');
         manager.addAnswer('es', 'greetings.bye', '¡Nos vemos pronto!');
-        manager.addAnswer('es', 'greetings.hello', '¡Hola! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte');
-        manager.addAnswer('es', 'greetings.hello', '¡Saludos! Soy VetBot, estoy aquí para ayudarte hasta que el médico se conecte');
+        manager.addAnswer('es', 'greetings.hello', '¡Hola! Soy VetBot, tu asistente virtual de Vetconnect. \u000a Estoy aquí para ayudarte mientras esperas a que un veterinario esté disponible. Por favor, proporcióname algunos detalles sobre tu mascota y los síntomas que has observado\u000a¿Cuál es el nombre de tu mascota?\u000a¿Qué especie y raza es tu mascota?\u000a¿Cuál es la edad de tu mascota?\u000a¿Cuáles son los síntomas que has observado? Por favor, enuméralos.\u000a¿Desde cuándo has notado estos síntomas?\u000a¿Has observado algún cambio en el comportamiento o hábitos de tu mascota? Por favor, descríbelo.\u000aTambién puedes adjuntar fotos para ayudar a evaluar la condición de tu mascota.\u000a¡Gracias por confiar en Vetconnect!');
 
         // Intents y respuestas específicos de la clínica veterinaria
-        manager.addDocument('es', 'quiero hacer una cita', 'appointment.create');
-        manager.addDocument('es', 'necesito una cita para mi mascota', 'appointment.create');
-        manager.addDocument('es', 'puedo agendar una cita', 'appointment.create');
-
         manager.addDocument('es', 'cuáles son sus horarios', 'clinic.hours');
         manager.addDocument('es', 'qué horarios tienen', 'clinic.hours');
         manager.addDocument('es', 'horarios de atención', 'clinic.hours');
 
-        manager.addDocument('es', 'dónde están ubicados', 'clinic.location');
-        manager.addDocument('es', 'cuál es su dirección', 'clinic.location');
-        manager.addDocument('es', 'cómo llegar a la clínica', 'clinic.location');
-
         // Respuestas para intents específicos de la clínica veterinaria
-
-        manager.addAnswer('es', 'appointment.create', 'Claro, ¿para qué día y hora le gustaría hacer la cita?');
-        manager.addAnswer('es', 'appointment.create', 'Podemos agendar una cita para su mascota. ¿Cuándo le gustaría venir?');
-
         manager.addAnswer('es', 'clinic.hours', 'Nuestro horario de atención es de lunes a viernes de 9:00 a 18:00 y los sábados de 9:00 a 14:00.');
         manager.addAnswer('es', 'clinic.hours', 'Atendemos de lunes a viernes de 9:00 a 18:00 y los sábados de 9:00 a 14:00.');
 
-        manager.addAnswer('es', 'clinic.location', 'Estamos ubicados en la calle Falsa 123, Springfield.');
-        manager.addAnswer('es', 'clinic.location', 'Nuestra dirección es calle Falsa 123, Springfield.');
+        (async() => {
+            await manager.train();
+            manager.save("./model.nlp", true);
+            console.log("La IA ha sido entrenada");
+            resolve(true);
+        })();
 
-        // Entrenar y guardar el modelo
-        await manager.train();
-        manager.save();
-        console.log("La IA ha sido entrenada");
-        resolve(true);
     });
 }
 

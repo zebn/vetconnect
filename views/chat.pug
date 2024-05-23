@@ -51,7 +51,7 @@ block content
                                         .chat-message-left.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')                                                
-                                            .flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
                                                 strong.font-weight-bold.mb-1 #{message.name}:
                                                 |   #{message.textMessage}
                                                 if (message.file)
@@ -66,7 +66,7 @@ block content
                                         .chat-message-right.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')
-                                            .flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
+                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
                                                 strong.font-weight-bold.mb-1 You:
                                                 |   #{message.textMessage}
                                                 if (message.file)
@@ -89,7 +89,7 @@ block content
                                                 .col-1                           
                                                     input#inputfile.inputfile(type='file' size="1")                                    
                                     .col-10
-                                        input#input.form-control(autocomplete='off' type='text' placeholder='Mensaje' maxlength="4096" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
+                                        input#input.form-control(autocomplete='off' type='textarea' placeholder='Mensaje' maxlength="4096" accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*")                                  
                                     .col-1                       
                                         button.btn.btn-primary Enviar
                                     .row
