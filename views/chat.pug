@@ -51,7 +51,7 @@ block content
                                         .chat-message-left.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')                                                
-                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3
+                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.ml-3.w-50
                                                 strong.font-weight-bold.mb-1 #{message.name}:
                                                 |   #{message.textMessage}
                                                 if (message.file)
@@ -66,8 +66,8 @@ block content
                                         .chat-message-right.pb-4
                                             div
                                                 img.rounded-circle.mr-1(src='/upload/'+message.img alt=message.name width='40' height='40')
-                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3
-                                                strong.font-weight-bold.mb-1 You:
+                                            #textbox.flex-shrink-1.bg-light.rounded.py-2.px-3.mr-3.w-50
+                                                strong.font-weight-bold.mb-1 Tú:
                                                 |   #{message.textMessage}
                                                 if (message.file)
                                                     .text-muted.small.text-nowrap.mt-2
@@ -187,7 +187,7 @@ block content
                 item.classList.add('chat-message-left', 'pb-4');
             } else if ((data.username== username)) {
                 item.classList.add('chat-message-right', 'pb-4');
-                data.name="You"
+                data.name="Tú"
             }
             const imageElement = document.createElement('img');
             imageElement.classList.add('rounded-circle', 'mr-1');
@@ -207,7 +207,7 @@ block content
             dateElement.classList.add('text-muted', 'small', 'text-nowrap', 'mt-2');
             dateElement.textContent = data.dateMessage;
             const contentElement = document.createElement('div');
-            contentElement.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', 'ml-3');
+            contentElement.classList.add('flex-shrink-1', 'bg-light', 'rounded', 'py-2', 'px-3', 'ml-3', 'w-50');
             const usernameElement = document.createElement('strong');
             usernameElement.classList.add('font-weight-bold', 'mb-1');
             usernameElement.textContent = data.name;

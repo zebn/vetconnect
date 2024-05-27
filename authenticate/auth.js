@@ -218,7 +218,7 @@ async function remindPassword(email) {
                 to: email,   // list of receivers
                 subject: 'Recordar contraseña',
                 text: 'That was easy!',
-                html: `<b>Hola! </b>  <br> Su clave temporal es <b>${results[0].passwordToken}</b><br> Por favor, utilice el enlace proporcionado para restablecer su contraseña: vetconnect.es/passwordrestore `
+                html: `¡Hola!</b><br>Tu clave temporal es <b>${results[0].passwordToken}</b>.<br>Por favor, utiliza el enlace proporcionado para restablecer tu contraseña: <a href="https://clubtenisigformacion.es/passwordrestore">clubtenisigformacion.es/passwordrestore</a>`
             };
 
             return new Promise((resolve, reject) => {
