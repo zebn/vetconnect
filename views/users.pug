@@ -93,9 +93,12 @@ block content
                                                     .card-header(style='height: 4rem;') #{chat.nameChat} Ref: #{chat.idChat} 
                                                     .card-body
                                                         p.card-text Consulta en progreso
-                                                        form(action="/users/finalize/"+chat.idChat method="POST")
-                                                            a.btn.btn-primary(href="/chat/"+chat.idChat) Unir                                                
-                                                            button(type="submit").btn.btn-danger.ms-1 Finalizar    
+                                                        .row    
+                                                            .col-4
+                                                                a.btn.btn-primary(href="/chat/"+chat.idChat) Unir  
+                                                            .col-6                                                  
+                                                                form(action="/users/finalize/"+chat.idChat method="POST")                                            
+                                                                    button(type="submit").btn.btn-danger.ms-1 Finalizar    
                                 if (chatsWithoutDoctor.length>0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
                                     h2 Consultas sin atención
                                     .row.mb-3
@@ -105,10 +108,12 @@ block content
                                                     .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat} Ref:  #{chatWithoutDoctor.idChat} 
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
-                                                        form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
-                                                            a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
-                                                            button(type="submit").btn.btn-danger.ms-1 Finalizar
-                                                                if (chatsWithoutDoctor.length>0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
+                                                        .row    
+                                                            .col-4                                                        
+                                                                a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
+                                                            .col-6                                                                     
+                                                                form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
+                                                                    button(type="submit").btn.btn-danger.ms-1 Finalizar
                                 if(chatsFinished.length>0)
                                     h2 Consultas finalizadas
                                     .row
@@ -143,46 +148,53 @@ block content
         img:img,
         nickname:nickname
         }
+        if (response.isConsultCreated)
+        {
+            alert("Ya tienes consulta pendiente");
+            window.location.href = "/chat/"+response.roomId;
+        }
+        else {
         let roomCreatedId = response.roomId;
         socket.emit('chat message', dataFirstMessage, (response) => {
         console.log('data to send:',dataFirstMessage)
-        window.location.replace("/chat/"+roomCreatedId)     
+        window.location.href = "/chat/"+roomCreatedId;
         });
-        //- document.getElementById("createButton").remove();
-        //- console.log(response.roomName);
-        //- const main = document.getElementById("main");
-        //- // Create div element with class 'card text-dark bg-light mb-3'
-        //- const cardDiv = document.createElement('div');
-        //- cardDiv.className = 'card text-dark bg-light mb-3 h-100';
-        //- cardDiv.style.width = '17rem';
-        //- // Create div element with class 'card-header' and set its text content
-        //- const cardHeader = document.createElement('div');
-        //- cardHeader.className = 'card-header';
-        //- cardHeader.style.height = '4rem';
-        //- cardHeader.textContent = response.roomName;
-        //- // Create div element with class 'card-body'
-        //- const cardBodyDiv = document.createElement('div');
-        //- cardBodyDiv.className = 'card-body';
-        //- // Create h5 element with class 'card-title' and set its text content
-        //- const cardTitle = document.createElement('h5');
-        //- cardTitle.className = 'card-title';
-        //- cardTitle.textContent = '';
-        //- // Create p element with class 'card-text' and set its text content
-        //- const cardText = document.createElement('p');
-        //- cardText.className = 'card-text';
-        //- cardText.textContent = "Haz creado nueva consulta";
-        //- // Create a element with class 'btn btn-primary' and set its attributes
-        //- const link = document.createElement('a');
-        //- link.href = "/chat/"+response.roomId;
-        //- link.className = 'btn btn-primary';
-        //- link.textContent = 'Unir consulta';
-        //- // Append all the created elements to the appropriate parent elements
-        //- cardDiv.appendChild(cardHeader);
-        //- cardDiv.appendChild(cardBodyDiv);
-        //- cardBodyDiv.appendChild(cardTitle);
-        //- cardBodyDiv.appendChild(cardText);
-        //- cardBodyDiv.appendChild(link);
-        //- // Append the cardDiv to the document body or any other desired parent element
-        //- main.prepend(cardDiv);        
+        document.getElementById("createButton").remove();
+        console.log(response.roomName);
+        const main = document.getElementById("main");
+        // Create div element with class 'card text-dark bg-light mb-3'
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card text-dark bg-light mb-3 h-100';
+        cardDiv.style.width = '17rem';
+        // Create div element with class 'card-header' and set its text content
+        const cardHeader = document.createElement('div');
+        cardHeader.className = 'card-header';
+        cardHeader.style.height = '4rem';
+        cardHeader.textContent = response.roomName;
+        // Create div element with class 'card-body'
+        const cardBodyDiv = document.createElement('div');
+        cardBodyDiv.className = 'card-body';
+        // Create h5 element with class 'card-title' and set its text content
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = 'card-title';
+        cardTitle.textContent = '';
+        // Create p element with class 'card-text' and set its text content
+        const cardText = document.createElement('p');
+        cardText.className = 'card-text';
+        cardText.textContent = "Haz creado nueva consulta";
+        // Create a element with class 'btn btn-primary' and set its attributes
+        const link = document.createElement('a');
+        link.href = "/chat/"+response.roomId;
+        link.className = 'btn btn-primary';
+        link.textContent = 'Unir consulta';
+        // Append all the created elements to the appropriate parent elements
+        cardDiv.appendChild(cardHeader);
+        cardDiv.appendChild(cardBodyDiv);
+        cardBodyDiv.appendChild(cardTitle);
+        cardBodyDiv.appendChild(cardText);
+        cardBodyDiv.appendChild(link);
+        // Append the cardDiv to the document body or any other desired parent element
+        main.prepend(cardDiv);     
+        }   
         }); 
         }

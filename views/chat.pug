@@ -283,7 +283,7 @@ block content
         }
         function makeUserOffline(socketId) {
         const statusSpan= document.getElementsByClassName(`${socketId}`);
-        if (statusSpan) {
+        if (statusSpan[0]) {
         console.log('became offline:',statusSpan[0])
         statusSpan[0].classList.remove('chat-online');
         statusSpan[0].classList.add('chat-offline');

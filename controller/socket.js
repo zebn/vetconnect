@@ -71,7 +71,7 @@ class SocketController {
                 io.to(data.roomId).emit('chat message', data);
                 let chatinfo = await chat.getChatInfo(data.roomId)
                 console.log(chatinfo['nameChat'])
-                if (chatinfo['isNeedDoctor'] == true&&data.message) {
+                if (chatinfo['isNeedDoctor'] == true && data.message) {
                     console.log("test")
                     let response = await chatbot.generateResponseAI(data.message);
                     console.log(response)
@@ -79,8 +79,8 @@ class SocketController {
                         message: response.answer !== undefined ? response.answer : "Lo siento, no entiendo :(",
                         roomId: data.roomId,
                         username: "Bot@bot.com",
-                        file:null,
-                        filename:null,
+                        file: null,
+                        filename: null,
                         name: "VetBot",
                         userId: 1,
                         nameRole: "ROLE_ADMIN",
@@ -96,15 +96,26 @@ class SocketController {
 
             socket.on('create', (data, callback) => {
                 return new Promise((resolve, reject) => {
-                db.connection.query("INSERT INTO chat (nameChat) VALUES (?);"
-                    , [`Consulta con ${data.nickname}`], function (error, results, fields) {
-                        if (error) throw error;
-                        console.log(`${data.userId} created room ${results.insertId}`);
-                        joinRoom({ userId: data.userId, roomId: results.insertId });
-                        callback({
-                            roomId: results.insertId,
-                            roomName: `Consulta con ${data.nickname} ${results.insertId}`
-                        });
+                    db.connection.query('select * from chat c left join chatuser cu on cu.idChat = c.idChat where idUser = ? AND c.isFinished = 0', [data.userId], function (error, results, fields) {
+                        if (results.length > 0) {
+                            callback({
+                                isConsultCreated:true,
+                                roomId: results[0].idChat,
+                            });
+                            }
+                        else {
+                            db.connection.query("INSERT INTO chat (nameChat) VALUES (?);"
+                                , [`Consulta con ${data.nickname}`], function (error, results, fields) {
+                                    if (error) throw error;
+                                    console.log(`${data.userId} created room ${results.insertId}`);
+                                    joinRoom({ userId: data.userId, roomId: results.insertId });
+                                    callback({
+                                        roomId: results.insertId,
+                                        roomName: `Consulta con ${data.nickname} ${results.insertId}`
+                                    });
+                                });
+                        }
+
                     });
                 });
             });
@@ -124,7 +135,7 @@ class SocketController {
                 io.to(data.roomId).emit('make offline', data);
             });
 
-            
+
             socket.on('make online', (data) => {
                 console.log(`Socket ${data.username} became offline ${data.roomId}`);
                 io.to(data.roomId).emit('make online', data);
