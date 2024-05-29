@@ -83,7 +83,7 @@ block content
                                 if (chats.length==0&&role=="ROLE_USER")
                                     button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal') Nueva consulta
                                 if (chats.length==0&&chatsWithoutDoctor.length==0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
-                                    h2 No hay consultas
+                                    h2 No hay consultas activas
                                 if (chats.length>0)                
                                     h2 Mis consultas
                                     .row.mb-3
@@ -115,6 +115,7 @@ block content
                                                                 form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
                                                                     button(type="submit").btn.btn-danger.ms-1 Finalizar
                                 if(chatsFinished.length>0)
+                                    hr
                                     h2 Consultas finalizadas
                                     .row
                                         each chatFinished in chatsFinished
