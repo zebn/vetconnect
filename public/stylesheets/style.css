@@ -1,6 +1,10 @@
 .hidden{
   display: none;
  }
+
+ .wigthdiv{
+  max-width: 50%;
+ }
  
 .main-body {
   padding: 15px;

@@ -10,7 +10,9 @@ const chat = require('../controller/chat');
 
 class SocketController {
     constructor(server) {
-        const io = socketIo(server);
+        const io = socketIo(server,{
+            maxHttpBufferSize: 1e7
+          });
         io.on('connection', (socket) => {
             async function joinRoom(data) {
                 return new Promise((resolve, reject) => {
@@ -26,7 +28,6 @@ class SocketController {
                                     });
                             }
                             socket.join(data.roomId);
-                            console.log(results);
                             if (results.affectedRows > 0) {
                                 io.to(data.roomId).emit('join', data);
                                 io.to(data.roomId).emit('make online', data);
@@ -46,12 +47,12 @@ class SocketController {
                         [[data.message, data.roomId, data.userId, new Date(), filename]], async function (error, results, fields) {
                             if (error) throw error;
                             data.dateMessage = moment(new Date().toUTCString()).fromNow();
+                            console.log('message', data);
                             if (data.file) {
                                 let uploadPath;
                                 uploadPath = path.join(__dirname, '..', 'public', 'upload', filename);
-                                console.log('message', data);
                                 await fs.writeFile(uploadPath, data.file, (err) => {
-                                    if (err) throw console.log(error);
+                                    if (err) throw console.log(err);
                                     resolve(results);
                                 });
                             }
@@ -61,6 +62,7 @@ class SocketController {
             }
 
             socket.on('chat message', async (data, callback) => {
+                console.log("test")
                 let results = await insertMessageDb(data);
                 if (data.file) {
                     var filename = data.userId + '_' + data.roomId + '_' + data.filename
@@ -70,9 +72,7 @@ class SocketController {
                 io.to(data.roomId).emit('make online', data);
                 io.to(data.roomId).emit('chat message', data);
                 let chatinfo = await chat.getChatInfo(data.roomId)
-                console.log(chatinfo['nameChat'])
                 if (chatinfo['isNeedDoctor'] == true && data.message) {
-                    console.log("test")
                     let response = await chatbot.generateResponseAI(data.message);
                     console.log(response)
                     let databotanswer = {
@@ -144,6 +144,14 @@ class SocketController {
             socket.on('disconnect', (data, callback) => {
                 socket.broadcast.emit('user disconnected', socket.id);
             })
+
+            socket.on('connect_error', function(err) {
+                console.log("client connect_error: ", err);
+            });
+            
+            socket.on('connect_timeout', function(err) {
+                console.log("client connect_timeout: ", err);
+            });
         });
     }
 
