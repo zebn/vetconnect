@@ -76,7 +76,7 @@ class SocketController {
                     let response = await chatbot.generateResponseAI(data.message);
                     console.log(response)
                     let databotanswer = {
-                        message: response.answer !== undefined ? response.answer : "Lo siento, no entiendo :(",
+                        message: response.answer !== undefined ? response.answer : "Lo siento, no entiendo. Necesito esperar al veterinario.",
                         roomId: data.roomId,
                         username: "Bot@bot.com",
                         file: null,
