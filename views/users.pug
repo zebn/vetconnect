@@ -88,30 +88,30 @@ block content
                                     h2 Mis consultas
                                     .row.mb-3
                                         each chat in chats
-                                            .col-lg-4.mt-3
+                                            .mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
                                                     .card-header(style='height: 4rem;') #{chat.nameChat} Ref: #{chat.idChat} 
                                                     .card-body
                                                         p.card-text Consulta en progreso
                                                         .row    
-                                                            .col-4
+                                                            .col-3
                                                                 a.btn.btn-primary(href="/chat/"+chat.idChat) Unir  
-                                                            .col-6                                                  
+                                                            .col-8                                               
                                                                 form(action="/users/finalize/"+chat.idChat method="POST")                                            
-                                                                    button(type="submit").btn.btn-danger.ms-1 Finalizar    
+                                                                    button(type="submit").btn.btn-danger Finalizar    
                                 if (chatsWithoutDoctor.length>0&&(role=="ROLE_DOCTOR"||role=="ROLE_ADMIN"))
                                     h2 Consultas sin atención
                                     .row.mb-3
                                         each chatWithoutDoctor in chatsWithoutDoctor
-                                            .col-lg-4.mt-3
+                                            .mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
                                                     .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat} Ref:  #{chatWithoutDoctor.idChat} 
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
                                                         .row    
-                                                            .col-4                                                        
+                                                            .col-3                                                     
                                                                 a.btn.btn-primary(href="/chat/"+chatWithoutDoctor.idChat) Unir
-                                                            .col-6                                                                     
+                                                            .col-8                                                                     
                                                                 form(action="/users/finalize/"+chatWithoutDoctor.idChat method="POST")
                                                                     button(type="submit").btn.btn-danger.ms-1 Finalizar
                                 if(chatsFinished.length>0)
