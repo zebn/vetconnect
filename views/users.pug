@@ -90,7 +90,7 @@ block content
                                         each chat in chats
                                             .mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 4rem;') #{chat.nameChat} Ref: #{chat.idChat} 
+                                                    .card-header(style='height: 4rem;') Ref: #{chat.idChat} #{chat.nameChat} 
                                                     .card-body
                                                         p.card-text Consulta en progreso
                                                         .row    
@@ -105,7 +105,7 @@ block content
                                         each chatWithoutDoctor in chatsWithoutDoctor
                                             .mt-3
                                                 .card.text-bg-light.mb-3.h-100(style='max-width: 18rem;')
-                                                    .card-header(style='height: 4rem;') #{chatWithoutDoctor.nameChat} Ref:  #{chatWithoutDoctor.idChat} 
+                                                    .card-header(style='height: 4rem;') Ref:  #{chatWithoutDoctor.idChat} #{chatWithoutDoctor.nameChat}  
                                                     .card-body
                                                         p.card-text.text-danger Consulta pendiente
                                                         .row    
