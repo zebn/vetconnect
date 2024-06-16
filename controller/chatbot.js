@@ -31,8 +31,8 @@ async function trainChatBotIA() {
         manager.addDocument('es', 'horarios de atención', 'clinic.hours');
 
         // Respuestas para intents específicos de la clínica veterinaria
-        manager.addAnswer('es', 'clinic.hours', 'Nuestro horario de atención es de lunes a viernes de 9:00 a 18:00 y los sábados de 9:00 a 14:00.');
-        manager.addAnswer('es', 'clinic.hours', 'Atendemos de lunes a viernes de 9:00 a 18:00 y los sábados de 9:00 a 14:00.');
+        manager.addAnswer('es', 'clinic.hours', 'Nuestro horario de atención es de lunes a sábados de 9:00 a 21:00 y los domingos  de 9:00 a 14:00.');
+        manager.addAnswer('es', 'clinic.hours', 'Atendemos de lunes a sábados de 9:00 a 21:00 y los domingos de 9:00 a 14:00.');
 
         (async() => {
             await manager.train();

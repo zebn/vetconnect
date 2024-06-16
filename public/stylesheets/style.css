@@ -60,6 +60,13 @@
   box-shadow: none !important;
 }
 
+.card-header {
+  overflow: hidden; 
+  white-space: nowrap; 
+  text-overflow: ellipsis;
+}
+
+
 .card-fixed-size {
   height: 300px;
   /* Adjust as needed */
